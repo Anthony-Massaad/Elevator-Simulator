@@ -60,7 +60,7 @@ public class Floor implements Runnable{
                     	Log.info(this.systemName, "Message Received from elevator -> " + receive.toString());
                     	this.messageQueue.outputFloorReceiver = null;
                     }else if (request == null && !this.parser.isEmpty()) {
-                    	this.messageQueue.inputFloorRequest = new Message(new Date(), this.parser.getRequest());
+                    	this.messageQueue.inputFloorRequest = new Message(new Date());
                     	Log.info(this.systemName, "Sending message -> " + this.messageQueue.inputFloorRequest.toString());
                     	this.parser.removeRequest();
                     }

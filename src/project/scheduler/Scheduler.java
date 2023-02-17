@@ -3,6 +3,7 @@ package project.scheduler;
 import project.logger.Log;
 import project.messageSystem.MessageQueue;
 import project.simulationParser.Parser; 
+import project.constants.SchedulerStates; 
 
 /**
  * Class Scheduler that implements the Runnable class for the purpose of creating a thread. Acts as a communication channel for the Floor and the Elevator systems using a MessageQueue.
@@ -15,6 +16,8 @@ public class Scheduler implements Runnable {
     private MessageQueue messageQueue;
     private Parser parser; 
     private String systemName; 
+    private SchedulerStates state; 
+    
     /**
      * Construct for the Scheduler class.
      * @param isDead Boolean variable for determining if there is a connection active.
