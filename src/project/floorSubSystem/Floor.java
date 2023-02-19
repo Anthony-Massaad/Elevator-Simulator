@@ -2,6 +2,7 @@ package project.floorSubSystem;
 
 import project.logger.Log;
 import project.messageSystem.MessageQueue;
+import project.messageSystem.messages.ElevatorRequestMessage;
 import project.messageSystem.FloorMessageQueue;
 import project.messageSystem.Message;
 import project.simulationParser.Parser;
@@ -20,7 +21,8 @@ public class Floor implements Runnable{
     private boolean isDead;
     private Parser parser;
     private FloorMessageQueue messageQueue; 
-    private String systemName; 
+    private final String systemName; 
+    private int floorNumber; 
     
     /**
      * Constructor for the Floor class
@@ -28,11 +30,12 @@ public class Floor implements Runnable{
      * @param messageQueue, MessageQueue object for creating a message queue.
      * @param systemName, the name of the system
      */
-    public Floor(Parser parser, FloorMessageQueue messageQueue, String systemName){
+    public Floor(Parser parser, FloorMessageQueue messageQueue, int floorNumber, String systemName){
         this.isDead = false;
         this.parser = parser;
         this.messageQueue = messageQueue;
         this.systemName = systemName; 
+        this.floorNumber = floorNumber; 
     }
 
     /**
@@ -50,11 +53,12 @@ public class Floor implements Runnable{
             	Message request = this.messageQueue.requests.poll();
             	
             	if (receive != null) {
-                	Log.info(this.systemName, "Message Received from elevator -> " + receive.toString());
+            		Log.notification("FLOOR", "Message received from an elevator: " + receive.toString(), new Date(), this.systemName);
+            		this.floorNumber++; 
                 }else if (request == null && !this.parser.isEmpty()) {
-                	Message m = new Message(new Date(), this.parser.getRequest());
-                	this.messageQueue.requests.addFirst(m);
-                	Log.info(this.systemName, "Sending message -> " + m.toString());
+                	ElevatorRequestMessage elRequestMessage = new ElevatorRequestMessage(new Date(), this.floorNumber);
+                	this.messageQueue.requests.addFirst(elRequestMessage);
+            		Log.notification("FLOOR", "Sending Message to Schedular: " + elRequestMessage.toString(), new Date(), this.systemName);
                 	this.parser.removeRequest();
                 }
             }

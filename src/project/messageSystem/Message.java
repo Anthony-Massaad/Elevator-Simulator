@@ -11,6 +11,10 @@ public class Message {
     private final Date timeStamp;
     private String message; 
 
+    public Message(Date timeStamp) {
+    	this(timeStamp, "");
+    }
+    
     /**
      * Constructor for the Message class.
      * @param timeStamp A Date object timeStamp.

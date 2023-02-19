@@ -1,10 +1,13 @@
 package project.scheduler;
 
+import java.util.Date;
+
 import project.logger.Log;
 import project.messageSystem.ElevatorSubSystemMessageQueue;
 import project.messageSystem.FloorMessageQueue;
 import project.messageSystem.Message;
 import project.messageSystem.MessageQueue;
+import project.messageSystem.messages.ArrivalMessage;
 import project.simulationParser.Parser; 
 
 /**
@@ -51,20 +54,20 @@ public class Scheduler implements Runnable {
     			
 				
 				if (floorRequest != null) {
-					Log.info(this.systemName, "Scheduler PROCCESSING: Floor request received -> " + floorRequest.toString());
+					Log.notification("SCHEDULER", "received floor request: " + floorRequest.toString(), new Date(), this.systemName);
 					this.eMQ.requests.addFirst(floorRequest);
 				}
 				else if (elevatorResponse != null) {
-					Log.info(this.systemName, "Scheduler PROCCESSING: Elevator Response received -> " + elevatorResponse.toString());
+					Log.notification("SCHEDULER", "received Elevator Response: " + elevatorResponse.toString(), new Date(), this.systemName);
 					this.fMQ.responses.addFirst(elevatorResponse);
 				}
 				else {
-					Log.error(this.systemName, "Error with the message queue.");
+//					Log.error(this.systemName, "Error with the message queue.");
 				}
     			
     		}
     	}catch(Exception e) {
-    		Log.error(this.systemName, "The Scheduler broke!");
+//    		Log.error(this.systemName, "The Scheduler broke!");
     	}
     }
 }

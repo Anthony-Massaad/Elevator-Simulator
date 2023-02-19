@@ -5,6 +5,7 @@ import project.messageSystem.ElevatorSubSystemMessageQueue;
 import project.messageSystem.FloorMessageQueue;
 import project.floorSubSystem.Floor;
 import project.elevatorSubSystem.Elevator;
+import project.elevatorSubSystem.ElevatorSubSystem;
 import project.scheduler.Scheduler;
 import project.simulationParser.Parser;
 
@@ -21,14 +22,14 @@ public class Main {
 		
 		Parser parser = new Parser(); 
 		
-		Floor floor = new Floor(parser, fMQ, "Floor");
-		Elevator elevator = new Elevator(parser, eMQ, "Elevator");
+		Floor floor = new Floor(parser, fMQ, 1, "Floor[0]");
+		ElevatorSubSystem ElevatorSubSystem = new ElevatorSubSystem(eMQ, "Elevator subsystem");
 		
 		
 		Scheduler scheduler = new Scheduler(parser, fMQ, eMQ, "Scheduler");
 		
 		Thread tFloor = new Thread(floor);
-		Thread tElevator = new Thread(elevator);
+		Thread tElevator = new Thread(ElevatorSubSystem);
 		Thread tScheduler = new Thread(scheduler);
 		
 		tFloor.start();
