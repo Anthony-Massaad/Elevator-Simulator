@@ -2,7 +2,8 @@ package project.main;
 
 import project.messageSystem.MessageQueue;
 import project.floorSubSystem.Floor;
-import project.elevatorSubSystem.Elevator;
+import project.elevatorSubSystem.ElevatorSubSystem;
+import project.elevatorSubSystem.ElevatorCommunication;
 import project.scheduler.Scheduler;
 import project.simulationParser.Parser;
 
@@ -15,18 +16,20 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		MessageQueue messageQueue = new MessageQueue(); 
+		ElevatorCommunication elevatorCommunication = new ElevatorCommunication(); 
 		Parser parser = new Parser(); 
 		
 		Floor floor = new Floor(parser, messageQueue, "Floor");
-		Elevator elevator = new Elevator(parser, messageQueue, "Elevator");
+		ElevatorSubSystem elevatorSubsystem = new ElevatorSubSystem(messageQueue, elevatorCommunication);  
+		//Elevator elevator = new Elevator("Elevator");
 		Scheduler scheduler = new Scheduler(parser, messageQueue, "Scheduler");
 		
 		Thread tFloor = new Thread(floor);
-		Thread tElevator = new Thread(elevator);
+		//Thread tElevator = new Thread(elevator);
 		Thread tScheduler = new Thread(scheduler);
 		
 		tFloor.start();
-		tElevator.start();
+		//tElevator.start();
 		tScheduler.start();
 	}
 
