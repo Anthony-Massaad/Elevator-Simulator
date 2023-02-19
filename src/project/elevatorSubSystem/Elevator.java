@@ -1,6 +1,8 @@
 package project.elevatorSubSystem;
 
 import project.logger.Log;
+import project.messageSystem.ElevatorSubSystemMessageQueue;
+import project.messageSystem.Message;
 import project.messageSystem.MessageQueue;
 import project.simulationParser.Parser;
 
@@ -12,7 +14,7 @@ import project.simulationParser.Parser;
 public class Elevator implements Runnable{
 	private boolean isDead;
 	private Parser parser;
-	private MessageQueue messageQueue;
+	private ElevatorSubSystemMessageQueue messageQueue;
 	private String systemName; 
 
 
@@ -22,7 +24,7 @@ public class Elevator implements Runnable{
 	 * @param messageQueue, MessageQueue object for creating a message queue.
 	 * @param systemName, the name of the system
 	 */
-    public Elevator(Parser parser, MessageQueue messageQueue, String systemName){
+    public Elevator(Parser parser, ElevatorSubSystemMessageQueue messageQueue, String systemName){
     	this.isDead = false;
         this.messageQueue = messageQueue;
         this.parser = parser; 
@@ -37,23 +39,17 @@ public class Elevator implements Runnable{
     public void run() {
     	try {
     		while(!this.isDead) {
-    			synchronized (this.messageQueue) {
-    				if (this.parser.isEmpty()) {
-    					this.isDead = true;
-    					break;
-    				}
-    				
-					while(messageQueue.outputElevatorReceiver == null) {
-						//Log.info("Elevator is waiting for a request");
-						messageQueue.wait();
-					}
-					Log.info(this.systemName, "Request received from floor -> " + messageQueue.outputElevatorReceiver);
-					messageQueue.inputElevatorRequest = messageQueue.outputElevatorReceiver;
-					messageQueue.outputElevatorReceiver = null;
-					messageQueue.notifyAll();
-				}
+    			while (this.messageQueue.requests.size() <= 0) {
+    				Thread.sleep(500);
+    			}
     			
-    		}
+    			// always true 
+    			Message request = this.messageQueue.requests.poll();
+				Log.info(this.systemName, "Request received from floor -> " + request.toString());
+				this.messageQueue.responses.addFirst(request);
+			}
+    			
+    		
     	}catch(Exception e) {
     		Log.error(this.systemName, "Something Broke");
     	}

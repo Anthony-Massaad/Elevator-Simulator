@@ -1,5 +1,6 @@
 package project.messageSystem;
 
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
  * Class MessageQueue that serves as the basis for four message queues: input floor request, 
@@ -8,20 +9,15 @@ package project.messageSystem;
  */
 public class MessageQueue {
 	
-	
-	public Message inputFloorRequest;
-	public Message outputFloorReceiver;
-	public Message inputElevatorRequest;
-	public Message outputElevatorReceiver;
-	
+	public ConcurrentLinkedDeque<Message> responses;
+	public ConcurrentLinkedDeque<Message> requests;
+
 	/**
 	 * Constructor for the MessageQueue class.
 	 */
 	public MessageQueue() {
-		this.inputFloorRequest = null;
-		this.outputFloorReceiver = null;
-		this.inputElevatorRequest = null;
-		this.outputElevatorReceiver = null;
+		this.requests = new ConcurrentLinkedDeque<>();
+		this.responses = new ConcurrentLinkedDeque<>();
 	}
 	
 }

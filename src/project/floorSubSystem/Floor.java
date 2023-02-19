@@ -2,6 +2,7 @@ package project.floorSubSystem;
 
 import project.logger.Log;
 import project.messageSystem.MessageQueue;
+import project.messageSystem.FloorMessageQueue;
 import project.messageSystem.Message;
 import project.simulationParser.Parser;
 import java.util.Date;
@@ -18,7 +19,7 @@ public class Floor implements Runnable{
 
     private boolean isDead;
     private Parser parser;
-    private MessageQueue messageQueue; 
+    private FloorMessageQueue messageQueue; 
     private String systemName; 
     
     /**
@@ -27,12 +28,11 @@ public class Floor implements Runnable{
      * @param messageQueue, MessageQueue object for creating a message queue.
      * @param systemName, the name of the system
      */
-    public Floor(Parser parser, MessageQueue messageQueue, String systemName){
+    public Floor(Parser parser, FloorMessageQueue messageQueue, String systemName){
         this.isDead = false;
         this.parser = parser;
         this.messageQueue = messageQueue;
         this.systemName = systemName; 
-
     }
 
     /**
@@ -42,30 +42,21 @@ public class Floor implements Runnable{
     public void run() {
         try {
             while (!this.isDead){
-            	synchronized(this.messageQueue) { 
-            		Message receive = this.messageQueue.outputFloorReceiver;
-            		Message request = this.messageQueue.inputFloorRequest;
-            		
-            		if (this.parser.isEmpty()) {
-    					this.isDead = true;
-    					break;
-    				}
-            		
-                    while ((receive == null && this.parser.isEmpty()) && request != null) {
-                    	this.messageQueue.wait();
-                    	//Log.info("FLOOR IS WAITING");
-                    }
-                    
-                    if (receive != null) {
-                    	Log.info(this.systemName, "Message Received from elevator -> " + receive.toString());
-                    	this.messageQueue.outputFloorReceiver = null;
-                    }else if (request == null && !this.parser.isEmpty()) {
-                    	this.messageQueue.inputFloorRequest = new Message(new Date(), this.parser.getRequest());
-                    	Log.info(this.systemName, "Sending message -> " + this.messageQueue.inputFloorRequest.toString());
-                    	this.parser.removeRequest();
-                    }
-                    this.messageQueue.notifyAll();
-            	}
+            	while ((this.messageQueue.responses.size() <= 0 && this.parser.isEmpty()) || this.messageQueue.requests.size() >= 1) {
+                	Thread.sleep(500);
+                }
+            	
+            	Message receive = this.messageQueue.responses.poll();
+            	Message request = this.messageQueue.requests.poll();
+            	
+            	if (receive != null) {
+                	Log.info(this.systemName, "Message Received from elevator -> " + receive.toString());
+                }else if (request == null && !this.parser.isEmpty()) {
+                	Message m = new Message(new Date(), this.parser.getRequest());
+                	this.messageQueue.requests.addFirst(m);
+                	Log.info(this.systemName, "Sending message -> " + m.toString());
+                	this.parser.removeRequest();
+                }
             }
         }
         catch (Exception e) {

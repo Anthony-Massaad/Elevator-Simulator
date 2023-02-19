@@ -1,6 +1,9 @@
 package project.scheduler;
 
 import project.logger.Log;
+import project.messageSystem.ElevatorSubSystemMessageQueue;
+import project.messageSystem.FloorMessageQueue;
+import project.messageSystem.Message;
 import project.messageSystem.MessageQueue;
 import project.simulationParser.Parser; 
 
@@ -12,7 +15,8 @@ import project.simulationParser.Parser;
 public class Scheduler implements Runnable {
 
     private boolean isDead;
-    private MessageQueue messageQueue;
+    private ElevatorSubSystemMessageQueue eMQ;
+    private FloorMessageQueue fMQ; 
     private Parser parser; 
     private String systemName; 
     /**
@@ -20,9 +24,10 @@ public class Scheduler implements Runnable {
      * @param isDead Boolean variable for determining if there is a connection active.
      * @param An messageQueue object for creating a message queue.
      */
-    public Scheduler(Parser parser, MessageQueue messageQueue, String systemName){
+    public Scheduler(Parser parser, FloorMessageQueue fMQ, ElevatorSubSystemMessageQueue eMQ, String systemName){
         this.isDead = false;
-        this.messageQueue = messageQueue;
+        this.eMQ = eMQ;
+        this.fMQ = fMQ;
         this.parser = parser; 
         this.systemName = systemName; 
     }
@@ -36,35 +41,27 @@ public class Scheduler implements Runnable {
     public void run() {
     	try {
     		while(!this.isDead) {
-    			synchronized (this.messageQueue) {
-    				
-    				if (this.parser.isEmpty()) {
-    					this.isDead = true; 
-    					break; 
-    				}
-    				
-    				while (this.messageQueue.inputElevatorRequest == null && this.messageQueue.inputFloorRequest == null) {
-        				//Log.info("The Scheduler is waiting for the Floor and the Elevator...");
-    					this.messageQueue.wait();
-    				}
-    				
-    				if (this.messageQueue.inputFloorRequest != null) {
-    					Log.info(this.systemName, "Scheduler PROCCESSING: Floor request received -> " + this.messageQueue.inputFloorRequest.toString());
-    					this.messageQueue.outputElevatorReceiver = this.messageQueue.inputFloorRequest;
-    					this.messageQueue.inputFloorRequest = null;
-    					//System.out.println("The Scheduler has received the Floor's request. Notifying the Elevator!");
-    				}
-    				else if (this.messageQueue.inputElevatorRequest != null) {
-    					Log.info(this.systemName, "Scheduler PROCCESSING: Elevator Response received -> " + this.messageQueue.inputElevatorRequest.toString());
-    					this.messageQueue.outputFloorReceiver = this.messageQueue.inputElevatorRequest;
-    					this.messageQueue.inputElevatorRequest = null;
-    					//System.out.println("The Scheduler has received the Elevator's request. Notifying the Floor!");
-    				}
-    				else {
-    					Log.error(this.systemName, "Error with the message queue.");
-    				}
-    				this.messageQueue.notifyAll();
+    			
+    			while (this.fMQ.requests.size() <= 0 && this.eMQ.responses.size() <= 0) {
+    				Thread.sleep(500);
     			}
+    			
+    			Message floorRequest = this.fMQ.requests.poll();
+    			Message elevatorResponse = this.eMQ.responses.poll();
+    			
+				
+				if (floorRequest != null) {
+					Log.info(this.systemName, "Scheduler PROCCESSING: Floor request received -> " + floorRequest.toString());
+					this.eMQ.requests.addFirst(floorRequest);
+				}
+				else if (elevatorResponse != null) {
+					Log.info(this.systemName, "Scheduler PROCCESSING: Elevator Response received -> " + elevatorResponse.toString());
+					this.fMQ.responses.addFirst(elevatorResponse);
+				}
+				else {
+					Log.error(this.systemName, "Error with the message queue.");
+				}
+    			
     		}
     	}catch(Exception e) {
     		Log.error(this.systemName, "The Scheduler broke!");
