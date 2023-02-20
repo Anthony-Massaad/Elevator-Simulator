@@ -6,8 +6,6 @@ import project.logger.Log;
 import project.messageSystem.ElevatorSubSystemMessageQueue;
 import project.messageSystem.FloorMessageQueue;
 import project.messageSystem.Message;
-import project.messageSystem.MessageQueue;
-import project.messageSystem.messages.ArrivalMessage;
 import project.simulationParser.Parser; 
 
 /**
@@ -20,18 +18,16 @@ public class Scheduler implements Runnable {
     private boolean isDead;
     private ElevatorSubSystemMessageQueue eMQ;
     private FloorMessageQueue fMQ; 
-    private Parser parser; 
     private String systemName; 
     /**
      * Construct for the Scheduler class.
      * @param isDead Boolean variable for determining if there is a connection active.
      * @param An messageQueue object for creating a message queue.
      */
-    public Scheduler(Parser parser, FloorMessageQueue fMQ, ElevatorSubSystemMessageQueue eMQ, String systemName){
+    public Scheduler(FloorMessageQueue fMQ, ElevatorSubSystemMessageQueue eMQ, String systemName){
         this.isDead = false;
         this.eMQ = eMQ;
         this.fMQ = fMQ;
-        this.parser = parser; 
         this.systemName = systemName; 
     }
     
@@ -44,30 +40,32 @@ public class Scheduler implements Runnable {
     public void run() {
     	try {
     		while(!this.isDead) {
+    			if (Parser.isEmpty()) {
+            		this.isDead = false; 
+            		break; 
+            	}
     			
-    			while (this.fMQ.requests.size() <= 0 && this.eMQ.responses.size() <= 0) {
+    			if (this.fMQ.requests.size() <= 0 && this.eMQ.responses.size() <= 0) {
     				Thread.sleep(500);
+    			}else {
+    				Message floorRequest = this.fMQ.requests.poll();
+        			Message elevatorResponse = this.eMQ.responses.poll();
+        			
+    				if (floorRequest != null) {
+    					Log.notification("SCHEDULER", "received floor request: " + floorRequest.toString(), new Date(), this.systemName);
+    					this.eMQ.requests.addFirst(floorRequest);
+    				}
+    				else if (elevatorResponse != null) {
+    					Log.notification("SCHEDULER", "received Elevator Response: " + elevatorResponse.toString(), new Date(), this.systemName);
+    					this.fMQ.responses.addFirst(elevatorResponse);
+    				}
+    				else {
+    		    		Log.error("SCHEDULER", "System skipped sleep and no conditions met", new Date(), this.systemName);
+    				}
     			}
-    			
-    			Message floorRequest = this.fMQ.requests.poll();
-    			Message elevatorResponse = this.eMQ.responses.poll();
-    			
-				
-				if (floorRequest != null) {
-					Log.notification("SCHEDULER", "received floor request: " + floorRequest.toString(), new Date(), this.systemName);
-					this.eMQ.requests.addFirst(floorRequest);
-				}
-				else if (elevatorResponse != null) {
-					Log.notification("SCHEDULER", "received Elevator Response: " + elevatorResponse.toString(), new Date(), this.systemName);
-					this.fMQ.responses.addFirst(elevatorResponse);
-				}
-				else {
-//					Log.error(this.systemName, "Error with the message queue.");
-				}
-    			
     		}
     	}catch(Exception e) {
-//    		Log.error(this.systemName, "The Scheduler broke!");
+    		Log.error("SCHEDULER", "System Crashed", new Date(), this.systemName);
     	}
     }
 }

@@ -6,9 +6,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import project.constants.ElevatorState;
 import project.constants.ElevatorTimes;
 import project.logger.Log;
-import project.messageSystem.ElevatorSubSystemMessageQueue;
 import project.messageSystem.Message;
-import project.messageSystem.MessageQueue;
 import project.messageSystem.messages.ArrivalMessage;
 import project.messageSystem.messages.MoveToMessage;
 import project.simulationParser.Parser;
@@ -53,7 +51,7 @@ public class Elevator implements Runnable{
     	if (message instanceof MoveToMessage) {
     		MoveToMessage moveToMessage = (MoveToMessage) message; 
     		int destination = moveToMessage.getDestinationFloor();
-        	Log.notification("ELEVATOR", "Received move to request to " + destination, new Date(), this.systemName);
+        	Log.notification("ELEVATOR", "Received move to request to floor " + destination, new Date(), this.systemName);
 
     		if (destination == this.currentFloor) {
     			// the request for the floor is on the current floor 
@@ -73,36 +71,43 @@ public class Elevator implements Runnable{
     public void run() {
     	try {
     		while(!this.isDead) {
-    			if (this.requests.size() <= 0) {
-    				// later on also conditions the queue of the elevator
-    				// since we are assuming one elevator and one floor we can just check if the request is 
-    				// empty
-    				this.state = ElevatorState.IDLE;
-    			}else{
+    			if (Parser.isEmpty()) {
+            		this.isDead = false; 
+            		break; 
+            	}
+    			
+    			if (this.requests.size() >= 0) {
     				this.checkMessage(); 
     			}
     			
     			if (this.state == ElevatorState.IDLE) {
                     // checks with the scheduler using the message queue system
                     // to see if it can do something.
+
                     Thread.sleep(500);
                 }
                 else if (this.state == ElevatorState.OPEN_DOOR){
+                	
                 	Log.notification("ELEVATOR", "Open Door", new Date(), this.systemName);
                     Thread.sleep(ElevatorTimes.OPEN_DOOR.getTime());
                     // Load/unload passengers and transition to close
+                    
                 }else if (this.state == ElevatorState.CLOSE_DOOR){
+                	
                 	Log.notification("ELEVATOR", "Closing Door", new Date(), this.systemName);
                     Thread.sleep(ElevatorTimes.CLOSING_DOOR.getTime());
                     // if buttons were pressed, then start moving. Otherwise transition to idle
                     this.state = ElevatorState.MOVING;
+                    
                 }
                 else if (this.state == ElevatorState.MOVING){
+                	Log.notification("ELEVATOR", "Current floor " + this.currentFloor, new Date(), this.systemName);
                 	if (this.currentFloor < this.desitnationFloor) {
                         this.currentFloor++;
                 	}else if (this.currentFloor > this.desitnationFloor) {
                         this.currentFloor--;
                 	}
+                	
                     Thread.sleep(ElevatorTimes.MOVING.getTime());
                 	Log.notification("ELEVATOR", "Reached floor " + this.currentFloor, new Date(), this.systemName);
                     if (this.desitnationFloor == this.currentFloor) {
@@ -110,6 +115,7 @@ public class Elevator implements Runnable{
                     	ArrivalMessage arrivalMessage = new ArrivalMessage(new Date(), this.desitnationFloor);
                     	Log.notification("ELEVATOR", arrivalMessage.toString(), new Date(), this.systemName);
                     	this.responses.addFirst(arrivalMessage);
+                    	this.state = ElevatorState.IDLE;
                     }   
                 }
 			}		

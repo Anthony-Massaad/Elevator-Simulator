@@ -1,14 +1,11 @@
 package project.floorSubSystem;
 
 import project.logger.Log;
-import project.messageSystem.MessageQueue;
 import project.messageSystem.messages.ElevatorRequestMessage;
 import project.messageSystem.FloorMessageQueue;
 import project.messageSystem.Message;
 import project.simulationParser.Parser;
 import java.util.Date;
-
-import java.util.ArrayList;
 
 /**
  * Class Floor that implements the Runnable class for the purpose of creating a thread. 
@@ -23,6 +20,8 @@ public class Floor implements Runnable{
     private FloorMessageQueue messageQueue; 
     private final String systemName; 
     private int floorNumber; 
+    // ASSUMING ONE REQUEST AT A TIME, TEMP VARIABLE FOR NOW, DELETE LATER WHEN SENDING MULTIPLE REQUEST AT ONCE 
+    private boolean requestSent; 
     
     /**
      * Constructor for the Floor class
@@ -36,6 +35,7 @@ public class Floor implements Runnable{
         this.messageQueue = messageQueue;
         this.systemName = systemName; 
         this.floorNumber = floorNumber; 
+        this.requestSent = false; // TEMP VARIABLE 
     }
 
     /**
@@ -45,7 +45,13 @@ public class Floor implements Runnable{
     public void run() {
         try {
             while (!this.isDead){
-            	while ((this.messageQueue.responses.size() <= 0 && this.parser.isEmpty()) || this.messageQueue.requests.size() >= 1) {
+            	if (Parser.isEmpty()) {
+            		this.isDead = false; 
+            		break; 
+            	}
+            	
+            	while (this.requestSent && this.messageQueue.responses.size() <= 0) {
+
                 	Thread.sleep(500);
                 }
             	
@@ -55,15 +61,20 @@ public class Floor implements Runnable{
             	if (receive != null) {
             		Log.notification("FLOOR", "Message received from an elevator: " + receive.toString(), new Date(), this.systemName);
             		this.floorNumber++; 
-                }else if (request == null && !this.parser.isEmpty()) {
+                	this.parser.removeRequest();
+            		this.requestSent = false; // TEMP DELETE LATER. SEE REASONING ON INITIALIZER 
+            	}
+            	
+            	if (request == null && !Parser.isEmpty()) {
                 	ElevatorRequestMessage elRequestMessage = new ElevatorRequestMessage(new Date(), this.floorNumber);
                 	this.messageQueue.requests.addFirst(elRequestMessage);
             		Log.notification("FLOOR", "Sending Message to Schedular: " + elRequestMessage.toString(), new Date(), this.systemName);
-                	this.parser.removeRequest();
+                	this.requestSent = true; // TEMP DELETE LATER. SEE REASONING ON INITIALIZER 
                 }
             }
         }
         catch (Exception e) {
+        	Log.error("FLOOR", "System Crashed", new Date(), this.systemName);
         }
     }
     

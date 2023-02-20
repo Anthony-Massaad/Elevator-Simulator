@@ -8,6 +8,7 @@ import project.messageSystem.ElevatorSubSystemMessageQueue;
 import project.messageSystem.Message;
 import project.messageSystem.messages.ElevatorRequestMessage;
 import project.messageSystem.messages.MoveToMessage;
+import project.simulationParser.Parser;
 
 public class ElevatorSubSystem implements Runnable{
 	
@@ -22,6 +23,7 @@ public class ElevatorSubSystem implements Runnable{
 		this.isDead = false; 
 		this.systemName = systemName;
 		this.elevatorResponses = new ConcurrentLinkedDeque<>();
+		this.systemName = systemName; 
 	}
 	
 	@Override
@@ -34,11 +36,15 @@ public class ElevatorSubSystem implements Runnable{
 		
 		try {
     		while(!this.isDead) {
-    			while (this.messageQueue.requests.size() <= 0 && this.elevatorResponses.size() <= 0) {
-    				Thread.sleep(500);
-    			}
     			
-    			if (this.messageQueue.requests.size() > 0) {
+    			if (Parser.isEmpty()) {
+            		this.isDead = false; 
+            		break; 
+            	}
+    			
+    			if (this.messageQueue.requests.size() <= 0 && this.elevatorResponses.size() <= 0) {
+    				Thread.sleep(500);
+    			}else if (this.messageQueue.requests.size() > 0) {
     				// always true 
         			Message request = this.messageQueue.requests.poll();
         			
@@ -54,7 +60,7 @@ public class ElevatorSubSystem implements Runnable{
 			}
     	}catch(Exception e) {
     		e.printStackTrace();
-//    		Log.error(this.systemName, "Something Broke");
+    		Log.error("ELEVATOR SUBSYSTEM", "System Crashed", new Date(), this.systemName);
     	}
 		
 	}
