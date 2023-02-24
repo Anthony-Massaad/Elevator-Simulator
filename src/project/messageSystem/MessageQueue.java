@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 /**
  * Class MessageQueue that serves as the basis for four message queues: input floor request, 
  * input elevator request, output floor receiver, and elevator floor receiver.
- * @author Max Curkovic, Dorothy Tran Group 2 SYSC 3303 A1
+ * @author Anthony Massaad, Dorothy Tran, Max Curkovic, Elisha Catherasoo, Cassidy Pacada SYSC 3303 Winter 2023 Lab A1
  */
 public class MessageQueue {
 	

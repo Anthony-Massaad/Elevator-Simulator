@@ -3,14 +3,17 @@ package project.messageSystem;
 import java.util.Date;
 
 /**
- * Class Message for defining a message that can be passed as communication between the Floor and the Elevator systems.
- * @author Dorothy Tran, Max Curkovic SYSC 3303 Winter 2023 Lab A1
- *
+ * Class Message for defining a message that can be passed as communication between the Floor, Scheduler and the Elevator systems.
+ * @author Anthony Massaad, Dorothy Tran, Max Curkovic, Elisha Catherasoo, Cassidy Pacada SYSC 3303 Winter 2023 Lab A1
  */
 public class Message {
     private final Date timeStamp;
     private String message; 
 
+    /**
+     * base constructor for the Message class 
+     * @param timeStamp Date, the date in which a message is made
+     */
     public Message(Date timeStamp) {
     	this(timeStamp, "");
     }

@@ -13,7 +13,7 @@ import project.simulationParser.Parser;
 
 /**
  * Class Elevator that implements the Runnable class
- * @author Elisha Catherasoo, Cassidy Pacada SYSC 3303 Winter 2023 Lab A1
+ * @author Anthony Massaad, Dorothy Tran, Max Curkovic, Elisha Catherasoo, Cassidy Pacada SYSC 3303 Winter 2023 Lab A1
  *
  */
 public class Elevator implements Runnable{
@@ -41,10 +41,18 @@ public class Elevator implements Runnable{
         this.requests = new ConcurrentLinkedDeque<>();
     }
     
+    /**
+     * Elevator Subsystem will use this method to add requests to the elevator
+     * @param message Message, the message
+     */
     public void addRequest(Message message) {
     	this.requests.add(message);
     }
     
+    /**
+     * Check the requested message sent from the elevator Subsystem.
+     * Elevator will change state accordingly depending on the message
+     */
     private void checkMessage() {
     	Message message = this.requests.poll();
     	
@@ -62,6 +70,50 @@ public class Elevator implements Runnable{
     			this.state = ElevatorState.MOVING;
     		}
     	}
+    }
+    
+    /**
+     * method handler for when the elevator is in a open door state
+     * @throws InterruptedException
+     */
+    private void handleOpenDoor() throws InterruptedException {
+    	Log.notification("ELEVATOR", "Open Door", new Date(), this.systemName);
+        Thread.sleep(ElevatorTimes.OPEN_DOOR.getTime());
+        // Load/unload passengers and transition to close
+    }
+    
+    /**
+     * method handler for when the elevator is in a close door state
+     * @throws InterruptedException
+     */
+    private void handleCloseDoor() throws InterruptedException {
+    	Log.notification("ELEVATOR", "Closing Door", new Date(), this.systemName);
+        Thread.sleep(ElevatorTimes.CLOSING_DOOR.getTime());
+        // if buttons were pressed, then start moving. Otherwise transition to idle
+        this.state = ElevatorState.MOVING;
+    }
+    
+    /**
+     * method handler for when the elevator is in a moving state
+     * @throws InterruptedException
+     */
+    private void handleMoving() throws InterruptedException {
+    	Log.notification("ELEVATOR", "Current floor " + this.currentFloor, new Date(), this.systemName);
+    	if (this.currentFloor < this.desitnationFloor) {
+            this.currentFloor++;
+    	}else if (this.currentFloor > this.desitnationFloor) {
+            this.currentFloor--;
+    	}
+    	
+        Thread.sleep(ElevatorTimes.MOVING.getTime());
+    	Log.notification("ELEVATOR", "Reached floor " + this.currentFloor, new Date(), this.systemName);
+        if (this.desitnationFloor == this.currentFloor) {
+        	// when we reach the destination floor 
+        	ArrivalMessage arrivalMessage = new ArrivalMessage(new Date(), this.desitnationFloor);
+        	Log.notification("ELEVATOR", arrivalMessage.toString(), new Date(), this.systemName);
+        	this.responses.addFirst(arrivalMessage);
+        	this.state = ElevatorState.IDLE;
+        }
     }
 
     /**
@@ -83,40 +135,15 @@ public class Elevator implements Runnable{
     			if (this.state == ElevatorState.IDLE) {
                     // checks with the scheduler using the message queue system
                     // to see if it can do something.
-
                     Thread.sleep(500);
                 }
                 else if (this.state == ElevatorState.OPEN_DOOR){
-                	
-                	Log.notification("ELEVATOR", "Open Door", new Date(), this.systemName);
-                    Thread.sleep(ElevatorTimes.OPEN_DOOR.getTime());
-                    // Load/unload passengers and transition to close
-                    
+                	this.handleOpenDoor();
                 }else if (this.state == ElevatorState.CLOSE_DOOR){
-                	
-                	Log.notification("ELEVATOR", "Closing Door", new Date(), this.systemName);
-                    Thread.sleep(ElevatorTimes.CLOSING_DOOR.getTime());
-                    // if buttons were pressed, then start moving. Otherwise transition to idle
-                    this.state = ElevatorState.MOVING;
-                    
+                	this.handleCloseDoor();
                 }
                 else if (this.state == ElevatorState.MOVING){
-                	Log.notification("ELEVATOR", "Current floor " + this.currentFloor, new Date(), this.systemName);
-                	if (this.currentFloor < this.desitnationFloor) {
-                        this.currentFloor++;
-                	}else if (this.currentFloor > this.desitnationFloor) {
-                        this.currentFloor--;
-                	}
-                	
-                    Thread.sleep(ElevatorTimes.MOVING.getTime());
-                	Log.notification("ELEVATOR", "Reached floor " + this.currentFloor, new Date(), this.systemName);
-                    if (this.desitnationFloor == this.currentFloor) {
-                    	// when we reach the destination floor 
-                    	ArrivalMessage arrivalMessage = new ArrivalMessage(new Date(), this.desitnationFloor);
-                    	Log.notification("ELEVATOR", arrivalMessage.toString(), new Date(), this.systemName);
-                    	this.responses.addFirst(arrivalMessage);
-                    	this.state = ElevatorState.IDLE;
-                    }   
+                	this.handleMoving();
                 }
 			}		
     	}catch(Exception e) {
