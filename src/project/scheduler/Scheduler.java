@@ -10,7 +10,7 @@ import project.simulationParser.Parser;
 
 /**
  * Class Scheduler that implements the Runnable class for the purpose of creating a thread. Acts as a communication channel for the Floor and the Elevator systems using a MessageQueue.
- * @author Dorothy Tran, Max Curkovic SYSC 3303 Winter 2023 Lab A1
+ * @author Anthony Massaad, Dorothy Tran, Max Curkovic, Elisha Catherasoo, Cassidy Pacada SYSC 3303 Winter 2023 Lab A1
  *
  */
 public class Scheduler implements Runnable {
@@ -33,9 +33,7 @@ public class Scheduler implements Runnable {
     
     @Override
     /**
-     * Overriden run method as part of Runnable. Checks to see whether a MessageQueue can be received 
-     * or sent by the Floor or the Elevator to the other, through the use of the Scheduler. 
-     * Notifies when this has occurred.
+     * Overriden run method as part of Runnable. 
      */
     public void run() {
     	try {
@@ -45,6 +43,7 @@ public class Scheduler implements Runnable {
             		break; 
             	}
     			
+    			// Will sleep when neither the elevator subsystem or the floor gave the scheduler anything 
     			if (this.fMQ.requests.size() <= 0 && this.eMQ.responses.size() <= 0) {
     				Thread.sleep(500);
     			}else {
@@ -52,10 +51,12 @@ public class Scheduler implements Runnable {
         			Message elevatorResponse = this.eMQ.responses.poll();
         			
     				if (floorRequest != null) {
+    					// floor requested something
     					Log.notification("SCHEDULER", "received floor request: " + floorRequest.toString(), new Date(), this.systemName);
     					this.eMQ.requests.addFirst(floorRequest);
     				}
     				else if (elevatorResponse != null) {
+    					// Elevator Subsystem Responded
     					Log.notification("SCHEDULER", "received Elevator Response: " + elevatorResponse.toString(), new Date(), this.systemName);
     					this.fMQ.responses.addFirst(elevatorResponse);
     				}
