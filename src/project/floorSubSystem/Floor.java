@@ -47,6 +47,7 @@ public class Floor implements Runnable{
             while (!this.isDead){
             	if (Parser.isEmpty()) {
             		this.isDead = false; 
+            		Log.notification("FLOOR", "Floor Killed", new Date(), this.systemName);
             		break; 
             	}
             	

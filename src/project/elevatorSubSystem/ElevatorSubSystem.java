@@ -50,6 +50,8 @@ public class ElevatorSubSystem implements Runnable{
     		while(!this.isDead) {
     			if (Parser.isEmpty()) {
             		this.isDead = false; 
+            		Log.notification("ELEVATOR SUBSYSTEM", "Elevator SubSystem Killed", new Date(), this.systemName);
+
             		break; 
             	}
     			// Concurrent loop

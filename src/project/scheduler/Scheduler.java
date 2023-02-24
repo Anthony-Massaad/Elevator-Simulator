@@ -40,6 +40,7 @@ public class Scheduler implements Runnable {
     		while(!this.isDead) {
     			if (Parser.isEmpty()) {
             		this.isDead = false; 
+					Log.notification("SCHEDULER", "Scheduler Killed", new Date(), this.systemName);
             		break; 
             	}
     			

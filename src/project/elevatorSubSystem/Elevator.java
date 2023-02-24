@@ -125,6 +125,7 @@ public class Elevator implements Runnable{
     		while(!this.isDead) {
     			if (Parser.isEmpty()) {
             		this.isDead = false; 
+                	Log.notification("ELEVATOR", "Elevator Killed", new Date(), this.systemName);
             		break; 
             	}
     			
