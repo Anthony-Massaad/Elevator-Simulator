@@ -2,6 +2,7 @@ package project.elevatorSubSystem;
 
 import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.function.BooleanSupplier;
 
 import project.logger.Log;
 import project.messageSystem.ElevatorSubSystemMessageQueue;
@@ -32,8 +33,28 @@ public class ElevatorSubSystem implements Runnable{
 		this.isDead = false; 
 		this.systemName = systemName;
 		this.elevatorResponses = new ConcurrentLinkedDeque<>();
-		this.systemName = systemName; 
 	}
+	
+	public ElevatorSubSystemMessageQueue getMessageQueue() {
+		// TODO Auto-generated method stub
+		return this.messageQueue;
+	}
+
+	public Boolean getIsDead() {
+		// TODO Auto-generated method stub
+		return this.isDead;
+	}
+
+	public String getSystemName() {
+		// TODO Auto-generated method stub
+		return this.systemName;
+	}
+
+	public ConcurrentLinkedDeque<Message> getElevatorResponses() {
+		// TODO Auto-generated method stub
+		return this.elevatorResponses;
+	}
+	
 	
 	/**
 	 * Overriden run method from the Runnable class
@@ -78,5 +99,4 @@ public class ElevatorSubSystem implements Runnable{
     	}
 		
 	}
-
 }

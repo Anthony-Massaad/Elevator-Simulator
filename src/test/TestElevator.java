@@ -6,17 +6,13 @@ package test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
-
 import java.util.Date;
 
 import org.junit.jupiter.api.Test;
 
-import project.elevatorSubSystem.ElevatorSubSystem;
 import project.constants.ElevatorState;
 import project.elevatorSubSystem.Elevator;
-import project.messageSystem.ElevatorSubSystemMessageQueue;
 import project.messageSystem.Message;
-import project.messageSystem.MessageQueue;
 
 /**
  * @author Elisha Catherasoo, Dorothy Tran
@@ -25,10 +21,7 @@ import project.messageSystem.MessageQueue;
 class TestElevator {
 	private ConcurrentLinkedDeque<Message> responses;
 	
-	ElevatorSubSystemMessageQueue eMQ = new ElevatorSubSystemMessageQueue(); 
 	Message message = new Message(new Date(), "Elevator has arrived");
-	
-	ElevatorSubSystem elevatorSubSystem = new ElevatorSubSystem(eMQ, "Elevator subsystem");
 	Elevator Elevator = new Elevator("Elevator", responses, 0);
 	
 	
@@ -66,7 +59,6 @@ class TestElevator {
 	void testElevatorRequests() {
 		assertTrue(Elevator.getRequests().isEmpty());
 	}
-	
 	
 	@Test
 	void testElevatorAddRequests() {
