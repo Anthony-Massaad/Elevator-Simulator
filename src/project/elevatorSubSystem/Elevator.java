@@ -31,11 +31,11 @@ public class Elevator implements Runnable{
 	 * @param messageQueue, MessageQueue object for creating a message queue.
 	 * @param systemName, the name of the system
 	 */
-    public Elevator(String systemName, ConcurrentLinkedDeque<Message> responses){
+    public Elevator(String systemName, ConcurrentLinkedDeque<Message> responses, int currentFloor){
     	this.isDead = false;
         this.systemName = systemName; 
         this.responses = responses; 
-        this.currentFloor = 3;
+        this.currentFloor = currentFloor;
         this.desitnationFloor = 0; 
         this.state = ElevatorState.IDLE;
         this.requests = new ConcurrentLinkedDeque<>();
@@ -48,6 +48,34 @@ public class Elevator implements Runnable{
     public void addRequest(Message message) {
     	this.requests.add(message);
     }
+    
+	public Boolean getIsDead() {
+		return this.isDead;
+	}
+
+	public String getSystemName() {
+		return this.systemName;
+	}
+
+	public ConcurrentLinkedDeque<Message> getResponses() {
+		return this.responses;
+	}
+
+	public Integer getCurrentFloor() {
+		return this.currentFloor;
+	}
+
+	public Integer getDestinationFloor() {
+		return this.desitnationFloor;
+	}
+
+	public ElevatorState getElevatorState() {
+		return this.state;
+	}
+    
+	public ConcurrentLinkedDeque<Message> getRequests() {
+		return this.requests;
+	}
     
     /**
      * Check the requested message sent from the elevator Subsystem.

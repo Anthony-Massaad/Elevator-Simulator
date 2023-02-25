@@ -41,7 +41,7 @@ public class ElevatorSubSystem implements Runnable{
 	@Override
 	public void run() {
 		// begin initialize elevator // 
-		this.elevator = new Elevator("Elevator[0]", elevatorResponses); 
+		this.elevator = new Elevator("Elevator[0]", elevatorResponses, 0); 
 		Thread elT = new Thread(this.elevator);
 		elT.start();
 		// begin initialize elevator // 
