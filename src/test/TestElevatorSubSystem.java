@@ -1,6 +1,3 @@
-/**
- * 
- */
 package test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,22 +16,22 @@ class TestElevatorSubSystem {
 	ElevatorSubSystem eSubSystem = new ElevatorSubSystem(esMQ, "ElevatorSubSystem");
 	
 	@Test
-	void testElevatorMessageQueue() {
+	void testElevatorSubSystemMessageQueue() {
 		assertEquals(eSubSystem.getMessageQueue(), esMQ);
 	}
 	
 	@Test
-	void testElevatorIsDead() {
+	void testElevatorSubSystemIsDead() {
 		assertFalse(eSubSystem.getIsDead());
 	}
 	
 	@Test
-	void testElevatorSystemName() {
+	void testElevatorSubSystemName() {
 		assertEquals(eSubSystem.getSystemName(), "ElevatorSubSystem");
 	}
 	
 	@Test
-	void testElevatorResponses() {
+	void testElevatorSubSystemResponses() {
 		assertTrue(eSubSystem.getElevatorResponses().isEmpty());
 	}
 	

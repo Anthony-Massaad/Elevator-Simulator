@@ -31,6 +31,22 @@ public class Scheduler implements Runnable {
         this.systemName = systemName; 
     }
     
+	public Boolean getIsDead() {
+		return this.isDead;
+	}
+
+	public ElevatorSubSystemMessageQueue getElevatorSubSystemMessageQueue() {
+		return this.eMQ;
+	}
+
+	public FloorMessageQueue getFloorMessageQueue() {
+		return this.fMQ;
+	}
+
+	public String getSystemName() {
+		return this.systemName;
+	}
+    
     @Override
     /**
      * Overriden run method as part of Runnable. 

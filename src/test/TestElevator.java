@@ -1,6 +1,3 @@
-/**
- * 
- */
 package test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,8 +19,7 @@ class TestElevator {
 	private ConcurrentLinkedDeque<Message> responses;
 	
 	Message message = new Message(new Date(), "Elevator has arrived");
-	Elevator Elevator = new Elevator("Elevator", responses, 0);
-	
+	Elevator Elevator = new Elevator("Elevator[0]", responses, 0);
 	
 	@Test
 	void testElevatorIsDead() {
@@ -32,7 +28,7 @@ class TestElevator {
 	
 	@Test
 	void testElevatorSystemName() {
-		assertEquals(Elevator.getSystemName(), "Elevator");
+		assertEquals(Elevator.getSystemName(), "Elevator[0]");
 	}
 	
 	@Test

@@ -37,6 +37,32 @@ public class Floor implements Runnable{
         this.floorNumber = floorNumber; 
         this.requestSent = false; // TEMP VARIABLE 
     }
+    
+    
+	public Boolean getIsDead() {
+		return this.isDead;
+	}
+
+	public Parser getParser() {
+		return this.parser;
+	}
+
+	public FloorMessageQueue getMessageQueue() {
+		return this.messageQueue;
+	}
+
+	public String getSystemName() {
+		return this.systemName;
+	}
+
+	public Integer getFloorNumber() {
+		return this.floorNumber;
+	}
+
+	public Boolean getRequestSent() {
+		return this.requestSent;
+	}
+    
 
     /**
      * Overriden run method as part of Runnable
@@ -81,6 +107,5 @@ public class Floor implements Runnable{
         catch (Exception e) {
         	Log.error("FLOOR", "System Crashed", new Date(), this.systemName);
         }
-    }
-    
+    }    
 }
