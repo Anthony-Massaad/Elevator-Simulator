@@ -34,18 +34,34 @@ public class ElevatorSubSystem implements Runnable{
 		this.elevatorResponses = new ConcurrentLinkedDeque<>();
 	}
 	
+	/**
+	 * Getter method to receive the message requests.
+	 * @return ConcurrentLinkedDeque, requests.
+	 */
 	public ElevatorSubSystemMessageQueue getMessageQueue() {
 		return this.messageQueue;
 	}
 
+	/**
+	 * Getter method to get the boolean value if the elevator subsystem is dead or not.
+	 * @return Boolean, true or false.
+	 */
 	public Boolean getIsDead() {
 		return this.isDead;
 	}
 
+	/**
+	 * Getter method to get the name of the elevator subsystem.
+	 * @return String, name of the elevator subsystem.
+	 */
 	public String getSystemName() {
 		return this.systemName;
 	}
 
+	/**
+	 * Getter method to receive the message responses.
+	 * @return ConcurrentLinkedDeque, response messages.
+	 */
 	public ConcurrentLinkedDeque<Message> getElevatorResponses() {
 		return this.elevatorResponses;
 	}
