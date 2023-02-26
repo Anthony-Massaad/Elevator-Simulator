@@ -48,31 +48,58 @@ public class Elevator implements Runnable{
     public void addRequest(Message message) {
     	this.requests.add(message);
     }
-    
+    	/**
+	 * Getter method to get the boolean value if the elevator system is dead or not.
+	 * @return Boolean, true or false.
+	 */
 	public Boolean getIsDead() {
 		return this.isDead;
 	}
 
+	/**
+	 * Getter method to get the name of the elevator system.
+	 * @return
+	 */
 	public String getSystemName() {
 		return this.systemName;
 	}
 
+	/**
+	 * Getter method to receive the message responses.
+	 * @return ConcurrentLinkedDeque, response messages.
+	 */
 	public ConcurrentLinkedDeque<Message> getResponses() {
 		return this.responses;
 	}
 
+	/**
+	 * Getter method to get the current floor of the elevator.
+	 * @return Integer, floor number.
+	 */
 	public Integer getCurrentFloor() {
 		return this.currentFloor;
 	}
 
+	/**
+	 * Getter method to get the destination floor number.
+	 * @return Integer, floor number.
+	 */
 	public Integer getDestinationFloor() {
 		return this.destinationFloor;
 	}
 
+	/**
+	 * Getter method to get the state of the elevator. 
+	 * @return Elevator State, enum of the state.
+	 */
 	public ElevatorState getElevatorState() {
 		return this.state;
 	}
     
+	/**
+	 * Getter method to receive the message requests.
+	 * @return ConcurrentLinkedDeque, requests.
+	 */
 	public ConcurrentLinkedDeque<Message> getRequests() {
 		return this.requests;
 	}
