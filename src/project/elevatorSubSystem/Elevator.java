@@ -58,7 +58,7 @@ public class Elevator implements Runnable{
 
 	/**
 	 * Getter method to get the name of the elevator system.
-	 * @return
+	 * @return String, name of the elevator system.
 	 */
 	public String getSystemName() {
 		return this.systemName;
