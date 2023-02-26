@@ -54,7 +54,6 @@ public class Floor implements Runnable{
             	// will continuously sleep when there is no responses and if a request was sent already 
             	// For this milestone still, it is one request at a time
             	while (this.requestSent && this.messageQueue.responses.size() <= 0) {
-
                 	Thread.sleep(500);
                 }
             	
@@ -66,14 +65,14 @@ public class Floor implements Runnable{
             		Log.notification("FLOOR", "Message received from an elevator: " + receive.toString(), new Date(), this.systemName);
             		this.floorNumber++; 
                 	this.parser.removeRequest();
-            		this.requestSent = false; // TEMP DELETE LATER. SEE REASONING ON INITIALIZER 
+            		this.requestSent = false; // TEMP DELETE LATER ITERATION. SEE REASONING ON INITIALIZER 
             	}
             	
             	// Floor is sending a request to the scheduler
             	if (request == null && !Parser.isEmpty()) {
                 	ElevatorRequestMessage elRequestMessage = new ElevatorRequestMessage(new Date(), this.floorNumber);
                 	this.messageQueue.requests.addFirst(elRequestMessage);
-            		Log.notification("FLOOR", "Sending Message to Schedular: " + elRequestMessage.toString(), new Date(), this.systemName);
+            		Log.notification("FLOOR", "Sending Message to Scheduler: " + elRequestMessage.toString(), new Date(), this.systemName);
                 	this.requestSent = true; // TEMP DELETE LATER. SEE REASONING ON INITIALIZER 
                 }
             }

@@ -7,6 +7,7 @@ import project.messageSystem.ElevatorSubSystemMessageQueue;
 import project.messageSystem.FloorMessageQueue;
 import project.messageSystem.Message;
 import project.simulationParser.Parser; 
+import project.constants.SchedulerStates;
 
 /**
  * Class Scheduler that implements the Runnable class for the purpose of creating a thread. Acts as a communication channel for the Floor and the Elevator systems using a MessageQueue.
@@ -19,6 +20,7 @@ public class Scheduler implements Runnable {
     private ElevatorSubSystemMessageQueue eMQ;
     private FloorMessageQueue fMQ; 
     private String systemName; 
+    private SchedulerStates state; 
     /**
      * Construct for the Scheduler class.
      * @param isDead Boolean variable for determining if there is a connection active.
@@ -29,6 +31,15 @@ public class Scheduler implements Runnable {
         this.eMQ = eMQ;
         this.fMQ = fMQ;
         this.systemName = systemName; 
+        this.state = SchedulerStates.IDLE;
+    }
+    
+    private void updateState() {
+    	if (this.fMQ.requests.size() <= 0 && this.eMQ.responses.size() <= 0) {
+    		this.state = SchedulerStates.IDLE;
+    	}else {
+    		this.state = SchedulerStates.PROCESSING;
+    	}
     }
     
     @Override
@@ -44,10 +55,12 @@ public class Scheduler implements Runnable {
             		break; 
             	}
     			
+    			this.updateState();
+    			
     			// Will sleep when neither the elevator subsystem or the floor gave the scheduler anything 
-    			if (this.fMQ.requests.size() <= 0 && this.eMQ.responses.size() <= 0) {
+    			if (this.state == SchedulerStates.IDLE) {
     				Thread.sleep(500);
-    			}else {
+    			}else if (this.state == SchedulerStates.PROCESSING) {
     				Message floorRequest = this.fMQ.requests.poll();
         			Message elevatorResponse = this.eMQ.responses.poll();
         			
