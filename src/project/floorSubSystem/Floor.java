@@ -38,27 +38,50 @@ public class Floor implements Runnable{
         this.requestSent = false; // TEMP VARIABLE 
     }
     
-    
+    	/**
+	 * Getter method to get the boolean value if the floor system is dead or not.
+	 * @return Boolean, true or false.
+	 */
 	public Boolean getIsDead() {
 		return this.isDead;
 	}
 
+	/**
+	 * Getter method to get the parser.
+	 * @return Parser.
+	 */
 	public Parser getParser() {
 		return this.parser;
 	}
 
+	/**
+	 * Getter method to get the floor message queue.
+	 * @return FloorMessageQueue.
+	 */
 	public FloorMessageQueue getMessageQueue() {
 		return this.messageQueue;
 	}
 
+	/**
+	 * Getter method to get the name of the floor system.
+	 * @return String, name of the floor system.
+	 */
 	public String getSystemName() {
 		return this.systemName;
 	}
 
+	/**
+	 * Getter method to get the current floor.
+	 * @return Integer, floor number.
+	 */
 	public Integer getFloorNumber() {
 		return this.floorNumber;
 	}
 
+	/**
+	 * Getter method to check if the request has been sent.
+	 * @return Boolean, true or false.
+	 */
 	public Boolean getRequestSent() {
 		return this.requestSent;
 	}
