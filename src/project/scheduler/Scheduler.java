@@ -42,6 +42,38 @@ public class Scheduler implements Runnable {
     	}
     }
     
+	/**
+	 * Getter method to get the boolean value if the Scheduler system is dead or not.
+	 * @return Boolean, true or false.
+	 */
+	public Boolean getIsDead() {
+		return this.isDead;
+	}
+
+	/**
+	 * Getter method to get Elevator subsystem message queue.
+	 * @return ElevatorSubSystemMessageQueue.
+	 */
+	public ElevatorSubSystemMessageQueue getElevatorSubSystemMessageQueue() {
+		return this.eMQ;
+	}
+
+	/**
+	 * Getter method to get Floor message queue.
+	 * @return FloorMessageQueue.
+	 */
+	public FloorMessageQueue getFloorMessageQueue() {
+		return this.fMQ;
+	}
+
+	/**
+	 * Getter method to get the name of the Scheduler system.
+	 * @return String, name of the Scheduler system.
+	 */
+	public String getSystemName() {
+		return this.systemName;
+	}
+    
     @Override
     /**
      * Overriden run method as part of Runnable. 

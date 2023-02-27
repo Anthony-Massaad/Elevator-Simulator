@@ -32,8 +32,40 @@ public class ElevatorSubSystem implements Runnable{
 		this.isDead = false; 
 		this.systemName = systemName;
 		this.elevatorResponses = new ConcurrentLinkedDeque<>();
-		this.systemName = systemName; 
 	}
+	
+	/**
+	 * Getter method to receive the message requests.
+	 * @return ConcurrentLinkedDeque, requests.
+	 */
+	public ElevatorSubSystemMessageQueue getMessageQueue() {
+		return this.messageQueue;
+	}
+
+	/**
+	 * Getter method to get the boolean value if the elevator subsystem is dead or not.
+	 * @return Boolean, true or false.
+	 */
+	public Boolean getIsDead() {
+		return this.isDead;
+	}
+
+	/**
+	 * Getter method to get the name of the elevator subsystem.
+	 * @return String, name of the elevator subsystem.
+	 */
+	public String getSystemName() {
+		return this.systemName;
+	}
+
+	/**
+	 * Getter method to receive the message responses.
+	 * @return ConcurrentLinkedDeque, response messages.
+	 */
+	public ConcurrentLinkedDeque<Message> getElevatorResponses() {
+		return this.elevatorResponses;
+	}
+	
 	
 	/**
 	 * Overriden run method from the Runnable class
@@ -41,7 +73,7 @@ public class ElevatorSubSystem implements Runnable{
 	@Override
 	public void run() {
 		// begin initialize elevator // 
-		this.elevator = new Elevator("Elevator[0]", elevatorResponses); 
+		this.elevator = new Elevator("Elevator[0]", elevatorResponses, 0); 
 		Thread elT = new Thread(this.elevator);
 		elT.start();
 		// begin initialize elevator // 
@@ -78,5 +110,4 @@ public class ElevatorSubSystem implements Runnable{
     	}
 		
 	}
-
 }
