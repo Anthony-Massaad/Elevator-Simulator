@@ -104,7 +104,7 @@ public class Scheduler implements Runnable {
     				else if (elevatorResponse != null) {
     					// Elevator Subsystem Responded
     					Log.notification("SCHEDULER", "received Elevator Response: " + elevatorResponse.toString(), new Date(), this.systemName);
-    					this.fMQ.responses.addFirst(elevatorResponse);
+    					this.fMQ.responses.addFirst(elevatorResponse);    					
     				}
     				else {
     		    		Log.error("SCHEDULER", "System skipped sleep and no conditions met", new Date(), this.systemName);

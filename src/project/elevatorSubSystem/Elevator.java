@@ -115,15 +115,11 @@ public class Elevator implements Runnable{
     		MoveToMessage moveToMessage = (MoveToMessage) message; 
     		int destination = moveToMessage.getDestinationFloor();
         	Log.notification("ELEVATOR", "Received move to request to floor " + destination, new Date(), this.systemName);
-
-    		if (destination == this.currentFloor) {
-    			// the request for the floor is on the current floor 
-    			this.state = ElevatorState.OPEN_DOOR;
-    		}else {
-            	Log.notification("ELEVATOR", moveToMessage.toString(), new Date(), this.systemName);
-    			this.destinationFloor = destination; 
-    			this.state = ElevatorState.MOVING;
-    		}
+        	// For this iteraion, it's just moving! 
+        	Log.notification("ELEVATOR", moveToMessage.toString(), new Date(), this.systemName);
+			this.destinationFloor = destination; 
+			this.state = ElevatorState.MOVING;
+    		
     	}
     }
     
@@ -135,6 +131,7 @@ public class Elevator implements Runnable{
     	Log.notification("ELEVATOR", "Open Door", new Date(), this.systemName);
         Thread.sleep(ElevatorTimes.OPEN_DOOR.getTime());
         // Load/unload passengers and transition to close
+        this.state = ElevatorState.CLOSE_DOOR;
     }
     
     /**
@@ -145,7 +142,11 @@ public class Elevator implements Runnable{
     	Log.notification("ELEVATOR", "Closing Door", new Date(), this.systemName);
         Thread.sleep(ElevatorTimes.CLOSING_DOOR.getTime());
         // if buttons were pressed, then start moving. Otherwise transition to idle
-        this.state = ElevatorState.MOVING;
+        if (this.requests.size() > 0) {
+        	this.checkMessage();
+        }else {
+        	this.state = ElevatorState.IDLE;
+        }
     }
     
     /**
