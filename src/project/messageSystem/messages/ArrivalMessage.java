@@ -26,9 +26,7 @@ public class ArrivalMessage extends Message{
 	
 	@Override
 	public String toString() {
-		String str = super.toString();
-		str += ", floorNumber=" + this.floorNumber + ", direction=" + this.direction;
-		return str;
+		return "Arrival Message floorNumber=" + this.floorNumber + ", direction=" + this.direction;		
 	}
 
 }

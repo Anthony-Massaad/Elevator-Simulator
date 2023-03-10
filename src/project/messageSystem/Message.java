@@ -25,6 +25,6 @@ public class Message implements Serializable{
      * Overriden toString method that returns a string representation of the Message superclass.
      */
     public String toString() {
-        return "Message Type Received=" + this.getClass().getName() + ", Created=" + this.timeStamp.getTime(); 
+        return "Message Type Received=" + this.getClass().getName(); 
     }
 }

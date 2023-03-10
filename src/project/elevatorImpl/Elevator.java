@@ -3,8 +3,14 @@ package project.elevatorImpl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedDeque;
+
+import javax.swing.plaf.ColorUIResource;
 
 import project.constants.ElevatorState;
 import project.constants.MotorDirection;
@@ -22,6 +28,8 @@ public class Elevator implements Runnable{
 	
 	private ConcurrentLinkedDeque<Message> responses; 
 	private ConcurrentLinkedDeque<Message> requests;
+	// <floor number, buttons to be pressed> 
+	private HashMap<Integer, ArrayList<Integer>> floorInputButtons;
 	private ArrayList<Integer> destinations;  // elevator buttons, technically passengers so .size is the number of passengers
 	private boolean[] lamps; // respective to the destinations value - 1. It is the buttons lamps light
 	private String systemName; 
@@ -40,6 +48,7 @@ public class Elevator implements Runnable{
 		this.lamps = new boolean[SimulationConstants.NUM_OF_FLOORS];
 		this.systemName = systemName; 
 		this.id = id; 
+		this.floorInputButtons = new HashMap<>();
 		this.sendUpdateStatus();
 	}
 
@@ -71,6 +80,23 @@ public class Elevator implements Runnable{
 		Log.notification("ELEVATOR", updatePositionMessage.toString(), new Date(), this.systemName);
 		this.responses.addFirst(updatePositionMessage);
 	}
+
+	private ArrayList<Integer> appendButtonsToExistingList(ArrayList<Integer> curr, ArrayList<Integer> toAdd){
+		curr.addAll(toAdd);
+		Set<Integer> set = new LinkedHashSet<>();
+		set.addAll(curr);
+		return new ArrayList<>(set);
+	}
+
+	private void addUpcomingButtons(int floorNumber, ArrayList<Integer> buttons){
+		if (this.floorInputButtons.containsKey(floorNumber)){
+			ArrayList<Integer> newList = appendButtonsToExistingList(this.floorInputButtons.get(floorNumber), buttons);
+			this.floorInputButtons.get(floorNumber).clear();
+			this.floorInputButtons.get(floorNumber).addAll(newList);
+		}else{
+			this.floorInputButtons.put(floorNumber, buttons);
+		}
+	}
 	
 	/**
      * Check the requested message sent from the elevator Subsystem.
@@ -82,7 +108,7 @@ public class Elevator implements Runnable{
     	if (message instanceof MoveToMessage) {
     		MoveToMessage moveToMessage = (MoveToMessage) message; 
     		int destination = moveToMessage.getDestinationFloor();
-        	Log.notification("ELEVATOR", "Received move to request to floor " + destination, new Date(), this.systemName);
+        	// Log.notification("ELEVATOR", "Received move to request to floor " + destination, new Date(), this.systemName);
         	// For this iteraion, it's just moving! 
         	Log.notification("ELEVATOR", moveToMessage.toString(), new Date(), this.systemName);
 			
@@ -95,9 +121,8 @@ public class Elevator implements Runnable{
 					return; 
 				}
         		this.destinations.add(destination);
-				this.lamps[destination - 1] = true; 
-				Log.notification("ELEVATOR", "Lamp " + destination + " turned on", new Date(), this.systemName);
         		this.sortDestinations();
+				this.addUpcomingButtons(destination, moveToMessage.getButtonsToBePressed());
         		// sort 
         	}else {
         		// start moving the elevator and change motor direction
@@ -112,7 +137,19 @@ public class Elevator implements Runnable{
     private void handleOpenDoor() throws InterruptedException {
 		Log.notification("ELEVATOR", "Open Door", new Date(), this.systemName);
         Thread.sleep(Time.OPEN_DOOR.getTime());
+
+		// handle unloading and loading passenger
+		Log.notification("ELEVATOR", "Unloading Passenger", new Date(), this.systemName);
+		Thread.sleep(Time.UNLOAD_PASSENGERS.getTime());
+
         // Load/unload passengers add to the buttons arraylist then close doors
+		if (this.floorInputButtons.containsKey(this.elevatorStatus.getCurrentFloor())){
+			Log.notification("ELEVATOR", "Loading Passenger", new Date(), this.systemName);
+			Thread.sleep(Time.LOAD_PASSENGERS.getTime());
+			this.destinations = this.appendButtonsToExistingList(this.destinations, this.floorInputButtons.get(this.elevatorStatus.getNextDestination()));
+			System.out.println("SIZE OF DESTINATION IS " + this.destinations.size()); 
+		}
+
         this.state = ElevatorState.CLOSE_DOOR;
     }
     

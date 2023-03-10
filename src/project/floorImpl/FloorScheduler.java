@@ -44,8 +44,11 @@ public class FloorScheduler extends UDPSend implements Runnable{
         Log.notification("FLOOR SCHEDULER", "Proccessing Event", new Date(), this.systemName);
         int floorNumber = Integer.parseInt(event[this.FLOOR_INDEX]);
         MotorDirection direction = MotorDirection.getDirection(event[this.DIRECTION_INDEX]);
-        // will be an arraylist I'd presume. right now assuming one button? 
-        int button = Integer.parseInt(event[this.BUTTON_START_INDEX]);
+        // will be an arraylist I'd presume.
+        ArrayList<Integer> buttonsToBePressed = new ArrayList<>();
+        for (int i = this.BUTTON_START_INDEX; i<event.length; i++){
+            buttonsToBePressed.add(Integer.parseInt(event[i]));
+        }   
 
         if (direction == MotorDirection.UP){
             this.floors.get(floorNumber).setUpBtn(FloorButtonState.ACTIVE);
@@ -55,7 +58,7 @@ public class FloorScheduler extends UDPSend implements Runnable{
             throw new Error("Pased an unknown direction for the floor events");
         }
         
-        this.send(new FloorRequestElevator(date, floorNumber, direction), SimulationConstants.SCHEDULER_PORT);
+        this.send(new FloorRequestElevator(date, floorNumber, direction, buttonsToBePressed), SimulationConstants.SCHEDULER_PORT);
     }
 
     @Override

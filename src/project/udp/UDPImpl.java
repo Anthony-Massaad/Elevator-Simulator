@@ -53,7 +53,7 @@ public abstract class UDPImpl {
 	protected void send(DatagramSocket sendSocket, Message msg, int destinationPort) throws IOException, InterruptedException {
 		byte[] data = this.serializeMessage(msg);  
 		this.sendPacket = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), destinationPort);
-		Log.logSendMsg(this.systemName, this.sendPacket);
+		Log.logSendMsg(this.systemName, this.sendPacket, msg.toString());
 		Thread.sleep(1000);		// slow things down
 		sendSocket.send(this.sendPacket);
 		System.out.println("Packet sent.");
@@ -63,8 +63,9 @@ public abstract class UDPImpl {
 		byte[] data = new byte[byteSize];
 		this.receivePacket = new DatagramPacket(data, data.length);
 		receiveSocket.receive(this.receivePacket);
-		Log.logReceiveMsg(this.systemName, this.receivePacket);
-		return this.deserializeMessage(this.receivePacket.getData());
+		Message msg = this.deserializeMessage(this.receivePacket.getData());
+		Log.logReceiveMsg(this.systemName, this.receivePacket, msg.toString());
+		return msg; 
 	}
 	
 	protected abstract void closeSockets();

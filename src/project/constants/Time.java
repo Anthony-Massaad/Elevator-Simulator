@@ -1,7 +1,7 @@
 package project.constants;
 
 public enum Time {
-	OPEN_DOOR(1200), CLOSE_DOOR(1200), MOVE(1000);
+	OPEN_DOOR(1200), CLOSE_DOOR(1200), MOVE(1000), LOAD_PASSENGERS(1000), UNLOAD_PASSENGERS(1000);
 	
 	private final int time; 
 	Time(int time){

@@ -46,9 +46,7 @@ public class UpdatePositionMessage extends Message{
 	 */
 	@Override
 	public String toString() {
-		String str = super.toString();
-		str += ", position to be updated for elevator=" + this.elevatorID;
-		return str;
+		return "Update Position with Scheduler Message, position to be updated for elevator=" + this.elevatorID;
 	}
     
 }

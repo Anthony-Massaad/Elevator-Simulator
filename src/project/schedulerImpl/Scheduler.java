@@ -90,7 +90,7 @@ public class Scheduler extends UDPBoth{
                     FloorRequestElevator requestMessage = (FloorRequestElevator) message;
                     int elevatorID = this.selectElevator(requestMessage.getFloorNumber(), requestMessage.getDirection());
                     Log.notification("SCHEDULER", requestMessage.toString(), new Date(), this.systemName);
-                    this.send(new RequestElevatorMessage(requestMessage.getTimeStamp(), requestMessage.getFloorNumber(), elevatorID), SimulationConstants.ELEVATOR_MANAGER_PORT);
+                    this.send(new RequestElevatorMessage(requestMessage.getTimeStamp(), requestMessage.getFloorNumber(), elevatorID, requestMessage.getButtonsToBePressed()), SimulationConstants.ELEVATOR_MANAGER_PORT);
                 }else{
                     throw new Error("Unknown Message Received");
                 }
