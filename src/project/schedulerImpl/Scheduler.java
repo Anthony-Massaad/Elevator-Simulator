@@ -115,11 +115,20 @@ public class Scheduler extends UDPBoth{
             e.printStackTrace();
         }
     }
-    
+	
+	/**
+	 * Getter method to get the Elevator statuses.
+	 * @return ConcurrentHashMap<Integer, ElevatorStatus>
+	 */	
 	public ConcurrentHashMap<Integer, ElevatorStatus> getElevatorStatuses() {
 		return this.elevatorStatuses;
 	}
 
+	/**
+	 * Method to add an elevator status.
+	 * @param i
+	 * @param elevatorStatus
+	 */
 	public void addElevatorStatus(int i, ElevatorStatus elevatorStatus) {
 		this.elevatorStatuses.put(i, elevatorStatus);
 	}
