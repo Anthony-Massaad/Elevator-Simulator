@@ -18,7 +18,9 @@ import project.schedulerImpl.Scheduler;
 class TestScheduler {
 	Scheduler scheduler = new Scheduler(SimulationConstants.SCHEDULER_PORT, "Scheduler");
 	
-	
+	/**
+	 * Test method to check the Elevator Statuses.
+	 */
 	@Test
 	void testSchedulerElevatorStatuses() {
 		ConcurrentHashMap<Integer, ElevatorStatus> elevatorStatuses = new ConcurrentHashMap<>();
@@ -26,6 +28,9 @@ class TestScheduler {
 		assertEquals(scheduler.getElevatorStatuses(), elevatorStatuses);
 	}
 	
+	/**
+	 * Test method for the selectElevator() method.
+	 */
 	@Test
 	void testSchedulerSelectElevator() {
 		for (int i = 0; i < SimulationConstants.NUM_OF_ELEVATORS; i++){
