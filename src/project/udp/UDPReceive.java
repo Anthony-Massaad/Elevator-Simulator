@@ -18,6 +18,7 @@ public class UDPReceive extends UDPImpl{
         super(systemName);
         try {
             this.receiveSocket = new DatagramSocket(port);
+            this.receiveSocket.setSoTimeout(30000);
         } catch (SocketException e) {
             e.printStackTrace();
         }

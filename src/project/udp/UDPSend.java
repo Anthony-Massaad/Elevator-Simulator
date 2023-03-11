@@ -16,6 +16,7 @@ public class UDPSend extends UDPImpl{
         super(systemName);
         try {
             this.sendSocket = new DatagramSocket();
+            this.sendSocket.setSoTimeout(30000);
         } catch (SocketException e) {
             e.printStackTrace();
         }
