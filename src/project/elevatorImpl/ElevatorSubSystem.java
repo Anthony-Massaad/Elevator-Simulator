@@ -36,7 +36,7 @@ public class ElevatorSubSystem extends UDPReceive implements Runnable{
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	private void udpImplementation() throws IOException, InterruptedException {
+	public void udpImplementation() throws IOException, InterruptedException {
 		Message request = this.receive(SimulationConstants.BYTE_SIZE);
 		// received, do something 
 		if (request instanceof RequestElevatorMessage){
@@ -56,7 +56,7 @@ public class ElevatorSubSystem extends UDPReceive implements Runnable{
 		// begin initialize elevator // 
 		for (int i = 0; i<SimulationConstants.NUM_OF_ELEVATORS; i++) {
 			// rand.nextInt(SimulationConstants.NUM_OF_FLOORS) + 1 = (0-21) + 1 = (1-22)
-			this.elevators[i] = new Elevator(i, "Elevator["  + i + "]", this.elevatorResponses); 
+			this.elevators[i] = new Elevator(i, "Elevator["  + i + "]", this.elevatorResponses);
 			Thread eT = new Thread(this.elevators[i]);
 			eT.start();
 			Log.notification("ELEVATOR SUBSYSTEM", "Elevator["  + i + "] Started and added to floor " + this.elevators[i].getElevatorStatus().getCurrentFloor(), new Date(), this.systemName);
@@ -84,8 +84,20 @@ public class ElevatorSubSystem extends UDPReceive implements Runnable{
 	 * @param args Not used in this iteration.
 	 */
 	public static void main(String[] args) {
-		ElevatorSubSystem el = new ElevatorSubSystem(SimulationConstants.ELEVATOR_MANAGER_PORT, "Elevattor Subsystem");
+		ElevatorSubSystem el = new ElevatorSubSystem(SimulationConstants.ELEVATOR_MANAGER_PORT, "Elevator Subsystem");
 		el.run();
+	}
+
+	public Elevator[] getElevators() {
+		return this.elevators;
+	}
+
+	public boolean getIsDead() {
+		return this.isDead;		
+	}
+
+	public ConcurrentLinkedDeque<Message> getElevatorResponses() {
+		return this.elevatorResponses;
 	}
 	
 }
