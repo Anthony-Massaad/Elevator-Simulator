@@ -89,11 +89,19 @@ public class FloorManager extends UDPReceive{
             
         }
     }
-    
+	
+   /**
+    * Getter method to get the floor.
+    * @return ConcurrentHashMap<Integer, Floor>
+    */
     public ConcurrentHashMap<Integer, Floor> getFloors() {
     	return this.floors;
     }
-
+	
+   /**
+    * Getter method to get the FloorManager events.
+    * @return ArrayList<String>
+    */
     public ArrayList<String> getEvents() {
     	return this.events;
     }
