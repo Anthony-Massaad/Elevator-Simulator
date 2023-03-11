@@ -78,6 +78,30 @@ public class ElevatorSubSystem extends UDPReceive{
     		Log.error("ELEVATOR SUBSYSTEM", "System Crashed", new Date(), this.systemName);
 		}
 	}
+	
+	/**
+	 * Getter method to get the SubSystem's elevators.
+	 * @return Elevator[]
+	 */
+	public Elevator[] getElevators() {
+		return this.elevators;
+	}
+	
+	/**
+	 * Getter method for the isDead attribute.
+	 * @return boolean
+	 */
+	public boolean getIsDead() {
+		return this.isDead;		
+	}
+
+	/**
+	 * Getter method to get the Elevator responses from the message queue.
+	 * @return ConcurrentLinkedDeque<Message>
+	 */
+	public ConcurrentLinkedDeque<Message> getElevatorResponses() {
+		return this.elevatorResponses;
+	}
 
 	/**
 	 * Main method for running the elevator subsystem.
@@ -86,18 +110,6 @@ public class ElevatorSubSystem extends UDPReceive{
 	public static void main(String[] args) {
 		ElevatorSubSystem el = new ElevatorSubSystem(SimulationConstants.ELEVATOR_MANAGER_PORT, "Elevator Subsystem");
 		el.run();
-	}
-
-	public Elevator[] getElevators() {
-		return this.elevators;
-	}
-
-	public boolean getIsDead() {
-		return this.isDead;		
-	}
-
-	public ConcurrentLinkedDeque<Message> getElevatorResponses() {
-		return this.elevatorResponses;
 	}
 	
 }
