@@ -11,7 +11,7 @@ import project.messageSystem.messages.MoveToMessage;
 import project.messageSystem.messages.RequestElevatorMessage;
 import project.udp.UDPReceive;
 
-public class ElevatorSubSystem extends UDPReceive implements Runnable{
+public class ElevatorSubSystem extends UDPReceive{
 	
 	private boolean isDead; 
 	private Elevator[] elevators; 

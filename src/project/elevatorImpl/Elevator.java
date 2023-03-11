@@ -22,7 +22,7 @@ import project.messageSystem.messages.ArrivalMessage;
 import project.messageSystem.messages.MoveToMessage;
 import project.messageSystem.messages.UpdatePositionMessage;
 
-public class Elevator{
+public class Elevator implements Runnable{
 	
 	private ConcurrentLinkedDeque<Message> responses; 
 	private ConcurrentLinkedDeque<Message> requests;
