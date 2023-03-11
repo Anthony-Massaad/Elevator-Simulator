@@ -85,7 +85,6 @@ class TestElevator {
 	
 	@Test
 	void testElevatorGetRequests() {
-		ConcurrentLinkedDeque<Message> requests = new ConcurrentLinkedDeque<>();
 		assertTrue(Elevator.getRequests().isEmpty());
 	}
 	
@@ -97,8 +96,6 @@ class TestElevator {
 	
 	@Test
 	void testElevatorGetElevatorStatus() {
-		ArrayList<Integer>destinations = new ArrayList<>();
-		ElevatorStatus elevatorStatus = new ElevatorStatus(destinations.size(), 0, new Random().nextInt(SimulationConstants.NUM_OF_FLOORS) + 1, MotorDirection.IDLE);
 		assertEquals(Elevator.getElevatorStatus().getMotorDirection(), MotorDirection.IDLE);
 		assertEquals(Elevator.getElevatorStatus().getNumberOfPassengers(), 0);
 		assertEquals(Elevator.getElevatorStatus().getNextDestination(), 0);

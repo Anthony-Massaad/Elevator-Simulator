@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import project.constants.SimulationConstants;
-import project.elevatorImpl.Elevator;
 import project.elevatorImpl.ElevatorSubSystem;
 
 /**
@@ -27,7 +26,6 @@ class TestElevatorSubSystem {
 	
 	@Test
 	void testElevatorSubSystemGetElevators() {
-		Elevator[] elevators = new Elevator[SimulationConstants.NUM_OF_ELEVATORS];
 		assertEquals(eSubSystem.getElevators().length, 4);
 	}
 }
