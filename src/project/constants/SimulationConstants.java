@@ -1,5 +1,8 @@
 package project.constants;
 
+/**
+ * All necessary constants, including our number of elevators, floors, passengers, and ports.
+ */
 public class SimulationConstants {
 	// values 
 	public static final int NUM_OF_ELEVATORS = 4; 

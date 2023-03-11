@@ -19,6 +19,9 @@ public class SchedulerMidTask extends UDPBoth implements Runnable{
         this.elevatorStatuses = elevatorStatuses;
     }
 
+    /**
+     * Overriden run method to implement the Scheduler's mid task.
+     */
     @Override
     public void run() {
         try{

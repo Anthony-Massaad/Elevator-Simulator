@@ -11,6 +11,13 @@ public class FloorRequestElevator extends Message {
     private final MotorDirection direction; 
     private final ArrayList<Integer> buttonsToBePressed;
     
+    /**
+     * Constructor for FloorRequestElevator.
+     * @param timeStamp Date object timeStamp.
+     * @param floorNumber Int floor number.
+     * @param direction MotorDirection direction.
+     * @param buttonsToBePressed ArrayList of buttons to be pressed.
+     */
     public FloorRequestElevator(Date timeStamp, int floorNumber, MotorDirection direction, ArrayList<Integer> buttonsToBePressed) {
         super(timeStamp);
         this.floorNumber = floorNumber;
@@ -18,14 +25,26 @@ public class FloorRequestElevator extends Message {
         this.buttonsToBePressed = buttonsToBePressed;
     }
 
+    /**
+     * Getter method for the floor number.
+     * @return The floor number.
+     */
     public int getFloorNumber(){
         return this.floorNumber; 
     }
 
+    /**
+     * Getter method for the motor direction.
+     * @return The motor direction.
+     */
     public MotorDirection getDirection(){
         return this.direction; 
     }
 
+    /**
+     * Getter method for the arraylist of buttons to be pressed.
+     * @return The arraylist of buttons to be pressed.
+     */
     public ArrayList<Integer> getButtonsToBePressed(){
         return this.buttonsToBePressed;
     }

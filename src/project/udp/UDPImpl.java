@@ -18,10 +18,19 @@ public abstract class UDPImpl {
 	private DatagramPacket sendPacket, receivePacket; 
 	protected final String systemName; 
 	
+	/**
+	 * Constructor for UDPImpl.
+	 * @param systemName String system name.
+	 */
 	public UDPImpl(String systemName) {
 		this.systemName = systemName; 
 	}
 
+	/**
+	 * Method to serialize a message into bytes.
+	 * @param msg String message.
+	 * @return The converted message into bytes.
+	 */
 	private byte[] serializeMessage(Message msg){
 		try{
 			ByteArrayOutputStream sout = new ByteArrayOutputStream(); 
@@ -38,6 +47,11 @@ public abstract class UDPImpl {
 		throw new Error("Failed to Serialize a message");
 	}
 
+	/**
+	 * Method to deserialize a message into a String.
+	 * @param data Byte message of data.
+	 * @return The converted message into a string.
+	 */
 	private Message deserializeMessage(byte[] data){
 		try{
 			ByteArrayInputStream in = new ByteArrayInputStream(data);
@@ -50,6 +64,14 @@ public abstract class UDPImpl {
 		throw new Error("Failed to Deserialize a byte list");
 	}
 	
+	/**
+	 * Protected method to send a packet to a specified socket.
+	 * @param sendSocket A specified socket.
+	 * @param msg A string message.
+	 * @param destinationPort An integer destination port number.
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	protected void send(DatagramSocket sendSocket, Message msg, int destinationPort) throws IOException, InterruptedException {
 		byte[] data = this.serializeMessage(msg);  
 		this.sendPacket = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), destinationPort);
@@ -59,6 +81,14 @@ public abstract class UDPImpl {
 		System.out.println("Packet sent.");
 	}
 	
+	/**
+	 * Protected method for receiving a packet.
+	 * @param receiveSocket The socket that the message is being received to.
+	 * @param byteSize An integer byteSize.
+	 * @return A string message.
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	protected Message receive(DatagramSocket receiveSocket, int byteSize) throws IOException, InterruptedException {
 		byte[] data = new byte[byteSize];
 		this.receivePacket = new DatagramPacket(data, data.length);
@@ -68,6 +98,9 @@ public abstract class UDPImpl {
 		return msg; 
 	}
 	
+	/**
+	 * Abstract method used by UDPReceive, UDPImpl and UDPBoth to close all necessary sockets.
+	 */
 	protected abstract void closeSockets();
 	
 }

@@ -18,6 +18,13 @@ public class FloorManager extends UDPReceive{
 
     private ConcurrentHashMap<Integer, Floor> floors;
     private ArrayList<String> events; 
+    
+    /**
+     * Constructor for the FloorManager.
+     * @param port Integer port number.
+     * @param systemName String systemName.
+     * @param events ArrayList of events.
+     */
     public FloorManager(int port, String systemName, ArrayList<String> events) {
         super(port, systemName);
         this.floors = new ConcurrentHashMap<>();
@@ -26,6 +33,9 @@ public class FloorManager extends UDPReceive{
 		System.out.println("-------------------------------------------------");
     }
 
+    /**
+     * Void method that initializes all floors as per the defined constant.
+     */
     private void initializeFloors(){
         // initialize the floors 
         for (int i = 0; i < SimulationConstants.NUM_OF_FLOORS; i++){
@@ -44,6 +54,9 @@ public class FloorManager extends UDPReceive{
         }
     }
 
+    /**
+     * Void method to run the FloorManager's functionality. Initializes all floors and sets buttons as per its states.
+     */
     public void run(){
         // initialize floors
         this.initializeFloors();
@@ -78,6 +91,10 @@ public class FloorManager extends UDPReceive{
     }
 
 
+   /**
+    * Main method to run the FloorManager.
+    * @param args Not used in this iteration.
+    */
     public static void main(String[] args) {
         Parser p = new Parser(); 
         FloorManager manager = new FloorManager(SimulationConstants.FLOOR_MANAGER_PORT, "Floor Manager", p.getEventLines());

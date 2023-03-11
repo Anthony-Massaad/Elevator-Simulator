@@ -11,6 +11,9 @@ public class Clock {
     private Date date;
     private final String START_TIME = "14:06:13.0";
     
+    /**
+     * Constructor for Clock.
+     */
     public Clock() {
         try {
         	this.date = new SimpleDateFormat(DATE_FORMAT).parse(START_TIME);
@@ -19,6 +22,11 @@ public class Clock {
 		}
     }
 
+    /**
+     * Converting a string date to a Date object.
+     * @param date A string date.
+     * @return A Date object date.
+     */
     public Date convertToDate(String date){
         try {
             return new SimpleDateFormat(DATE_FORMAT).parse(date);
@@ -30,7 +38,7 @@ public class Clock {
     }
 
     /**
-     * Increment time by 1 second
+     * Method for incrementing time by one second.
      */
     public void increment() {
         date.setTime(date.getTime() + this.INCREMENT_MS);
@@ -39,7 +47,7 @@ public class Clock {
 
     /**
      * Compares the date time to a passed in time.
-     * @param time
+     * @param A long value time.
      * @return boolean if they are the same.
      */
     public boolean isTime(long time) {

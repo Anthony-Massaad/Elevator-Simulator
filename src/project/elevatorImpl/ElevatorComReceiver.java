@@ -9,11 +9,20 @@ import project.udp.UDPSend;
 public class ElevatorComReceiver extends UDPSend implements Runnable{
 
 	private ConcurrentLinkedDeque<Message> elevatorResponses;
+	
+	/**
+	 * Constructor for the ElevatorComReceiver.
+	 * @param systemName String systemName.
+	 * @param elevatorResponses ArrayList of elevator responses.
+	 */
 	public ElevatorComReceiver(String systemName, ConcurrentLinkedDeque<Message> elevatorResponses) {
 		super(systemName);
 		this.elevatorResponses = elevatorResponses;
 	}
 
+	/**
+	 * Void method for running the ElevatorComReceiver. Consistently polls for elevator responses and sends them to the SchedulerMidTask.
+	 */
 	@Override
 	public void run() {
 		try{

@@ -37,6 +37,12 @@ public class Elevator implements Runnable{
 	private ElevatorState state; 
 	private int id; 
 	
+	/**
+	 * Constructor for the Elevator class.
+	 * @param id An integer ID.
+	 * @param systemName A string systemName.
+	 * @param responses A linked deque of responses.
+	 */
 	public Elevator(int id, String systemName, ConcurrentLinkedDeque<Message> responses) {
 		this.responses = responses; 
 		this.requests = new ConcurrentLinkedDeque<>();
@@ -52,14 +58,24 @@ public class Elevator implements Runnable{
 		this.sendUpdateStatus();
 	}
 
+	/**
+	 * Getter method for the elevator status.
+	 */
 	public ElevatorStatus getElevatorStatus(){
 		return this.elevatorStatus;
 	}
 
+	/**
+	 * Void method for adding a request.
+	 * @param msg A Message object msg.
+	 */
 	public void addRequest(Message msg){
 		this.requests.add(msg);
 	}
 	
+	/**
+	 * Void method for sorting the directions based on the direction the elevator is headed.
+	 */
 	private void sortDestinations() {
 		if (this.elevatorStatus.getMotorDirection() == MotorDirection.UP) {
 			Collections.sort(this.destinations);
@@ -71,16 +87,28 @@ public class Elevator implements Runnable{
 		}
 	}
 
+	/**
+	 * Void method for updating the Elevator's motor direction.
+	 */
 	private void updateMotorStatus(){
 		this.elevatorStatus.setMotorDirection(this.elevatorStatus.getNextDestination() > this.elevatorStatus.getCurrentFloor() ? MotorDirection.UP : MotorDirection.DOWN);
 	}
 
+	/**
+	 * Void method for sending the update status.
+	 */
 	private void sendUpdateStatus(){
 		UpdatePositionMessage updatePositionMessage = new UpdatePositionMessage(new Date(), this.id, this.elevatorStatus.getNumberOfPassengers(), this.elevatorStatus.getNextDestination(), this.elevatorStatus.getCurrentFloor(), this.elevatorStatus.getMotorDirection());
 		Log.notification("ELEVATOR", updatePositionMessage.toString(), new Date(), this.systemName);
 		this.responses.addFirst(updatePositionMessage);
 	}
 
+	/**
+	 * Void method for ading all buttons to the current existing list of elevator buttons.
+	 * @param curr The arraylist of current buttons for that elevator.
+	 * @param toAdd The arraylist of buttons to add to the list.
+	 * @return The combined arraylist.
+	 */
 	private ArrayList<Integer> appendButtonsToExistingList(ArrayList<Integer> curr, ArrayList<Integer> toAdd){
 		curr.addAll(toAdd);
 		Set<Integer> set = new LinkedHashSet<>();
@@ -88,6 +116,11 @@ public class Elevator implements Runnable{
 		return new ArrayList<>(set);
 	}
 
+	/**
+	 * Void method to add all upcoming buttons to the current list of buttons.
+	 * @param floorNumber An integer floor number.
+	 * @param buttons An arraylist of current buttons.
+	 */
 	private void addUpcomingButtons(int floorNumber, ArrayList<Integer> buttons){
 		if (this.floorInputButtons.containsKey(floorNumber)){
 			ArrayList<Integer> newList = appendButtonsToExistingList(this.floorInputButtons.get(floorNumber), buttons);
@@ -99,8 +132,7 @@ public class Elevator implements Runnable{
 	}
 	
 	/**
-     * Check the requested message sent from the elevator Subsystem.
-     * Elevator will change state accordingly depending on the message
+     * Void method that checks if the requested message was sent from the elevator Subsystem. The Elevator will change state accordingly depending on the message
      */
     private void checkMessage() {
     	Message message = this.requests.poll();
@@ -134,6 +166,10 @@ public class Elevator implements Runnable{
     	}
     }
     
+    /**
+     * Void method that handles the opening of the Elevator door. Prints all related messages and sleeps depending on the Elevator state.
+     * @throws InterruptedException
+     */
     private void handleOpenDoor() throws InterruptedException {
 		Log.notification("ELEVATOR", "Open Door", new Date(), this.systemName);
         Thread.sleep(Time.OPEN_DOOR.getTime());
@@ -153,6 +189,10 @@ public class Elevator implements Runnable{
         this.state = ElevatorState.CLOSE_DOOR;
     }
     
+    /**
+     * Void method that handles the closing of the Elevator door. 
+     * @throws InterruptedException
+     */
     private void handleCloseDoor() throws InterruptedException {
     	Log.notification("ELEVATOR", "Closing Door", new Date(), this.systemName);
         Thread.sleep(Time.CLOSE_DOOR.getTime());
@@ -169,6 +209,10 @@ public class Elevator implements Runnable{
 		this.sendUpdateStatus();
     }
     
+    /**
+     * Void method that handles the moving of the Elevator. 
+     * @throws InterruptedException
+     */
     private void handleMoving() throws InterruptedException {
     	Log.notification("ELEVATOR", "Current floor " + this.elevatorStatus.getCurrentFloor(), new Date(), this.systemName);
     	
@@ -193,6 +237,9 @@ public class Elevator implements Runnable{
         }
     }
 	
+    /**
+     * Overriden method that runs the functionality of the Elevator, all dependent on the current state.
+     */
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub

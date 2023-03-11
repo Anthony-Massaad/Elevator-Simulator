@@ -22,6 +22,13 @@ public class FloorScheduler extends UDPSend implements Runnable{
     private ArrayList<String> events; 
     private Clock clock; 
     private ConcurrentHashMap<Integer, Floor> floors; 
+    
+    /**
+     * Constructor for the FloorScheduler.
+     * @param systemName A string systemName.
+     * @param events An arrayList of events.
+     * @param floors A hashmap of floors.
+     */
     public FloorScheduler(String systemName, ArrayList<String> events, ConcurrentHashMap<Integer, Floor> floors) {
         super(systemName);
         this.events = events;
@@ -29,6 +36,12 @@ public class FloorScheduler extends UDPSend implements Runnable{
         this.floors = floors; 
     }
 
+    /**
+     * Void method to check and process each event and increment the clock.
+     * @throws ParseException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     private void checkEvents() throws ParseException, IOException, InterruptedException{
         for (String event : this.events){
             String[] currEvent = event.split(" "); 
@@ -40,6 +53,14 @@ public class FloorScheduler extends UDPSend implements Runnable{
         this.clock.increment();
     }
 
+    /**
+     * Void method that processes each event received, and set buttons as necessary per the events received.
+     * @param event A string array event.
+     * @param date A Date object date.
+     * @throws ParseException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     private void processEvent(String[] event, Date date) throws ParseException, IOException, InterruptedException{
         Log.notification("FLOOR SCHEDULER", "Proccessing Event", new Date(), this.systemName);
         int floorNumber = Integer.parseInt(event[this.FLOOR_INDEX]);
@@ -61,6 +82,9 @@ public class FloorScheduler extends UDPSend implements Runnable{
         this.send(new FloorRequestElevator(date, floorNumber, direction, buttonsToBePressed), SimulationConstants.SCHEDULER_PORT);
     }
 
+    /**
+     * Void method to run the FloorScheduler thread.
+     */
     @Override
     public void run() {
         try{

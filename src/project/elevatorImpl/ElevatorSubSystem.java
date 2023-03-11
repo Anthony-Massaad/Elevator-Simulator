@@ -17,6 +17,11 @@ public class ElevatorSubSystem extends UDPReceive{
 	private Elevator[] elevators; 
 	private ConcurrentLinkedDeque<Message> elevatorResponses;
 	
+	/**
+	 * Constructor for the ElevatorSubSystem.
+	 * @param port An integer port number.
+	 * @param systemName A string system name.
+	 */
 	public ElevatorSubSystem(int port, String systemName) {
 		super(port, systemName);
 		this.elevatorResponses = new ConcurrentLinkedDeque<>();
@@ -26,6 +31,11 @@ public class ElevatorSubSystem extends UDPReceive{
 		System.out.println("-------------------------------------------------");
 	}
 	
+	/**
+	 * Void method for implementing the UDP for the elevator subsystem.
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	private void udpImplementation() throws IOException, InterruptedException {
 		Message request = this.receive(SimulationConstants.BYTE_SIZE);
 		// received, do something 
@@ -39,6 +49,9 @@ public class ElevatorSubSystem extends UDPReceive{
 		}
 	}
 
+	/**
+	 * Void method for running the Elevator subsystem. It essentially initializes all elevators and implements the UDP communication.
+	 */
 	public void run() {
 		// begin initialize elevator // 
 		for (int i = 0; i<SimulationConstants.NUM_OF_ELEVATORS; i++) {
@@ -66,6 +79,10 @@ public class ElevatorSubSystem extends UDPReceive{
 		}
 	}
 
+	/**
+	 * Main method for running the elevator subsystem.
+	 * @param args Not used in this iteration.
+	 */
 	public static void main(String[] args) {
 		ElevatorSubSystem el = new ElevatorSubSystem(SimulationConstants.ELEVATOR_MANAGER_PORT, "Elevattor Subsystem");
 		el.run();

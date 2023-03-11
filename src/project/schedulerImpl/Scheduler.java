@@ -16,6 +16,12 @@ import project.udp.UDPBoth;
 public class Scheduler extends UDPBoth{
 
     private ConcurrentHashMap<Integer, ElevatorStatus> elevatorStatuses;
+    
+    /**
+     * Constructor for the Scheduler class.
+     * @param port Integer port number.
+     * @param systemName String system name.
+     */
     public Scheduler(int port, String systemName) {
         super(port, systemName);
         this.elevatorStatuses = new ConcurrentHashMap<>();
@@ -23,6 +29,12 @@ public class Scheduler extends UDPBoth{
 		System.out.println("-------------------------------------------------");
     }
 
+    /**
+     * Method that allows the Scheduler to select an Elevator depending on its distance from the floor.
+     * @param floorNumber An integer floor number.
+     * @param direction A string direction.
+     * @return An elevator number.
+     */
     private int selectElevator(int floorNumber, MotorDirection direction){
         int shortestDistance = 9999;
         int elNumber = -1; 
@@ -69,6 +81,9 @@ public class Scheduler extends UDPBoth{
         return elNumber; 
     }
 
+    /**
+     * Run method that activates the Scheduler's functionality.
+     */
     public void run(){
         // initialize the hashmap of elevatorStatuses
         for (int i = 0; i < SimulationConstants.NUM_OF_ELEVATORS; i++){
@@ -102,7 +117,10 @@ public class Scheduler extends UDPBoth{
     }
 
 
-
+    /**
+     * Main method that allows the Scheduler to run.
+     * @param args Typical of main functions. Not used in this iteration.
+     */
     public static void main(String[] args) {
         Scheduler s = new Scheduler(SimulationConstants.SCHEDULER_PORT, "Scheduler");
         s.run();
