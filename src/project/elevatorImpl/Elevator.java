@@ -74,7 +74,7 @@ public class Elevator implements Runnable{
 	/**
 	 * Void method for sorting the directions based on the direction the elevator is headed.
 	 */
-	private void sortDestinations() {
+	public void sortDestinations() {
 		if (this.elevatorStatus.getMotorDirection() == MotorDirection.UP) {
 			Collections.sort(this.destinations);
 		}else if (this.elevatorStatus.getMotorDirection() == MotorDirection.DOWN){
@@ -119,7 +119,7 @@ public class Elevator implements Runnable{
 	 * @param floorNumber An integer floor number.
 	 * @param buttons An arraylist of current buttons.
 	 */
-	private void addUpcomingButtons(int floorNumber, ArrayList<Integer> buttons){
+	public void addUpcomingButtons(int floorNumber, ArrayList<Integer> buttons){
 		if (this.floorInputButtons.containsKey(floorNumber)){
 			ArrayList<Integer> newList = appendButtonsToExistingList(this.floorInputButtons.get(floorNumber), buttons);
 			this.floorInputButtons.get(floorNumber).clear();
@@ -132,7 +132,7 @@ public class Elevator implements Runnable{
 	/**
      * Void method that checks if the requested message was sent from the elevator Subsystem. The Elevator will change state accordingly depending on the message
      */
-    private void checkMessage() {
+	public void checkMessage() {
     	Message message = this.requests.poll();
     	
     	if (message instanceof MoveToMessage) {
@@ -168,7 +168,7 @@ public class Elevator implements Runnable{
      * Void method that handles the opening of the Elevator door. Prints all related messages and sleeps depending on the Elevator state.
      * @throws InterruptedException
      */
-    private void handleOpenDoor() throws InterruptedException {
+	public void handleOpenDoor() throws InterruptedException {
 		Log.notification("ELEVATOR", "Open Door", new Date(), this.systemName);
         Thread.sleep(Time.OPEN_DOOR.getTime());
 
@@ -183,7 +183,7 @@ public class Elevator implements Runnable{
 			this.destinations = this.appendButtonsToExistingList(this.destinations, this.floorInputButtons.get(this.elevatorStatus.getNextDestination()));
 			System.out.println("SIZE OF DESTINATION IS " + this.destinations.size()); 
 		}
-
+		
         this.state = ElevatorState.CLOSE_DOOR;
     }
     
@@ -191,7 +191,7 @@ public class Elevator implements Runnable{
      * Void method that handles the closing of the Elevator door. 
      * @throws InterruptedException
      */
-    private void handleCloseDoor() throws InterruptedException {
+	public void handleCloseDoor() throws InterruptedException {
     	Log.notification("ELEVATOR", "Closing Door", new Date(), this.systemName);
         Thread.sleep(Time.CLOSE_DOOR.getTime());
         // if buttons were pressed, then start moving. Otherwise transition to idle
@@ -211,7 +211,7 @@ public class Elevator implements Runnable{
      * Void method that handles the moving of the Elevator. 
      * @throws InterruptedException
      */
-    private void handleMoving() throws InterruptedException {
+	public void handleMoving() throws InterruptedException {
     	Log.notification("ELEVATOR", "Current floor " + this.elevatorStatus.getCurrentFloor(), new Date(), this.systemName);
     	
     	if (this.elevatorStatus.getCurrentFloor() < this.elevatorStatus.getNextDestination()) {
@@ -268,6 +268,38 @@ public class Elevator implements Runnable{
 			
 			
 		}
+	}
+
+	public ElevatorState getState() {
+		return this.state;
+	}
+
+	public HashMap<Integer, ArrayList<Integer>> getFloorInputButtons() {
+		return this.floorInputButtons;
+	}
+
+	public ConcurrentLinkedDeque<Message> getRequests() {
+		return this.requests;
+	}
+
+	public ConcurrentLinkedDeque<Message> getResponses() {
+		return this.responses;
+	}
+
+	public ArrayList<Integer> getDestinations() {
+		return this.destinations;
+	}
+
+	public boolean[] getLamps() {
+		return this.lamps;
+	}
+
+	public String getSystemName() {
+		return this.systemName;
+	}
+
+	public Integer getId() {
+		return this.id;
 	}
 
 }

@@ -2,44 +2,36 @@ package test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
+import java.util.concurrent.ConcurrentLinkedDeque;
+
 import org.junit.jupiter.api.Test;
+
+import project.constants.SimulationConstants;
+import project.elevatorImpl.Elevator;
+import project.elevatorImpl.ElevatorSubSystem;
+import project.messageSystem.Message;
+
 /**
  * Elevator Subsystem Test Class.
- * @author Elisha Catherasoo
+ * @author Elisha Catherasoo, Dorothy Tran
  */
 class TestElevatorSubSystem {
-	// ElevatorSubSystemMessageQueue esMQ = new ElevatorSubSystemMessageQueue();
-	// ElevatorSubSystem eSubSystem = new ElevatorSubSystem(esMQ, "ElevatorSubSystem");
+	ElevatorSubSystem eSubSystem = new ElevatorSubSystem(SimulationConstants.ELEVATOR_MANAGER_PORT, "ElevatorSubSystem");
 	
-	// /**
-	//  * Test to check the initial message queue message of the elevator subsystem.
-	//  */
-	// @Test
-	// void testElevatorSubSystemMessageQueue() {
-	// 	assertEquals(eSubSystem.getMessageQueue(), esMQ);
-	// }
+	@Test
+	void testElevatorSubSystemGetElevatorResponses() {
+		assertTrue(eSubSystem.getElevatorResponses().isEmpty());
+	}
 	
-	// /**
-	//  * Test to check if the elevator subsystem is initially dead.
-	//  */
-	// @Test
-	// void testElevatorSubSystemIsDead() {
-	// 	assertFalse(eSubSystem.getIsDead());
-	// }
+	@Test
+	void testElevatorSubSystemGetIsDead() {
+		assertEquals(eSubSystem.getIsDead(), false);
+	}
 	
-	// /**
-	//  * Test to check the name of elevator subsystem.
-	//  */
-	// @Test
-	// void testElevatorSubSystemName() {
-	// 	assertEquals(eSubSystem.getSystemName(), "ElevatorSubSystem");
-	// }
-	
-	// /**
-	//  * Test to check if the ConcurrentLinkedDeque of responses is initially empty.
-	//  */
-	// @Test
-	// void testElevatorSubSystemResponses() {
-	// 	assertTrue(eSubSystem.getElevatorResponses().isEmpty());
-	// }
+	@Test
+	void testElevatorSubSystemGetElevators() {
+		Elevator[] elevators = new Elevator[SimulationConstants.NUM_OF_ELEVATORS];
+		assertEquals(eSubSystem.getElevators().length, 4);
+	}
 }

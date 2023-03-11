@@ -36,7 +36,7 @@ public class FloorManager extends UDPReceive{
     /**
      * Void method that initializes all floors as per the defined constant.
      */
-    private void initializeFloors(){
+    public void initializeFloors(){
         // initialize the floors 
         for (int i = 0; i < SimulationConstants.NUM_OF_FLOORS; i++){
             String name = "Floor[" + i + "]";
@@ -89,7 +89,14 @@ public class FloorManager extends UDPReceive{
             
         }
     }
+    
+    public ConcurrentHashMap<Integer, Floor> getFloors() {
+    	return this.floors;
+    }
 
+    public ArrayList<String> getEvents() {
+    	return this.events;
+    }
 
    /**
     * Main method to run the FloorManager.
@@ -100,7 +107,5 @@ public class FloorManager extends UDPReceive{
         FloorManager manager = new FloorManager(SimulationConstants.FLOOR_MANAGER_PORT, "Floor Manager", p.getEventLines());
         manager.run();
     }
-
-
 
 }

@@ -3,87 +3,130 @@ package test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
 import project.constants.ElevatorState;
+import project.constants.MotorDirection;
+import project.constants.SimulationConstants;
 import project.messageSystem.Message;
+import project.elevatorImpl.Elevator;
+import project.elevatorImpl.ElevatorStatus;
 
 /**
  * Elevator Test Class.
  * @author Elisha Catherasoo, Dorothy Tran
  */
 class TestElevator {
-	// private ConcurrentLinkedDeque<Message> responses;
+	ConcurrentLinkedDeque<Message> responses = new ConcurrentLinkedDeque<>();
 	
 	// Message message = new Message(new Date(), "Elevator has arrived");
-	// Elevator Elevator = new Elevator("Elevator[0]", responses, 0);
+	ConcurrentLinkedDeque<Message> responsesConcurrentLinkedDeque = new ConcurrentLinkedDeque<>();
+	Elevator Elevator = new Elevator(0, "Elevator[0]", responses);
+		
+	// ADD GETTERS TESTING
 	
-	// /**
-	//  * Test to check if the elevator is initially dead.
-	//  */
-	// @Test
-	// void testElevatorIsDead() {
-	// 	assertFalse(Elevator.getIsDead());
-	// }
+	@Test
+	void testElevatorCheckMessage() {
+		Elevator.checkMessage();
+		assertEquals(Elevator.getState(), ElevatorState.IDLE);
+	}
 	
-	// /**
-	//  * Test to check the name of elevator system.
-	//  */
-	// @Test
-	// void testElevatorSystemName() {
-	// 	assertEquals(Elevator.getSystemName(), "Elevator[0]");
-	// }
+	@Test
+	void testElevatorHandleOpenDoor() {
+		try {
+			Elevator.handleOpenDoor();
+			assertEquals(Elevator.getState(), ElevatorState.CLOSE_DOOR);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 	
-	// /**
-	//  * Test to check if the ConcurrentLinkedDeque of responses is initially empty.
-	//  */
-	// @Test
-	// void testElevatorResponses() {
-	// 	assertEquals(Elevator.getResponses(), null);
-	// }
 	
-	// /**
-	//  * Test to check if the initial current floor the elevator is on is floor 0.
-	//  */
-	// @Test
-	// void testElevatorCurrentFloor() {
-	// 	assertEquals(Elevator.getCurrentFloor(), 0);
-	// }
+	@Test
+	void testElevatorHandleCloseDoor() {
+		try {
+			Elevator.handleCloseDoor();
+			assertEquals(Elevator.getState(), ElevatorState.IDLE);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 	
-	// /**
-	//  * Test to check if the destination floor is initally floor 0.
-	//  */
-	// @Test
-	// void testElevatorDestinationFloor() {
-	// 	assertEquals(Elevator.getDestinationFloor(), 0);
-	// }
 	
-	// /**
-	//  * Test to check if the initial state of the Elevator is IDLE.
-	//  */
-	// @Test
-	// void testElevatorState() {
-	// 	assertEquals(Elevator.getElevatorState(), ElevatorState.IDLE);
-	// }
+	@Test
+	void testElevatorHandleMoving() {
+		try {
+			Elevator.handleMoving();
+			assertEquals(Elevator.getState(), ElevatorState.IDLE);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 	
-	// /**
-	//  * Test to check if the ConcurrentLinkedDeque of requests is initially empty.
-	//  */
-	// @Test
-	// void testElevatorRequests() {
-	// 	assertTrue(Elevator.getRequests().isEmpty());
-	// }
+	@Test
+	void testElevatorAddUpcomingButtons() {
+		ArrayList<Integer> buttons = new ArrayList<>();
+		Elevator.addUpcomingButtons(2, buttons);
+		HashMap<Integer, ArrayList<Integer>> floorInputButtonsHashMap = new HashMap<>();
+		floorInputButtonsHashMap.put(2, buttons);
+		
+		
+		assertEquals(Elevator.getFloorInputButtons(), floorInputButtonsHashMap);
+	}
 	
-	// /**
-	//  * Test to check if requests are added into the ConcurrentLinkedDeque of requests.
-	//  */
-	// @Test
-	// void testElevatorAddRequests() {
-	// 	assertEquals(Elevator.getRequests().size(), 0); //check if initially empty
-	// 	Elevator.addRequest(message);
-	// 	assertEquals(Elevator.getRequests().size(), 1); // check if the request was added
-	// }
-
+	@Test
+	void testElevatorGetResponses() {
+		assertEquals(Elevator.getResponses(), responses);
+	}
+	
+	@Test
+	void testElevatorGetRequests() {
+		ConcurrentLinkedDeque<Message> requests = new ConcurrentLinkedDeque<>();
+		assertTrue(Elevator.getRequests().isEmpty());
+	}
+	
+	@Test
+	void testElevatorGetDestinations() {
+		ArrayList<Integer>destinations = new ArrayList<>();
+		assertEquals(Elevator.getDestinations(), destinations);
+	}
+	
+	@Test
+	void testElevatorGetElevatorStatus() {
+		ArrayList<Integer>destinations = new ArrayList<>();
+		ElevatorStatus elevatorStatus = new ElevatorStatus(destinations.size(), 0, new Random().nextInt(SimulationConstants.NUM_OF_FLOORS) + 1, MotorDirection.IDLE);
+		assertEquals(Elevator.getElevatorStatus().getMotorDirection(), MotorDirection.IDLE);
+		assertEquals(Elevator.getElevatorStatus().getNumberOfPassengers(), 0);
+		assertEquals(Elevator.getElevatorStatus().getNextDestination(), 0);
+	}
+	
+	@Test
+	void testElevatorGetState() {
+		assertEquals(Elevator.getState(), ElevatorState.IDLE);
+	}
+	
+	@Test
+	void testElevatorGetLamps() {
+		assertEquals(Elevator.getLamps().length, 22);
+	}
+	
+	@Test
+	void testElevatorGetSystemName() {
+		assertEquals(Elevator.getSystemName(), "Elevator[0]");
+	}
+	
+	@Test
+	void testElevatorGetId() {
+		assertEquals(Elevator.getId(), 0);
+	}
+	
+	@Test
+	void testElevatorGetFloorInputButtons() {
+		HashMap<Integer, ArrayList<Integer>> floorInputButtons = new HashMap<>();
+		assertEquals(Elevator.getFloorInputButtons(), floorInputButtons);
+	}
 }

@@ -35,7 +35,7 @@ public class Scheduler extends UDPBoth{
      * @param direction A string direction.
      * @return An elevator number.
      */
-    private int selectElevator(int floorNumber, MotorDirection direction){
+    public int selectElevator(int floorNumber, MotorDirection direction){
         int shortestDistance = 9999;
         int elNumber = -1; 
 
@@ -115,7 +115,14 @@ public class Scheduler extends UDPBoth{
             e.printStackTrace();
         }
     }
+    
+	public ConcurrentHashMap<Integer, ElevatorStatus> getElevatorStatuses() {
+		return this.elevatorStatuses;
+	}
 
+	public void addElevatorStatus(int i, ElevatorStatus elevatorStatus) {
+		this.elevatorStatuses.put(i, elevatorStatus);
+	}
 
     /**
      * Main method that allows the Scheduler to run.
@@ -133,6 +140,5 @@ public class Scheduler extends UDPBoth{
         // System.out.println(s.selectElevator(3, MotorDirection.UP));
 
     }
-
 
 }
