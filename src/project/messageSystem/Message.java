@@ -17,6 +17,10 @@ public class Message implements Serializable{
         this.timeStamp = timeStamp;
     }
 
+    /**
+	 * Getter method to get the TimeStamp date.
+	 * @return A Date object.
+	 */
     public Date getTimeStamp(){
         return this.timeStamp;
     }
