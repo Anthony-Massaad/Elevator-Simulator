@@ -17,27 +17,34 @@ import project.floorImpl.FloorManager;
 import project.simulationParser.Parser;
 
 /**
- * @author elish
- *
+ * FloorManager Test Class.
+ * @author Elisha Catherasoo
  */
 public class testFloorManager {
 	Parser p = new Parser(); 
     FloorManager manager = new FloorManager(SimulationConstants.FLOOR_MANAGER_PORT, "Floor Manager", p.getEventLines());
     
+    /**
+    * Test method for the getFloors() getter method.
+    */	    
     @Test
 	void testFloorManagerGetFloors() {
     	ConcurrentHashMap<Integer, Floor> floors = new ConcurrentHashMap<>();
     	assertEquals(floors, manager.getFloors());
     }
     
+    /**
+    * Test method for the getEvents() getter method.
+    */	
     @Test
 	void testFloorManagerGetEvents() {
     	ArrayList<String> events = p.getEventLines();
-    	
     	assertEquals(events, manager.getEvents());
-    	
     }
-    
+	
+    /**
+    * Test method to check the initialization of the floors in the FloorManager.
+    */	
     @Test
 	void testFloorManagerInitializeFloors() {
     	manager.initializeFloors();
@@ -57,6 +64,5 @@ public class testFloorManager {
     	assertEquals(12, manager.getFloors().get(11).getFloorNumber());
     	assertEquals(FloorButtonState.NOT_ACTIVE, manager.getFloors().get(11).getUpBtn());
     	assertEquals(FloorButtonState.NOT_ACTIVE, manager.getFloors().get(11).getDownBtn());
-    	
     }
 }
