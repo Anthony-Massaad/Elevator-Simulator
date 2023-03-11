@@ -2,7 +2,6 @@ package test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.junit.jupiter.api.Test;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import project.constants.MotorDirection;
 import project.constants.SimulationConstants;
 import project.elevatorImpl.ElevatorStatus;
-import project.logger.Log;
 import project.schedulerImpl.Scheduler;
 
 /**
