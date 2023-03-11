@@ -270,34 +270,66 @@ public class Elevator implements Runnable{
 		}
 	}
 
+	/**
+	 * Getter method to get the Elevator state.
+	 * @return ElevatorState
+	 */
 	public ElevatorState getState() {
 		return this.state;
 	}
 
+	/**
+	 * Getter method to get the floor input buttons from the HashMap.
+	 * @return HashMap <Integer, ArrayList<Integer>>
+	 */
 	public HashMap<Integer, ArrayList<Integer>> getFloorInputButtons() {
 		return this.floorInputButtons;
 	}
 
+	/**
+	 * Getter method to get the Elevator requests from the message queue.
+	 * @return ConcurrentLinkedDeque<Message>
+	 */
 	public ConcurrentLinkedDeque<Message> getRequests() {
 		return this.requests;
 	}
 
+	/**
+	 * Getter method to get the Elevator responses from the message queue.
+	 * @return ConcurrentLinkedDeque<Message>
+	 */
 	public ConcurrentLinkedDeque<Message> getResponses() {
 		return this.responses;
 	}
 
+	/**
+	 * Getter method to get the Elevator destination.
+	 * @return ArrayList<Integer>
+	 */
 	public ArrayList<Integer> getDestinations() {
 		return this.destinations;
 	}
 
+	/**
+	 * Getter method to get the Elevator lamps.
+	 * @return boolean[]
+	 */
 	public boolean[] getLamps() {
 		return this.lamps;
 	}
 
+	/**
+	 * Getter method to get the Elevator system name.
+	 * @return String
+	 */
 	public String getSystemName() {
 		return this.systemName;
 	}
 
+	/**
+	 * Getter method to get the Elevator Id.
+	 * @return Integer
+	 */
 	public Integer getId() {
 		return this.id;
 	}
