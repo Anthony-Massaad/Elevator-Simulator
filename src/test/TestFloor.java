@@ -14,11 +14,17 @@ import project.floorImpl.Floor;
 class TestFloor {
 	Floor floor = new Floor(0, FloorButtonState.ACTIVE, FloorButtonState.NOT_ACTIVE, "Floor [0]");
 	
+	/**
+	 * Test method to check if the initial floor number is 0.
+	 */
 	@Test
 	void testFloorNumber() {
 		assertEquals(0, floor.getFloorNumber());
 	}
 	
+	/**
+	 * Test method to check the Floor Button states when active and inactive when the floor goes up.
+	 */
 	@Test
 	void testFloorUpBtnState() {
 		assertEquals(floor.getUpBtn(), FloorButtonState.ACTIVE);
@@ -27,6 +33,9 @@ class TestFloor {
 		assertEquals(floor.getUpBtn(), FloorButtonState.NOT_ACTIVE);
 	}
 	
+	/**
+	 * Test method to check the Floor Button states when active and inactive when the floor goes down.
+	 */
 	@Test
 	void testFloorDownBtnState() {
 		assertEquals(floor.getDownBtn(), FloorButtonState.NOT_ACTIVE);
