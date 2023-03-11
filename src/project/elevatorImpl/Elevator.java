@@ -22,8 +22,6 @@ import project.messageSystem.messages.ArrivalMessage;
 import project.messageSystem.messages.MoveToMessage;
 import project.messageSystem.messages.UpdatePositionMessage;
 
-// UPDATE POSITION MESSAGE!!! LOAD AND UNLOAD PASSENGERS IN THE OPENDOOR BULLSHIT 
-
 public class Elevator implements Runnable{
 	
 	private ConcurrentLinkedDeque<Message> responses; 
