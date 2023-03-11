@@ -14,7 +14,7 @@ import project.messageSystem.messages.ArrivalMessage;
 import project.simulationParser.Parser;
 import project.udp.UDPReceive;
 
-public class FloorManager extends UDPReceive implements Runnable{
+public class FloorManager extends UDPReceive{
 
     private ConcurrentHashMap<Integer, Floor> floors;
     private ArrayList<String> events; 

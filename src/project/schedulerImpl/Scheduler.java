@@ -13,7 +13,7 @@ import project.messageSystem.messages.FloorRequestElevator;
 import project.messageSystem.messages.RequestElevatorMessage;
 import project.udp.UDPBoth;
 
-public class Scheduler extends UDPBoth implements Runnable{
+public class Scheduler extends UDPBoth{
 
     private ConcurrentHashMap<Integer, ElevatorStatus> elevatorStatuses;
     
