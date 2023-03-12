@@ -1,28 +1,33 @@
-# SYSC 3303 Group Project - Iteration 2
+# SYSC 3303 Group Project - Iteration 3
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Contributors and Respective Contributions - Group 2:
 
 Anthony Massaad 101150282
-- ElevatorSubSystem, Scheduler, Floor, MessageQueue, Message, ElevatorSubSystemMessageQueue, FloorMessageQueue, ArrivalMessage, MoveToMessage, ElevatorRequestMessage, Log
+- ElevatorSubSystem, Scheduler, Floor, Message, UpdatePositionMesesage, ArrivalMessage, MoveToMessage, RequestElevatorMessage, FloorRequestElevator,
+  ElevatorComReceiver, Elevator, ElevatorStatus, SchedulerMidTask, UDPReceive, UDPBoth, UDPSend, UDPImpl, Clock, FloorManager, FloorScheduler, Log
 - Uml Class Diagram
 - Scheduler State Diagram
 
 Dorothy Tran 101141902 
-- ElevatorSubSystem, Scheduler, Floor, MessageQueue, Message, ElevatorSubSystemMessageQueue, FloorMessageQueue, ArrivalMessage, MoveToMessage, ElevatorRequestMessage
+- ElevatorSubSystem, Scheduler, Floor, Message, UpdatePositionMesesage, ArrivalMessage, MoveToMessage, RequestElevatorMessage, FloorRequestElevator,
+  ElevatorComReceiver, Elevator, ElevatorStatus, SchedulerMidTask, UDPReceive, UDPBoth, UDPSend, UDPImpl, Clock, FloorManager, FloorScheduler,
 - JUnit Testing
 
 Max Curkovic 101139937
-- ElevatorSubSystem, Scheduler, Floor, MessageQueue, Message, ElevatorSubSystemMessageQueue, FloorMessageQueue, ArrivalMessage, MoveToMessage, ElevatorRequestMessage
+- ElevatorSubSystem, Scheduler, Floor, Message, UpdatePositionMesesage, ArrivalMessage, MoveToMessage, RequestElevatorMessage, FloorRequestElevator,
+  ElevatorComReceiver, Elevator, ElevatorStatus, SchedulerMidTask, UDPReceive, UDPBoth, UDPSend, UDPImpl, Clock, FloorManager, FloorScheduler,
 - Sequence Diagram
 - JUnit Testing
 
 Elisha Catherasoo 101148507
-- ElevatorSubSystem, Scheduler, Floor, MessageQueue, Message, ElevatorSubSystemMessageQueue, FloorMessageQueue, ArrivalMessage, MoveToMessage, ElevatorRequestMessage
+- ElevatorSubSystem, Scheduler, Floor, Message, UpdatePositionMesesage, ArrivalMessage, MoveToMessage, RequestElevatorMessage, FloorRequestElevator,
+  ElevatorComReceiver, Elevator, ElevatorStatus, SchedulerMidTask, UDPReceive, UDPBoth, UDPSend, UDPImpl, Clock, FloorManager, FloorScheduler,
 - JUnit Testing
 
 Cassidy Pacada 101143345
-- ElevatorSubSystem, Scheduler, Floor, MessageQueue, Message, ElevatorSubSystemMessageQueue, FloorMessageQueue, ArrivalMessage, MoveToMessage, ElevatorRequestMessage
+- ElevatorSubSystem, Scheduler, Floor, Message, UpdatePositionMesesage, ArrivalMessage, MoveToMessage, RequestElevatorMessage, FloorRequestElevator,
+  ElevatorComReceiver, Elevator, ElevatorStatus, SchedulerMidTask, UDPReceive, UDPBoth, UDPSend, UDPImpl, Clock, FloorManager, FloorScheduler,
 - Elevator State Diagram
 
 Overall in general, everyone contributed evening as the general code was done as a group. 
@@ -33,15 +38,40 @@ Project Description
 
 The purpose of this project is to design and create a system that simulates an elevator. It consists of three subsystems, the Elevator, the Scheduler, and the Floor.
 
-For the purpose of Iteration 2, the system is to simply run similar as Iteration 1 but with state machines, and the additional feature of the Elevator SubSystem. Request Message 
-is passed from the floor to the scheduler then to the ElevatorSubSystem class, which would then tell a elevator to move to the designated floor. When the Elevator arrived, it will 
-send an ArrivalMessage back to the ElevatorSubSystem, back to the scheduler, and back to the floor to notify it. 
+For the purpose of Iteration 3, the system now supports multiple elevators which are co-ordinated so that each one will carry around the same number of passengers.
+As well, this iteration implements UDP to communicate as opposed to the MessageQueue implementation that was used in the previous two milestones. 
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Files Included
 
-This Iteration consists of 22 Java files where 5 are test files and 1 textfile listed below:
+This Iteration consists of 33 Java files where 6 are test files and 1 textfile listed below:
+- Clock.java: grabs the time 
+
+- ElevatorStatus.java: keeps track of how many passengers an elevator has, its current flor, its direction, and its next destination
+
+- ElevatorState.java: enum that defines the elevator states
+
+- ElevatorComReceiver: polls for elevator responses to send to the SchedulerMidTask
+
+- FloorButtonState.java: enum that defines the floor button states
+
+- MotorDirection: enum that defines the motor directions
+
+- SimulationConstants.java: Miscellaneous constants like number of elevators, number of floors, and maximum passengers
+
+- FloorManager.java: Initializes each of the floors and managers events for each of the floors
+
+- FloorScheduler.java: processes events for the floors
+
+- FloorRequestElevator.java: request for elevators to a specific floor
+
+- RequestElevatorMessage.java: request for elevators from the scheduler
+
+- UpdatePositionMessage.java: updates the elevators position to the scheduler
+
+- SchedulerMidTask.java: intermediary between the Scheduler and the Elevators
+
 - Elevator.java: A thread that simulates an elevator car. It continuously checks if the Scheduler has sent a message. Once it receives a message, it will send a 
   response message back to the Scheduler.
 
@@ -55,24 +85,17 @@ This Iteration consists of 22 Java files where 5 are test files and 1 textfile l
 
 - Message.java: Defines the messasge that is sent between the Floor and Elevator systems.
 
+- Time.java: Enum that defines the Time states and their integer values
+
 - ArrivalMessage.java: Inherits from Message.java and implies that an Elevator has arrived to a floor. 
 
 - MoveToMessage.java: Inherits from Message.java and tells an elevator to move to a designated floor.
 
 - ElevatorRequestMessage.java, Inherits from Message.java and it is to request an elevator to a floor.
 
-- MessageQueue.java: Contains the four kinds of messages that can be sent through the system and initializes them to null. If a particular message gets sent,
-  the respective message in the MessageQueue is changed from null.
-  
-- ElevatorSubSystemMessageQueue.java: Inherits from MessageQueue.java and it is the queue of messages for the ElevatorSubSystem with the Scheduler
-
-- FloorMessageQueue.java: inherits from MessageQueue.java and it is the queue of messages for the Floor with the Scheduler
-
 - Parser.java: Parses the textfile containing the system instructions.
 
 - Log.java: A Logging system used to help with debugging.
-
-- Main.java: Contains the main method that creates instances of all the threads and starts them.
 
 - TestParser.java: JUnit tests for the Parser class to ensure that the instructions are being parsed correctly.
 
@@ -84,6 +107,16 @@ This Iteration consists of 22 Java files where 5 are test files and 1 textfile l
 
 - TestScheduler: JUnit test for the Scheduler
 
+- TestFloorManager: JUnit test for the FloorManager
+
+- UDPBoth: receives and sends UDP messages
+
+- UDPImpl: formats messages to be able to send through UDP and sends and receives UDP messages
+
+- UDPReceive: receives UDP messages
+
+- UDPSend: sends UDP messages
+
 - sim.txt: The textfile containing the instructions to be parsed and sent to the elevator system. 
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -92,8 +125,8 @@ Setup Instructions
 
 1. Open Eclipse IDE and import the project by going to File -> Import -> Projects from Folder or Archive and select the submitted archive file. 
 
-2. To run the program, open Main.Java and navigate to the toolbar. Find the green run button and select the down arrow next to it. A dropdown menu will appear, 
-   hover over the "Run As" option and select "1 Java Application". The output will appear in the console window.
+2. To run the program, open FloorManager.Java and navigate to the toolbar. Find the green run button and select the down arrow next to it. A dropdown menu will appear, 
+   hover over the "Run As" option and select "1 Java Application". The output will appear in the console window. Repeat with EelvatorSubSystem.java and Scheduler.java.
 
 
 Test Instructions 
@@ -101,7 +134,7 @@ Test Instructions
    hover over the "Run As" option and select "1 JUnit Test". The output will appear in the JUnit window and will tell you how many errors and failures
    occurred.
 
-3. To run the JUnit test for the System, repeat step 3 but with the TestSystem.java file instead of TestParser.java.
+3. The other JUnit tests are run in the same way but open their respective files. 
 
 
 
