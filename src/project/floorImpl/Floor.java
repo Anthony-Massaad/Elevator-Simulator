@@ -7,7 +7,6 @@ import project.logger.Log;
 public class Floor {
 
     private final int floorNumber; 
-    // -1 means none existent, 0 means off, 1 means on 
     private FloorButtonState upBtn; 
     private FloorButtonState downBtn; 
     private boolean upLamp;
@@ -52,6 +51,14 @@ public class Floor {
      */
     public FloorButtonState getDownBtn(){
         return this.downBtn;
+    }
+
+    public boolean getUpLamp(){
+        return this.upLamp;
+    }
+
+    public boolean getDownLamp(){
+        return this.downLamp;
     }
 
     /**
