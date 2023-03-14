@@ -19,8 +19,8 @@ public class UDPBoth extends UDPImpl{
         try {
             this.sendSocket = new DatagramSocket();
             this.receiveSocket = new DatagramSocket(port);
-            this.receiveSocket.setSoTimeout(30000);
-            this.sendSocket.setSoTimeout(30000);
+            // this.receiveSocket.setSoTimeout(30000);
+            // this.sendSocket.setSoTimeout(30000);
         } catch (SocketException e) {
             e.printStackTrace();
         }

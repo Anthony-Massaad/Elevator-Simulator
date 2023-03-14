@@ -1,10 +1,12 @@
 package project.schedulerImpl;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import project.constants.MotorDirection;
+import project.constants.SchedulerState;
 import project.constants.SimulationConstants;
 import project.elevatorImpl.ElevatorStatus;
 import project.logger.Log;
@@ -13,10 +15,15 @@ import project.messageSystem.messages.FloorRequestElevator;
 import project.messageSystem.messages.RequestElevatorMessage;
 import project.udp.UDPBoth;
 
+/*
+ * Class for communication between the floor to elevator and determining the nearest elevator 
+ * Given request from floor
+ */
 public class Scheduler extends UDPBoth{
 
     private ConcurrentHashMap<Integer, ElevatorStatus> elevatorStatuses;
-    
+    private SchedulerState state;     
+    private Message receivedMessage; 
     /**
      * Constructor for the Scheduler class.
      * @param port Integer port number.
@@ -25,7 +32,9 @@ public class Scheduler extends UDPBoth{
     public Scheduler(int port, String systemName) {
         super(port, systemName);
         this.elevatorStatuses = new ConcurrentHashMap<>();
+        this.state = SchedulerState.IDLE; 
         System.out.println(this.systemName + " started");
+        this.receivedMessage = null; 
 		System.out.println("-------------------------------------------------");
     }
 
@@ -48,6 +57,7 @@ public class Scheduler extends UDPBoth{
 
             int distance = 9999;
             int elCurrPosition = status.getCurrentFloor(); 
+            System.out.println("Elevator ID: " + entry.getKey() + " Current floor: " + elCurrPosition);
             MotorDirection elDirection = status.getMotorDirection();
             int elDest = status.getNextDestination();
 
@@ -76,9 +86,22 @@ public class Scheduler extends UDPBoth{
             throw new Error("Elevator was not selected. sill elevator number is still -1");
         }
 
-        Log.notification("SCHEDULER", "Shortest elevator to " + floorNumber + " is elevator " + elNumber, new Date(), this.systemName);
+        Log.notification("SCHEDULER", "Shortest elevator to floor " + floorNumber + " is elevator " + elNumber, new Date(), this.systemName);
 
         return elNumber; 
+    }
+
+    private void processMessage() throws IOException, InterruptedException{
+        if (this.receivedMessage instanceof FloorRequestElevator){
+            FloorRequestElevator requestMessage = (FloorRequestElevator) this.receivedMessage;
+            int elevatorID = this.selectElevator(requestMessage.getFloorNumber(), requestMessage.getDirection());
+            Log.notification("SCHEDULER", requestMessage.toString(), new Date(), this.systemName);
+            this.send(new RequestElevatorMessage(requestMessage.getTimeStamp(), requestMessage.getFloorNumber(), elevatorID, requestMessage.getButtonsToBePressed()), SimulationConstants.ELEVATOR_MANAGER_PORT);
+        }else{
+            throw new Error("Unknown Message Received or null");
+        }
+        this.state = SchedulerState.IDLE;
+        this.receivedMessage = null; 
     }
 
     /**
@@ -99,17 +122,14 @@ public class Scheduler extends UDPBoth{
 
         try{
             while (true) {
-                Message message = this.receive(SimulationConstants.BYTE_SIZE);
-
-                if (message instanceof FloorRequestElevator){
-                    FloorRequestElevator requestMessage = (FloorRequestElevator) message;
-                    int elevatorID = this.selectElevator(requestMessage.getFloorNumber(), requestMessage.getDirection());
-                    Log.notification("SCHEDULER", requestMessage.toString(), new Date(), this.systemName);
-                    this.send(new RequestElevatorMessage(requestMessage.getTimeStamp(), requestMessage.getFloorNumber(), elevatorID, requestMessage.getButtonsToBePressed()), SimulationConstants.ELEVATOR_MANAGER_PORT);
-                }else{
-                    throw new Error("Unknown Message Received");
+                if (this.state == SchedulerState.IDLE){
+                    this.receivedMessage = this.receive(SimulationConstants.BYTE_SIZE);
+                    this.state = SchedulerState.PROCESSING;
                 }
-
+                
+                if (this.state == SchedulerState.PROCESSING){
+                    this.processMessage();
+                }
             }
         }catch (Exception e){
             e.printStackTrace();

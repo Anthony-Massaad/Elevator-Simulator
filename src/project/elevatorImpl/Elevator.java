@@ -127,6 +127,7 @@ public class Elevator implements Runnable{
 		}else{
 			this.floorInputButtons.put(floorNumber, buttons);
 		}
+		System.out.println("Size for upcoming buttons! = " + this.floorInputButtons.size());
 	}
 	
 	/**
@@ -142,21 +143,25 @@ public class Elevator implements Runnable{
         	// For this iteraion, it's just moving! 
         	Log.notification("ELEVATOR", moveToMessage.toString(), new Date(), this.systemName);
 			
-        	if (this.elevatorStatus.getCurrentFloor() == destination) {
-        		// already at the requested floor
-        		this.state = ElevatorState.OPEN_DOOR;
-        	}else if (this.state == ElevatorState.MOVING) {
+        	if (this.state == ElevatorState.MOVING) {
         		// add to queue if button isn't already pressed
 				if (this.destinations.contains(destination)){
+					this.addUpcomingButtons(destination, moveToMessage.getButtonsToBePressed());
 					return; 
 				}
         		this.destinations.add(destination);
         		this.sortDestinations();
 				this.addUpcomingButtons(destination, moveToMessage.getButtonsToBePressed());
         		// sort 
-        	}else {
+        	}else if (this.elevatorStatus.getCurrentFloor() == destination) {
+        		// already at the requested floor
+        		this.state = ElevatorState.OPEN_DOOR;
+			}
+			else {
         		// start moving the elevator and change motor direction
         		this.elevatorStatus.setNextDestination(destination);
+				this.destinations.add(destination);
+				this.addUpcomingButtons(destination, moveToMessage.getButtonsToBePressed());
 				this.updateMotorStatus();
 				this.sendUpdateStatus();
     			this.state = ElevatorState.MOVING;
@@ -183,7 +188,7 @@ public class Elevator implements Runnable{
 			this.destinations = this.appendButtonsToExistingList(this.destinations, this.floorInputButtons.get(this.elevatorStatus.getNextDestination()));
 			System.out.println("SIZE OF DESTINATION IS " + this.destinations.size()); 
 		}
-		
+
         this.state = ElevatorState.CLOSE_DOOR;
     }
     
@@ -213,7 +218,7 @@ public class Elevator implements Runnable{
      */
 	public void handleMoving() throws InterruptedException {
     	Log.notification("ELEVATOR", "Current floor " + this.elevatorStatus.getCurrentFloor(), new Date(), this.systemName);
-    	
+
     	if (this.elevatorStatus.getCurrentFloor() < this.elevatorStatus.getNextDestination()) {
 			this.elevatorStatus.setCurrentFloor(this.elevatorStatus.getCurrentFloor() + 1);
     	}else if (this.elevatorStatus.getCurrentFloor() > this.elevatorStatus.getNextDestination()) {
@@ -227,7 +232,12 @@ public class Elevator implements Runnable{
         	// when we reach the destination floor 
 			this.destinations.remove(0);
 			this.lamps[this.elevatorStatus.getNextDestination() - 1] = false; 
-        	ArrivalMessage arrivalMessage = new ArrivalMessage(new Date(), this.elevatorStatus.getNextDestination(), this.elevatorStatus.getMotorDirection());
+			ArrivalMessage arrivalMessage;
+			if (this.destinations.size() == 0){
+				arrivalMessage = new ArrivalMessage(new Date(), this.elevatorStatus.getNextDestination(), MotorDirection.oppositeDirection(this.elevatorStatus.getMotorDirection()));
+			}else{
+				arrivalMessage = new ArrivalMessage(new Date(), this.elevatorStatus.getNextDestination(), this.elevatorStatus.getMotorDirection());
+			}
         	Log.notification("ELEVATOR", arrivalMessage.toString(), new Date(), this.systemName);
 			Log.notification("ELEVATOR", "Lamp " + this.elevatorStatus.getNextDestination() + " off", new Date(), this.systemName);
         	this.responses.addFirst(arrivalMessage);

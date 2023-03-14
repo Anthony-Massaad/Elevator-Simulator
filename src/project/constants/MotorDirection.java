@@ -14,4 +14,13 @@ public enum MotorDirection {
 	public static MotorDirection getDirection(String direction){
 		return direction.equals("UP") ? MotorDirection.UP : MotorDirection.DOWN;
 	}
+
+	/**
+	 * get the opposite of the direction given
+	 * @param direction MotorDirection, the direction
+	 * @return MotorDirection, the opposite direaction
+	 */
+	public static MotorDirection oppositeDirection(MotorDirection direction){
+		return direction == MotorDirection.DOWN ? MotorDirection.UP : MotorDirection.DOWN;
+	}
 }
