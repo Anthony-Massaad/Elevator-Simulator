@@ -3,12 +3,8 @@ package project.floorImpl;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.omg.CORBA.Environment;
-
 import project.clockImpl.Clock;
 import project.constants.FloorButtonState;
 import project.constants.MotorDirection;

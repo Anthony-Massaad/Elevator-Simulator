@@ -11,6 +11,7 @@ import project.constants.SimulationConstants;
 import project.logger.Log;
 import project.messageSystem.Message;
 import project.messageSystem.messages.ArrivalMessage;
+import project.messageSystem.messages.ElevatorLeavingMessage;
 import project.simulationParser.Parser;
 import project.udp.UDPReceive;
 
@@ -74,19 +75,26 @@ public class FloorManager extends UDPReceive{
                     ArrivalMessage arrivalMessage = (ArrivalMessage) msg; 
                     int floorNumber = arrivalMessage.getFloorNumber();
                     MotorDirection direction = arrivalMessage.getDirection();
-
                     if (direction == MotorDirection.UP){
                         this.floors.get(floorNumber).setUpBtn(FloorButtonState.NOT_ACTIVE);
+                        this.floors.get(floorNumber).setUpLamp(true);
                     }else if (direction == MotorDirection.DOWN){
                         this.floors.get(floorNumber).setDownBtn(FloorButtonState.NOT_ACTIVE);
+                        this.floors.get(floorNumber).setDownLamp(true);
                     }else{
                         throw new Error("Pased an unknown direction for the floor events");
                     }
-
+                }else if (msg instanceof ElevatorLeavingMessage){
+                    ElevatorLeavingMessage leavingMessage = (ElevatorLeavingMessage) msg; 
+                    if (leavingMessage.getDirection() == MotorDirection.UP){
+                        this.floors.get(leavingMessage.getFloorNumber()).setUpLamp(false);
+                    }else if (leavingMessage.getDirection() == MotorDirection.DOWN){
+                        this.floors.get(leavingMessage.getFloorNumber()).setDownLamp(false);
+                    }
                 }
             }
         }catch (Exception e){
-            
+            Log.error("FLOOR MANAGER", "System broke", new Date(), this.systemName);
         }
     }
 	

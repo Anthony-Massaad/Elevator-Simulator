@@ -10,6 +10,7 @@ import project.elevatorImpl.ElevatorStatus;
 import project.logger.Log;
 import project.messageSystem.Message;
 import project.messageSystem.messages.ArrivalMessage;
+import project.messageSystem.messages.ElevatorLeavingMessage;
 import project.messageSystem.messages.UpdatePositionMessage;
 import project.udp.UDPBoth;
 
@@ -28,7 +29,7 @@ public class SchedulerMidTask extends UDPBoth implements Runnable{
         this.receivedMessage = null;
     }
 
-    private void processMessage() throws IOException, InterruptedException{
+    private void processMessage() throws IOException, InterruptedException {
         if (this.receivedMessage instanceof UpdatePositionMessage) {
             UpdatePositionMessage updatePositionMessage = (UpdatePositionMessage) this.receivedMessage;
             this.elevatorStatuses.get(updatePositionMessage.getElevatorID()).update(updatePositionMessage.getDirection(), updatePositionMessage.getCurrentFloor(), updatePositionMessage.getNumberOfPassengers(), updatePositionMessage.getNextDestination());
@@ -38,6 +39,10 @@ public class SchedulerMidTask extends UDPBoth implements Runnable{
             ArrivalMessage arrivalMessage = (ArrivalMessage) this.receivedMessage;
             this.send(arrivalMessage, SimulationConstants.FLOOR_MANAGER_PORT);
             Log.notification("SCHEDULER MID TASK", arrivalMessage.toString(), new Date(), this.systemName);
+        }else if (this.receivedMessage instanceof ElevatorLeavingMessage){
+            ElevatorLeavingMessage elevatorMoving = (ElevatorLeavingMessage) this.receivedMessage;
+            this.send(elevatorMoving, SimulationConstants.FLOOR_MANAGER_PORT);
+            Log.notification("SCHEDULER MID TASK", elevatorMoving.toString(), new Date(), this.systemName);
         }else{
             throw new Error("Unknown Message Received or null"); 
         }

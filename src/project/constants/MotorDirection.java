@@ -5,7 +5,7 @@ package project.constants;
  */
 public enum MotorDirection {
 	UP, DOWN, IDLE;
-
+	
 	/**
 	 * Method for getting the direction via a string.
 	 * @param direction A string direction.
@@ -23,4 +23,9 @@ public enum MotorDirection {
 	public static MotorDirection oppositeDirection(MotorDirection direction){
 		return direction == MotorDirection.DOWN ? MotorDirection.UP : MotorDirection.DOWN;
 	}
+
+	public static String toString(MotorDirection direction){
+		return direction == MotorDirection.DOWN ? "DOWN" : "UP";
+	}
+
 }

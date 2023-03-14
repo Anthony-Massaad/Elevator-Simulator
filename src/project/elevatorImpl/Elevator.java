@@ -19,6 +19,7 @@ import project.constants.Time;
 import project.logger.Log;
 import project.messageSystem.Message;
 import project.messageSystem.messages.ArrivalMessage;
+import project.messageSystem.messages.ElevatorLeavingMessage;
 import project.messageSystem.messages.MoveToMessage;
 import project.messageSystem.messages.UpdatePositionMessage;
 
@@ -34,6 +35,8 @@ public class Elevator implements Runnable{
 	private ElevatorStatus elevatorStatus; 
 	private ElevatorState state; 
 	private int id; 
+	private boolean directionLampUp;
+	private boolean directionLampDown;
 	
 	/**
 	 * Constructor for the Elevator class.
@@ -89,7 +92,18 @@ public class Elevator implements Runnable{
 	 * Void method for updating the Elevator's motor direction.
 	 */
 	private void updateMotorStatus(){
-		this.elevatorStatus.setMotorDirection(this.elevatorStatus.getNextDestination() > this.elevatorStatus.getCurrentFloor() ? MotorDirection.UP : MotorDirection.DOWN);
+		if (this.elevatorStatus.getNextDestination() > this.elevatorStatus.getCurrentFloor()){
+			this.elevatorStatus.setMotorDirection(MotorDirection.UP);
+			this.directionLampUp = true; 
+			this.directionLampDown = false; 
+		}else{
+			this.elevatorStatus.setMotorDirection(MotorDirection.DOWN);
+			this.directionLampDown = true;
+			this.directionLampUp = false; 
+		}
+		Log.notification("ELEVATOR", "Motor Direction is " + MotorDirection.toString(this.elevatorStatus.getMotorDirection()), new Date(), this.systemName);
+		Log.notification("ELEVATOR", "up direction lamp set to " + this.directionLampUp, new Date(), this.systemName);
+		Log.notification("ELEVATOR", "down direction lamp set to " + this.directionLampDown, new Date(), this.systemName);
 	}
 
 	/**
@@ -188,7 +202,6 @@ public class Elevator implements Runnable{
 			this.destinations = this.appendButtonsToExistingList(this.destinations, this.floorInputButtons.get(this.elevatorStatus.getNextDestination()));
 			System.out.println("SIZE OF DESTINATION IS " + this.destinations.size()); 
 		}
-
         this.state = ElevatorState.CLOSE_DOOR;
     }
     
@@ -204,10 +217,17 @@ public class Elevator implements Runnable{
 			this.elevatorStatus.setNextDestination(this.destinations.get(0));
         	this.destinations.remove(0);
 			this.updateMotorStatus();
+			this.responses.add(new ElevatorLeavingMessage(new Date(), this.elevatorStatus.getCurrentFloor(), this.elevatorStatus.getMotorDirection()));
         	this.state = ElevatorState.MOVING;
         }else {
 			this.elevatorStatus.setMotorDirection(MotorDirection.IDLE);
+			Log.notification("ELEVATOR", "Motor Direction is " + MotorDirection.toString(this.elevatorStatus.getMotorDirection()), new Date(), this.systemName);
         	this.state = ElevatorState.IDLE;
+			this.directionLampDown = false; 
+			this.directionLampUp = false; 
+			Log.notification("ELEVATOR", "up direction lamp set to " + this.directionLampUp, new Date(), this.systemName);
+			Log.notification("ELEVATOR", "down direction lamp set to " + this.directionLampDown, new Date(), this.systemName);
+			this.responses.add(new ElevatorLeavingMessage(new Date(), this.elevatorStatus.getCurrentFloor(), this.elevatorStatus.getMotorDirection()));
         }
 		this.sendUpdateStatus();
     }

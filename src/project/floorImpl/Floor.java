@@ -10,6 +10,8 @@ public class Floor {
     // -1 means none existent, 0 means off, 1 means on 
     private FloorButtonState upBtn; 
     private FloorButtonState downBtn; 
+    private boolean upLamp;
+    private boolean downLamp; 
     private final String systemName; 
 
     /**
@@ -24,6 +26,8 @@ public class Floor {
         this.upBtn = upBtn;
         this.downBtn = downBtn;
         this.systemName = systemName;
+        this.upLamp = false; 
+        this.downLamp = false; 
     }
 
     /**
@@ -54,7 +58,7 @@ public class Floor {
      * Setter method for setting the up button state.
      * @param state The floor button state.
      */
-    public void setUpBtn(FloorButtonState state){
+    public void setUpBtn(FloorButtonState state) {
         this.upBtn = state;
         Log.notification("FLOOR", "Up button is set to " + FloorButtonState.parseState(state), new Date(), this.systemName);
     }
@@ -63,9 +67,27 @@ public class Floor {
      * Setter method for setting the down button state.
      * @param state The floor button state.
      */
-    public void setDownBtn(FloorButtonState state){
+    public void setDownBtn(FloorButtonState state) {
         this.downBtn = state;
         Log.notification("FLOOR", "Down button is set to " + FloorButtonState.parseState(state), new Date(), this.systemName);
+    }
+
+    /**
+     * set the status of the up lamp
+     * @param cond boolean, true or false
+     */
+    public void setUpLamp(boolean cond) {
+        this.upLamp = cond; 
+        Log.notification("FLOOR", "Up Lamp is set to " + cond, new Date(), this.systemName);
+    }
+
+    /**
+     * set the status of the down lamp
+     * @param cond boolean, true or false
+     */
+    public void setDownLamp(boolean cond) {
+        this.downLamp = cond; 
+        Log.notification("FLOOR", "Down Lamp is set to " + cond, new Date(), this.systemName);
     }
 
 }
