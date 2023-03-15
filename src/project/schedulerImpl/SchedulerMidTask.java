@@ -59,10 +59,10 @@ public class SchedulerMidTask extends UDPBoth implements Runnable{
             while (true){
                 if (this.state == SchedulerState.IDLE){
                     this.receivedMessage = this.receive(SimulationConstants.BYTE_SIZE);
-                    this.state = SchedulerState.PROCESSING;
+                    this.state = SchedulerState.PROCESSING_ELEVATOR;
                 }
                 
-                if (this.state == SchedulerState.PROCESSING){
+                if (this.state == SchedulerState.PROCESSING_ELEVATOR){
                     this.processMessage();
                 }
             }

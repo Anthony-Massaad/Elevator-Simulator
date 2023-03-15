@@ -124,10 +124,10 @@ public class Scheduler extends UDPBoth{
             while (true) {
                 if (this.state == SchedulerState.IDLE){
                     this.receivedMessage = this.receive(SimulationConstants.BYTE_SIZE);
-                    this.state = SchedulerState.PROCESSING;
+                    this.state = SchedulerState.PROCESSING_FLOOR;
                 }
                 
-                if (this.state == SchedulerState.PROCESSING){
+                if (this.state == SchedulerState.PROCESSING_FLOOR){
                     this.processMessage();
                 }
             }
