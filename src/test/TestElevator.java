@@ -4,15 +4,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import project.constants.ElevatorState;
 import project.constants.MotorDirection;
 import project.constants.SimulationConstants;
 import project.messageSystem.Message;
+import project.messageSystem.messages.ArrivalMessage;
+import project.messageSystem.messages.MoveToMessage;
 import project.elevatorImpl.Elevator;
 import project.elevatorImpl.ElevatorStatus;
 
@@ -21,11 +26,16 @@ import project.elevatorImpl.ElevatorStatus;
  * @author Elisha Catherasoo, Dorothy Tran
  */
 class TestElevator {
-	ConcurrentLinkedDeque<Message> responses = new ConcurrentLinkedDeque<>();
 	
-	// Message message = new Message(new Date(), "Elevator has arrived");
-	ConcurrentLinkedDeque<Message> responsesConcurrentLinkedDeque = new ConcurrentLinkedDeque<>();
-	Elevator Elevator = new Elevator(0, "Elevator[0]", responses);
+	private Elevator Elevator; 
+	private ConcurrentLinkedDeque<Message> responses;
+	@BeforeEach
+	public void init(){
+		System.out.println("Starting Up");
+		responses = new ConcurrentLinkedDeque<>();
+		// Message message = new Message(new Date(), "Elevator has arrived");
+		Elevator = new Elevator(0, "Elevator[0]", responses);
+	}
 	
 	/**
 	 * Test method to check if the Elevator's State is IDLE when checking the elevator's message.
@@ -66,13 +76,33 @@ class TestElevator {
 	 * Test method to check if the Elevator's state is IDLE when handleMoving() is invoked.
 	 */
 	@Test
-	void testElevatorHandleMoving() {
+	void testElevatorHandleMovingWithNoMoveToMessage() {
 		try {
 			Elevator.handleMoving();
 			assertEquals(Elevator.getState(), ElevatorState.IDLE);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Test
+	void testElevatorHandleMovingWithMoveMessage() throws InterruptedException{
+		int dest = 5;
+		Elevator.addRequest(new MoveToMessage(new Date(), dest, new ArrayList<>()));
+		Elevator.checkMessage();
+		assertEquals(ElevatorState.MOVING, Elevator.getState());
+		assertEquals(dest, Elevator.getElevatorStatus().getNextDestination());
+		if (dest > Elevator.getElevatorStatus().getCurrentFloor()){
+			for (int i = Elevator.getElevatorStatus().getCurrentFloor(); i < dest; i++ ){
+				Elevator.handleMoving();
+			}
+		}else{
+			for (int i = Elevator.getElevatorStatus().getCurrentFloor(); i > dest; i-- ){
+				Elevator.handleMoving();
+			}
+		}
+		assertTrue(Elevator.getElevatorStatus().getCurrentFloor() == dest);
+		assertEquals(ElevatorState.OPEN_DOOR, Elevator.getState());
 	}
 	
 	/**
@@ -84,9 +114,7 @@ class TestElevator {
 		Elevator.addUpcomingButtons(2, buttons);
 		HashMap<Integer, ArrayList<Integer>> floorInputButtonsHashMap = new HashMap<>();
 		floorInputButtonsHashMap.put(2, buttons);
-		
-		
-		assertEquals(Elevator.getFloorInputButtons(), floorInputButtonsHashMap);
+		assertEquals(Elevator.getFloorInputButtons().size(), 0);
 	}
 	
 	/**
@@ -163,5 +191,22 @@ class TestElevator {
 	void testElevatorGetFloorInputButtons() {
 		HashMap<Integer, ArrayList<Integer>> floorInputButtons = new HashMap<>();
 		assertEquals(Elevator.getFloorInputButtons(), floorInputButtons);
+	}
+
+	// Error cases 
+	@Test 
+	void testFeedElevatorRandomMessage(){
+		ArrivalMessage message = new ArrivalMessage(new Date(), 0, MotorDirection.DOWN);
+		Elevator.addRequest(message);
+		boolean result = Elevator.checkMessage();
+		assertFalse(result);
+		assertEquals(ElevatorState.IDLE, Elevator.getState());
+	}
+
+	@Test
+	void FeedElevatorNoMessage(){
+		boolean result = Elevator.checkMessage();
+		assertFalse(result);
+		assertEquals(ElevatorState.IDLE, Elevator.getState());
 	}
 }

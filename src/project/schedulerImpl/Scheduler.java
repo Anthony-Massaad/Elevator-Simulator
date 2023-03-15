@@ -39,6 +39,37 @@ public class Scheduler extends UDPBoth{
     }
 
     /**
+     * set a message
+     * @param msg Message, the message
+     */
+    public void setReceivedMessage(Message msg){
+        this.receivedMessage = msg; 
+    }
+
+    /**
+     * get the current scheduler state
+     * @return state SchedulerState, the current state of the scheduler
+     */
+    public SchedulerState getState(){
+        return this.state; 
+    }
+
+    public Message getReceviedMessage(){
+        return this.receivedMessage;
+    }
+
+    /**
+     * check the state of the scheduler
+     */
+    public void checkState() {
+        if (this.receivedMessage == null){
+            this.state = SchedulerState.IDLE;
+        }else{
+            this.state = SchedulerState.PROCESSING_FLOOR;
+        }
+    }
+
+    /**
      * Method that allows the Scheduler to select an Elevator depending on its distance from the floor.
      * @param floorNumber An integer floor number.
      * @param direction A string direction.
@@ -91,17 +122,29 @@ public class Scheduler extends UDPBoth{
         return elNumber; 
     }
 
-    private void processMessage() throws IOException, InterruptedException{
-        if (this.receivedMessage instanceof FloorRequestElevator){
-            FloorRequestElevator requestMessage = (FloorRequestElevator) this.receivedMessage;
-            int elevatorID = this.selectElevator(requestMessage.getFloorNumber(), requestMessage.getDirection());
-            Log.notification("SCHEDULER", requestMessage.toString(), new Date(), this.systemName);
-            this.send(new RequestElevatorMessage(requestMessage.getTimeStamp(), requestMessage.getFloorNumber(), elevatorID, requestMessage.getButtonsToBePressed()), SimulationConstants.ELEVATOR_MANAGER_PORT);
-        }else{
-            throw new Error("Unknown Message Received or null");
-        }
-        this.state = SchedulerState.IDLE;
+    /**
+     * reset the states
+     */
+    public void reset(){
         this.receivedMessage = null; 
+        this.checkState();
+    }
+
+    public boolean processMessage() throws IOException, InterruptedException{
+        if (this.receivedMessage == null){
+            return false;
+        }else{
+            if (this.receivedMessage instanceof FloorRequestElevator){
+                FloorRequestElevator requestMessage = (FloorRequestElevator) this.receivedMessage;
+                int elevatorID = this.selectElevator(requestMessage.getFloorNumber(), requestMessage.getDirection());
+                Log.notification("SCHEDULER", requestMessage.toString(), new Date(), this.systemName);
+                this.send(new RequestElevatorMessage(requestMessage.getTimeStamp(), requestMessage.getFloorNumber(), elevatorID, requestMessage.getButtonsToBePressed()), SimulationConstants.ELEVATOR_MANAGER_PORT);
+                this.reset();
+                return true; 
+            }
+            this.reset();
+            return false; 
+        }
     }
 
     /**
@@ -124,7 +167,7 @@ public class Scheduler extends UDPBoth{
             while (true) {
                 if (this.state == SchedulerState.IDLE){
                     this.receivedMessage = this.receive(SimulationConstants.BYTE_SIZE);
-                    this.state = SchedulerState.PROCESSING_FLOOR;
+                    this.checkState();
                 }
                 
                 if (this.state == SchedulerState.PROCESSING_FLOOR){

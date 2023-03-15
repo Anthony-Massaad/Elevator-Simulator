@@ -130,6 +130,10 @@ public class Elevator implements Runnable{
 	 * @param buttons An arraylist of current buttons.
 	 */
 	public void addUpcomingButtons(int floorNumber, ArrayList<Integer> buttons){
+		if (buttons.size() == 0){
+			return; 
+		}
+		
 		if (this.floorInputButtons.containsKey(floorNumber)){
 			ArrayList<Integer> newList = appendButtonsToExistingList(this.floorInputButtons.get(floorNumber), buttons);
 			this.floorInputButtons.get(floorNumber).clear();
@@ -143,9 +147,9 @@ public class Elevator implements Runnable{
 	/**
      * Void method that checks if the requested message was sent from the elevator Subsystem. The Elevator will change state accordingly depending on the message
      */
-	public void checkMessage() {
+	public boolean checkMessage() {
     	Message message = this.requests.poll();
-    	
+		
     	if (message instanceof MoveToMessage) {
     		MoveToMessage moveToMessage = (MoveToMessage) message; 
     		int destination = moveToMessage.getDestinationFloor();
@@ -157,7 +161,7 @@ public class Elevator implements Runnable{
         		// add to queue if button isn't already pressed
 				if (this.destinations.contains(destination)){
 					this.addUpcomingButtons(destination, moveToMessage.getButtonsToBePressed());
-					return; 
+					return true; 
 				}
         		this.destinations.add(destination);
         		this.sortDestinations();
@@ -176,7 +180,9 @@ public class Elevator implements Runnable{
 				this.sendUpdateStatus();
     			this.state = ElevatorState.MOVING;
         	}
+			return true; 
     	}
+		return false;
     }
     
     /**

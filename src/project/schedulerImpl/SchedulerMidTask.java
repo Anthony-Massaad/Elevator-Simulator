@@ -29,25 +29,72 @@ public class SchedulerMidTask extends UDPBoth implements Runnable{
         this.receivedMessage = null;
     }
 
-    private void processMessage() throws IOException, InterruptedException {
-        if (this.receivedMessage instanceof UpdatePositionMessage) {
-            UpdatePositionMessage updatePositionMessage = (UpdatePositionMessage) this.receivedMessage;
-            this.elevatorStatuses.get(updatePositionMessage.getElevatorID()).update(updatePositionMessage.getDirection(), updatePositionMessage.getCurrentFloor(), updatePositionMessage.getNumberOfPassengers(), updatePositionMessage.getNextDestination());
-            Log.notification("SCHEDULER MID TASK", updatePositionMessage.toString(), new Date(), this.systemName);
-            System.out.println("elevator Position update blah blah blah floor: " + this.elevatorStatuses.get(updatePositionMessage.getElevatorID()).getCurrentFloor());
-        }else if (this.receivedMessage instanceof ArrivalMessage) {
-            ArrivalMessage arrivalMessage = (ArrivalMessage) this.receivedMessage;
-            this.send(arrivalMessage, SimulationConstants.FLOOR_MANAGER_PORT);
-            Log.notification("SCHEDULER MID TASK", arrivalMessage.toString(), new Date(), this.systemName);
-        }else if (this.receivedMessage instanceof ElevatorLeavingMessage){
-            ElevatorLeavingMessage elevatorMoving = (ElevatorLeavingMessage) this.receivedMessage;
-            this.send(elevatorMoving, SimulationConstants.FLOOR_MANAGER_PORT);
-            Log.notification("SCHEDULER MID TASK", elevatorMoving.toString(), new Date(), this.systemName);
+    /**
+     * set a message
+     * @param msg Message, the message
+     */
+    public void setReceivedMessage(Message msg){
+        this.receivedMessage = msg; 
+    }
+
+    /**
+     * get the current scheduler state
+     * @return state SchedulerState, the current state of the scheduler
+     */
+    public SchedulerState getState(){
+        return this.state; 
+    }
+
+    public Message getReceviedMessage(){
+        return this.receivedMessage;
+    }
+
+    /**
+     * check the state of the scheduler
+     */
+    public void checkState() {
+        if (this.receivedMessage == null){
+            this.state = SchedulerState.IDLE;
         }else{
-            throw new Error("Unknown Message Received or null"); 
+            this.state = SchedulerState.PROCESSING_ELEVATOR;
         }
-        this.state = SchedulerState.IDLE;
+    }
+
+    /**
+     * reset the states
+     */
+    public void reset(){
         this.receivedMessage = null; 
+        this.checkState();
+    }
+
+    private boolean processMessage() throws IOException, InterruptedException {
+        if (this.receivedMessage == null){
+            return false;
+        }else{
+            if (this.receivedMessage instanceof UpdatePositionMessage) {
+                UpdatePositionMessage updatePositionMessage = (UpdatePositionMessage) this.receivedMessage;
+                this.elevatorStatuses.get(updatePositionMessage.getElevatorID()).update(updatePositionMessage.getDirection(), updatePositionMessage.getCurrentFloor(), updatePositionMessage.getNumberOfPassengers(), updatePositionMessage.getNextDestination());
+                Log.notification("SCHEDULER MID TASK", updatePositionMessage.toString(), new Date(), this.systemName);
+                System.out.println("elevator Position update blah blah blah floor: " + this.elevatorStatuses.get(updatePositionMessage.getElevatorID()).getCurrentFloor());
+                this.reset();
+                return true; 
+            }else if (this.receivedMessage instanceof ArrivalMessage) {
+                ArrivalMessage arrivalMessage = (ArrivalMessage) this.receivedMessage;
+                this.send(arrivalMessage, SimulationConstants.FLOOR_MANAGER_PORT);
+                Log.notification("SCHEDULER MID TASK", arrivalMessage.toString(), new Date(), this.systemName);
+                this.reset();
+                return true; 
+            }else if (this.receivedMessage instanceof ElevatorLeavingMessage){
+                ElevatorLeavingMessage elevatorMoving = (ElevatorLeavingMessage) this.receivedMessage;
+                this.send(elevatorMoving, SimulationConstants.FLOOR_MANAGER_PORT);
+                Log.notification("SCHEDULER MID TASK", elevatorMoving.toString(), new Date(), this.systemName);
+                this.reset();
+                return true; 
+            }
+            this.reset();
+            return false; 
+        }
     }
 
     /**
@@ -59,7 +106,7 @@ public class SchedulerMidTask extends UDPBoth implements Runnable{
             while (true){
                 if (this.state == SchedulerState.IDLE){
                     this.receivedMessage = this.receive(SimulationConstants.BYTE_SIZE);
-                    this.state = SchedulerState.PROCESSING_ELEVATOR;
+                    this.checkState();
                 }
                 
                 if (this.state == SchedulerState.PROCESSING_ELEVATOR){

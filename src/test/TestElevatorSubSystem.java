@@ -35,6 +35,6 @@ class TestElevatorSubSystem {
 	 */
 	@Test
 	void testElevatorSubSystemGetElevators() {
-		assertEquals(eSubSystem.getElevators().length, 4);
+		assertEquals(eSubSystem.getElevators().length, SimulationConstants.NUM_OF_ELEVATORS);
 	}
 }
