@@ -1,25 +1,18 @@
 package test;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Random;
-
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import project.constants.ElevatorState;
 import project.constants.MotorDirection;
-import project.constants.SimulationConstants;
 import project.messageSystem.Message;
 import project.messageSystem.messages.ArrivalMessage;
 import project.messageSystem.messages.MoveToMessage;
 import project.elevatorImpl.Elevator;
-import project.elevatorImpl.ElevatorStatus;
 
 /**
  * Elevator Test Class.
