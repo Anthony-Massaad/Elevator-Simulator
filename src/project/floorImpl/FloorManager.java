@@ -90,6 +90,9 @@ public class FloorManager extends UDPReceive{
                         this.floors.get(leavingMessage.getFloorNumber()).setUpLamp(false);
                     }else if (leavingMessage.getDirection() == MotorDirection.DOWN){
                         this.floors.get(leavingMessage.getFloorNumber()).setDownLamp(false);
+                    }else{
+                        this.floors.get(leavingMessage.getFloorNumber()).setDownLamp(false);
+                        this.floors.get(leavingMessage.getFloorNumber()).setUpLamp(false);
                     }
                 }
             }
