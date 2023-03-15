@@ -125,8 +125,8 @@ Setup Instructions
 
 1. Open Eclipse IDE and import the project by going to File -> Import -> Projects from Folder or Archive and select the submitted archive file. 
 
-2. To run the program, open FloorManager.Java and navigate to the toolbar. Find the green run button and select the down arrow next to it. A dropdown menu will appear, 
-   hover over the "Run As" option and select "1 Java Application". The output will appear in the console window. Repeat with EelvatorSubSystem.java and Scheduler.java.
+2. To run the program, Navigate to the toolbar and find the green run button and select the down arrow next to it. A dropdown menu will appear, 
+   hover over the "Run As" option and select "1 Java Application". Run the Following in order: Scheduler.java, ElevatorSubSystem.java (wait about 3 second) then FloorManager.java.
 
 
 Test Instructions 
