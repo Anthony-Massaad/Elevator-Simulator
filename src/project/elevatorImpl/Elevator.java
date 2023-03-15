@@ -362,7 +362,7 @@ public class Elevator implements Runnable{
 	 * Getter method to get the Elevator Id.
 	 * @return Integer
 	 */
-	public Integer getId() {
+	public int getId() {
 		return this.id;
 	}
 
