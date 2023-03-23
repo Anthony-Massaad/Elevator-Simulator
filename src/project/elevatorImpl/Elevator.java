@@ -273,11 +273,12 @@ public class Elevator implements Runnable{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		while (this.state != ElevatorState.ERROR) {
+		while (this.state != ElevatorState.ELEVATOR_BROKEN) {
 			try {
 				if (this.requests.size() >= 0) {
 					this.checkMessage(); 
 				}
+				
 				if (this.state == ElevatorState.IDLE) {
 	                // checks with the scheduler using the message queue system
 	                // to see if it can do something.
