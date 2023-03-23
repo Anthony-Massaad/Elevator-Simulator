@@ -8,16 +8,17 @@ import java.util.LinkedHashSet;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import project.constants.ElevatorState;
 import project.constants.MotorDirection;
 import project.constants.SimulationConstants;
-import project.constants.Time;
 import project.logger.Log;
 import project.messageSystem.Message;
-import project.messageSystem.messages.ArrivalMessage;
-import project.messageSystem.messages.ElevatorLeavingMessage;
-import project.messageSystem.messages.MoveToMessage;
 import project.messageSystem.messages.UpdatePositionMessage;
+import project.statesImpl.State;
+import project.statesImpl.elevatorStates.ElevatorCloseDoorState;
+import project.statesImpl.elevatorStates.ElevatorIdleState;
+import project.statesImpl.elevatorStates.ElevatorMovingState;
+import project.statesImpl.elevatorStates.ElevatorOpenDoorState;
+import project.statesImpl.elevatorStates.ElevatorRequestProcessState;
 
 public class Elevator implements Runnable{
 	
@@ -29,10 +30,17 @@ public class Elevator implements Runnable{
 	private boolean[] lamps; // respective to the destinations value - 1. It is the buttons lamps light
 	private String systemName; 
 	private ElevatorStatus elevatorStatus; 
-	private ElevatorState state; 
 	private int id; 
 	private boolean directionLampUp;
 	private boolean directionLampDown;
+
+	// declare the states 
+	private State currentState;
+	private State requestProcessingState;
+	private State elevatorMovingState;
+	private State elevatorDoorCloseState; 
+	private State elevatorIdleState; 
+	private State elevatorDoorOpenState; 
 	
 	/**
 	 * Constructor for the Elevator class.
@@ -47,12 +55,78 @@ public class Elevator implements Runnable{
 		// new Random().nextInt(SimulationConstants.NUM_OF_FLOORS) + 1 = (0-21) + 1 = (1-22)
 		this.destinations = new ArrayList<>(); 
 		elevatorStatus = new ElevatorStatus(this.destinations.size(), 0, new Random().nextInt(SimulationConstants.NUM_OF_FLOORS) + 1, MotorDirection.IDLE);
-		this.state = ElevatorState.IDLE; 
 		this.lamps = new boolean[SimulationConstants.NUM_OF_FLOORS];
 		this.systemName = systemName; 
 		this.id = id; 
 		this.floorInputButtons = new HashMap<>();
 		this.sendUpdateStatus();
+		// initialize the states
+		this.currentState = new ElevatorIdleState(this);
+		this.requestProcessingState = new ElevatorRequestProcessState(this);
+		this.elevatorDoorCloseState = new ElevatorCloseDoorState(this);
+		this.elevatorDoorOpenState = new ElevatorOpenDoorState(this);
+		this.elevatorIdleState = new ElevatorIdleState(this);
+		this.elevatorMovingState = new ElevatorMovingState(this);
+	}
+
+	/**
+	 * have the thread sleep
+	 * @param time Integer, the duration
+	 */
+	public void sleep(int time){
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * set the current state of elevator
+	 * @param state State, the new current state
+	 */
+	public void setCurrentState(State state){
+		this.currentState = state; 
+	}
+
+	/**
+	 * get the current State
+	 * @return State, the current state
+	 */
+	public State getCurrentState(){
+		return this.currentState; 
+	}
+
+	/**
+	 * get the elevator moving state
+	 * @return State, the moving state
+	 */
+	public State getElevatorMovingState(){
+		return this.elevatorMovingState;
+	}
+
+	/**
+	 * get the elevator Idle state
+	 * @return State, the idle state
+	 */
+	public State getElevatorIdleState(){
+		return this.elevatorIdleState;
+	}
+
+	/**
+	 * get the elevator Close door state 
+	 * @return State, the close door state
+	 */
+	public State getElevatorDoorCloseState(){
+		return this.elevatorDoorCloseState;
+	}
+
+	/**
+	 * get the elevator door open state 
+	 * @return State, the door open state
+	 */
+	public State getElevatorDoorOpenState(){
+		return this.elevatorDoorOpenState;
 	}
 
 	/**
@@ -68,6 +142,14 @@ public class Elevator implements Runnable{
 	 */
 	public void addRequest(Message msg){
 		this.requests.add(msg);
+	}
+
+	/**
+	 * Set the destination
+	 * @param dest ArrayList<Integer>, new destinations
+	 */
+	public void setDestinations(ArrayList<Integer> dest){
+		this.destinations = dest; 
 	}
 	
 	/**
@@ -87,7 +169,7 @@ public class Elevator implements Runnable{
 	/**
 	 * Void method for updating the Elevator's motor direction.
 	 */
-	private void updateMotorStatus(){
+	public void updateMotorStatus(){
 		if (this.elevatorStatus.getNextDestination() > this.elevatorStatus.getCurrentFloor()){
 			this.elevatorStatus.setMotorDirection(MotorDirection.UP);
 			this.directionLampUp = true; 
@@ -105,7 +187,7 @@ public class Elevator implements Runnable{
 	/**
 	 * Void method for sending the update status.
 	 */
-	private void sendUpdateStatus(){
+	public void sendUpdateStatus(){
 		UpdatePositionMessage updatePositionMessage = new UpdatePositionMessage(new Date(), this.id, this.elevatorStatus.getNumberOfPassengers(), this.elevatorStatus.getNextDestination(), this.elevatorStatus.getCurrentFloor(), this.elevatorStatus.getMotorDirection());
 		Log.notification("ELEVATOR", updatePositionMessage.toString(), new Date(), this.systemName);
 		this.responses.addFirst(updatePositionMessage);
@@ -117,7 +199,7 @@ public class Elevator implements Runnable{
 	 * @param toAdd The arraylist of buttons to add to the list.
 	 * @return The combined arraylist.
 	 */
-	private ArrayList<Integer> appendButtonsToExistingList(ArrayList<Integer> curr, ArrayList<Integer> toAdd){
+	public ArrayList<Integer> appendButtonsToExistingList(ArrayList<Integer> curr, ArrayList<Integer> toAdd){
 		curr.addAll(toAdd);
 		Set<Integer> set = new LinkedHashSet<>();
 		set.addAll(curr);
@@ -142,173 +224,6 @@ public class Elevator implements Runnable{
 			this.floorInputButtons.put(floorNumber, buttons);
 		}
 		System.out.println("Size for upcoming buttons! = " + this.floorInputButtons.size());
-	}
-	
-	/**
-     * Void method that checks if the requested message was sent from the elevator Subsystem. The Elevator will change state accordingly depending on the message
-     */
-	public boolean checkMessage() {
-    	Message message = this.requests.poll();
-		
-    	if (message instanceof MoveToMessage) {
-    		MoveToMessage moveToMessage = (MoveToMessage) message; 
-    		int destination = moveToMessage.getDestinationFloor();
-        	// Log.notification("ELEVATOR", "Received move to request to floor " + destination, new Date(), this.systemName);
-        	// For this iteraion, it's just moving! 
-        	Log.notification("ELEVATOR", moveToMessage.toString(), new Date(), this.systemName);
-			
-        	if (this.state == ElevatorState.MOVING) {
-        		// add to queue if button isn't already pressed
-				if (this.destinations.contains(destination)){
-					this.addUpcomingButtons(destination, moveToMessage.getButtonsToBePressed());
-					return true; 
-				}
-        		this.destinations.add(destination);
-        		this.sortDestinations();
-				this.addUpcomingButtons(destination, moveToMessage.getButtonsToBePressed());
-        		// sort 
-        	}else if (this.elevatorStatus.getCurrentFloor() == destination) {
-        		// already at the requested floor
-        		this.state = ElevatorState.OPEN_DOOR;
-			}
-			else {
-        		// start moving the elevator and change motor direction
-        		this.elevatorStatus.setNextDestination(destination);
-				this.destinations.add(destination);
-				this.addUpcomingButtons(destination, moveToMessage.getButtonsToBePressed());
-				this.updateMotorStatus();
-				this.sendUpdateStatus();
-    			this.state = ElevatorState.MOVING;
-        	}
-			return true; 
-    	}
-		return false;
-    }
-    
-    /**
-     * Void method that handles the opening of the Elevator door. Prints all related messages and sleeps depending on the Elevator state.
-     * @throws InterruptedException
-     */
-	public void handleOpenDoor() throws InterruptedException {
-		Log.notification("ELEVATOR", "Open Door", new Date(), this.systemName);
-        Thread.sleep(Time.OPEN_DOOR.getTime());
-
-		// handle unloading and loading passenger
-		Log.notification("ELEVATOR", "Unloading Passenger", new Date(), this.systemName);
-		Thread.sleep(Time.UNLOAD_PASSENGERS.getTime());
-
-        // Load/unload passengers add to the buttons arraylist then close doors
-		if (this.floorInputButtons.containsKey(this.elevatorStatus.getCurrentFloor())){
-			Log.notification("ELEVATOR", "Loading Passenger", new Date(), this.systemName);
-			Thread.sleep(Time.LOAD_PASSENGERS.getTime());
-			this.destinations = this.appendButtonsToExistingList(this.destinations, this.floorInputButtons.get(this.elevatorStatus.getNextDestination()));
-			System.out.println("SIZE OF DESTINATION IS " + this.destinations.size()); 
-		}
-        this.state = ElevatorState.CLOSE_DOOR;
-    }
-    
-    /**
-     * Void method that handles the closing of the Elevator door. 
-     * @throws InterruptedException
-     */
-	public void handleCloseDoor() throws InterruptedException {
-    	Log.notification("ELEVATOR", "Closing Door", new Date(), this.systemName);
-        Thread.sleep(Time.CLOSE_DOOR.getTime());
-        // if buttons were pressed, then start moving. Otherwise transition to idle
-        if (this.destinations.size() > 0) {
-			this.elevatorStatus.setNextDestination(this.destinations.get(0));
-        	this.destinations.remove(0);
-			this.updateMotorStatus();
-			this.responses.add(new ElevatorLeavingMessage(new Date(), this.elevatorStatus.getCurrentFloor(), this.elevatorStatus.getMotorDirection()));
-        	this.state = ElevatorState.MOVING;
-        }else {
-			this.elevatorStatus.setMotorDirection(MotorDirection.IDLE);
-			Log.notification("ELEVATOR", "Motor Direction is " + MotorDirection.toString(this.elevatorStatus.getMotorDirection()), new Date(), this.systemName);
-        	this.state = ElevatorState.IDLE;
-			this.directionLampDown = false; 
-			this.directionLampUp = false; 
-			Log.notification("ELEVATOR", "up direction lamp set to " + this.directionLampUp, new Date(), this.systemName);
-			Log.notification("ELEVATOR", "down direction lamp set to " + this.directionLampDown, new Date(), this.systemName);
-			this.responses.add(new ElevatorLeavingMessage(new Date(), this.elevatorStatus.getCurrentFloor(), this.elevatorStatus.getMotorDirection()));
-        }
-		this.sendUpdateStatus();
-    }
-    
-    /**
-     * Void method that handles the moving of the Elevator. 
-     * @throws InterruptedException
-     */
-	public void handleMoving() throws InterruptedException {
-    	Log.notification("ELEVATOR", "Current floor " + this.elevatorStatus.getCurrentFloor(), new Date(), this.systemName);
-
-    	if (this.elevatorStatus.getCurrentFloor() < this.elevatorStatus.getNextDestination()) {
-			this.elevatorStatus.setCurrentFloor(this.elevatorStatus.getCurrentFloor() + 1);
-    	}else if (this.elevatorStatus.getCurrentFloor() > this.elevatorStatus.getNextDestination()) {
-			this.elevatorStatus.setCurrentFloor(this.elevatorStatus.getCurrentFloor() - 1);
-    	}
-        Thread.sleep(Time.MOVE.getTime());
-    	Log.notification("ELEVATOR", "Reached floor " + this.elevatorStatus.getCurrentFloor(), new Date(), this.systemName);
-    	// update the scheduler through the ElevatorSubsystem
-    	this.sendUpdateStatus();
-        if (this.elevatorStatus.getNextDestination() == this.elevatorStatus.getCurrentFloor()) {
-        	// when we reach the destination floor 
-			this.destinations.remove(0);
-			this.lamps[this.elevatorStatus.getNextDestination() - 1] = false; 
-			ArrivalMessage arrivalMessage;
-			if (this.destinations.size() == 0){
-				arrivalMessage = new ArrivalMessage(new Date(), this.elevatorStatus.getNextDestination(), MotorDirection.oppositeDirection(this.elevatorStatus.getMotorDirection()));
-			}else{
-				arrivalMessage = new ArrivalMessage(new Date(), this.elevatorStatus.getNextDestination(), this.elevatorStatus.getMotorDirection());
-			}
-        	Log.notification("ELEVATOR", arrivalMessage.toString(), new Date(), this.systemName);
-			Log.notification("ELEVATOR", "Lamp " + this.elevatorStatus.getNextDestination() + " off", new Date(), this.systemName);
-        	this.responses.addFirst(arrivalMessage);
-        	this.state = ElevatorState.OPEN_DOOR;
-        }
-    }
-	
-    /**
-     * Overriden method that runs the functionality of the Elevator, all dependent on the current state.
-     */
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		while (this.state != ElevatorState.ELEVATOR_BROKEN) {
-			try {
-				if (this.requests.size() >= 0) {
-					this.checkMessage(); 
-				}
-				
-				if (this.state == ElevatorState.IDLE) {
-	                // checks with the scheduler using the message queue system
-	                // to see if it can do something.
-	                Thread.sleep(500);
-	            }
-	            if (this.state == ElevatorState.OPEN_DOOR){
-	            	this.handleOpenDoor();
-	            }
-				
-				if (this.state == ElevatorState.CLOSE_DOOR){
-	            	this.handleCloseDoor();
-	            }
-	            
-				if (this.state == ElevatorState.MOVING){
-	            	this.handleMoving();
-	            }
-			}catch (InterruptedException e) {
-				// tthrow error
-			}
-			
-			
-		}
-	}
-
-	/**
-	 * Getter method to get the Elevator state.
-	 * @return ElevatorState
-	 */
-	public ElevatorState getState() {
-		return this.state;
 	}
 
 	/**
@@ -365,6 +280,55 @@ public class Elevator implements Runnable{
 	 */
 	public int getId() {
 		return this.id;
+	}
+
+	/**
+	 * Set the direction lamp for up
+	 * @param cond boolean, true if on otherwise false
+	 */
+	public void setDirectionLampUp(boolean cond){
+		this.directionLampUp = cond; 
+	}
+
+	/**
+	 * set the direction lamp for down
+	 * @param cond boolean, true if on otherwise false 
+	 */
+	public void setDirectionLampDown(boolean cond){
+		this.directionLampDown = cond;
+	}
+
+	/**
+	 * get the up direction lamp 
+	 * @return boolean, true if on otherwise false 
+	 */
+	public boolean getDirectionLampUp(){
+		return this.directionLampUp;
+	}
+
+	/**
+	 * get the down direction lamp
+	 * @return boolean, true if on otherwise false 
+	 */
+	public boolean getDirectionLampDown(){
+		return this.directionLampDown; 
+	}
+
+	/**
+     * Overriden method that runs the functionality of the Elevator, all dependent on the current state.
+     */
+	@Override
+	public void run() {
+		while (true) {
+			try {
+				if (this.requests.size() > 0) {
+					this.setCurrentState(this.requestProcessingState.handleState());
+				}
+				this.setCurrentState(this.currentState.handleState());
+			}catch (Exception e) {
+				// tthrow error
+			}
+		}
 	}
 
 }

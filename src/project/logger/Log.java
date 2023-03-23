@@ -4,6 +4,7 @@ import java.net.DatagramPacket;
 import java.util.Date;
 
 public class Log {
+	private static boolean logPackets = false; 
 
 	/**
 	 * Log Messages as notifications (None urgent messages) 
@@ -29,8 +30,11 @@ public class Log {
 
 
 	public static void logSendMsg(String systemName, DatagramPacket packet, String msgAsString) {
+		if (!logPackets){
+			return;
+		}
 		// Process the send datagram.
-		System.out.println(systemName + ": Preparing to send packet:");
+		System.out.println(systemName + ": Sending Packet:");
 		System.out.println("To host -> " + packet.getAddress());
 		System.out.println("Destination port -> " + packet.getPort());
 		int len = packet.getLength();
@@ -44,6 +48,9 @@ public class Log {
 	 * @param packet DatagramPacket, the packet to collect information from
 	 */
 	public static void logReceiveMsg(String systemName, DatagramPacket packet, String msgAsString) {
+		if (!logPackets){
+			return; 
+		}
 		// Process the received datagram.
 		System.out.println(systemName + ": Packet received:");
 		System.out.println("From host -> " + packet.getAddress());

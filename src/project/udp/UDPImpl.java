@@ -78,7 +78,7 @@ public abstract class UDPImpl {
 		Log.logSendMsg(this.systemName, this.sendPacket, msg.toString());
 		Thread.sleep(1000);		// slow things down
 		sendSocket.send(this.sendPacket);
-		System.out.println("Packet sent.");
+		// System.out.println("Packet sent.");
 	}
 	
 	/**

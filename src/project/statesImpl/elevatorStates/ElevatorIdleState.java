@@ -1,5 +1,19 @@
 package project.statesImpl.elevatorStates;
 
-public class ElevatorIdleState {
+import project.elevatorImpl.Elevator;
+import project.statesImpl.State;
+
+public class ElevatorIdleState extends State{
+    private Elevator elevator; 
+
+    public ElevatorIdleState(Elevator elevator){
+        this.elevator = elevator; 
+    }
+
+    @Override
+    public State handleState() {
+        this.elevator.sleep(500);
+        return this.elevator.getElevatorIdleState();
+    }
     
 }
