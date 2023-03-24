@@ -26,7 +26,7 @@ public class SchedulerProcessFloorState extends State {
                 FloorRequestElevator requestMessage = (FloorRequestElevator) this.scheduler.getReceviedMessage();
                 int elevatorID = this.scheduler.selectElevator(requestMessage.getFloorNumber(), requestMessage.getDirection());
                 Log.notification("SCHEDULER", requestMessage.toString(), new Date(), this.scheduler.getSystemName());
-                RequestElevatorMessage msg = new RequestElevatorMessage(requestMessage.getTimeStamp(), requestMessage.getFloorNumber(), elevatorID, requestMessage.getButtonsToBePressed());
+                RequestElevatorMessage msg = new RequestElevatorMessage(requestMessage.getTimeStamp(), requestMessage.getFloorNumber(), elevatorID, requestMessage.getButtonsToBePressed(), requestMessage.getDirection());
                 this.scheduler.sendPacket(msg, SimulationConstants.ELEVATOR_MANAGER_PORT);
             }
             this.scheduler.reset();

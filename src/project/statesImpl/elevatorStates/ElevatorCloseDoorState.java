@@ -24,7 +24,8 @@ public class ElevatorCloseDoorState extends State{
         
         // if buttons were pressed, then start moving. Otherwise transition to idle
         if (this.elevator.getDestinations().size() > 0) {
-            if (this.elevator.getDestinations().get(0) <= 0){
+            if (this.elevator.getDestinations().get(0) == 0){
+                // door is stuck to close if the value is 0
                 returningState = this.elevator.getElevatorDoorFaultState();
             }else{
                 Log.notification("ELEVATOR", "Doors Closed", new Date(), this.elevator.getSystemName());

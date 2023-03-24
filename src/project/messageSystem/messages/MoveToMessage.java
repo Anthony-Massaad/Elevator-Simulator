@@ -3,12 +3,14 @@ package project.messageSystem.messages;
 import java.util.ArrayList;
 import java.util.Date;
 
+import project.constants.MotorDirection;
 import project.messageSystem.Message;
 
 public class MoveToMessage extends Message{
 	
 	private final int destinationFloor; 
 	private final ArrayList<Integer> buttonsToBePressed;
+	private final MotorDirection direction; 
 
 	/**
 	 * Constructor for MoveToMessage.
@@ -16,10 +18,11 @@ public class MoveToMessage extends Message{
 	 * @param destinationFloor An integer destinationFloor.
 	 * @param buttonsToBePressed An arraylist of buttons to be pressed.
 	 */
-	public MoveToMessage(Date timeStamp, int destinationFloor, ArrayList<Integer> buttonsToBePressed) {
+	public MoveToMessage(Date timeStamp, int destinationFloor, ArrayList<Integer> buttonsToBePressed, MotorDirection direction) {
 		super(timeStamp);
 		this.destinationFloor = destinationFloor; 
 		this.buttonsToBePressed = buttonsToBePressed;
+		this.direction = direction; 
 	}
 	
 	/**
@@ -36,6 +39,14 @@ public class MoveToMessage extends Message{
 	 */
 	public ArrayList<Integer> getButtonsToBePressed(){
 		return this.buttonsToBePressed;
+	}
+
+	/**
+	 * get the direction
+	 * @return MotorDirection, the direction
+	 */
+	public MotorDirection getDirection(){
+		return this.direction; 
 	}
 
 	/**

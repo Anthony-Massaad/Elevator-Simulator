@@ -42,7 +42,7 @@ public class ElevatorSubSystem extends UDPReceive{
 		if (request instanceof RequestElevatorMessage){
 			RequestElevatorMessage requestMessage = (RequestElevatorMessage) request; 
 			Log.notification("ELEVATOR SUBSYSTEM", requestMessage.toString(), new Date(), this.systemName);
-			MoveToMessage moveToMessage = new MoveToMessage(requestMessage.getTimeStamp(), requestMessage.getFloorNumber(), requestMessage.getButtonsToBePressed());
+			MoveToMessage moveToMessage = new MoveToMessage(requestMessage.getTimeStamp(), requestMessage.getFloorNumber(), requestMessage.getButtonsToBePressed(), requestMessage.getDirection());
 			this.elevators[requestMessage.getElevatorID()].addRequest(moveToMessage);
 		}else{
 			throw new Error("Unknown message received");

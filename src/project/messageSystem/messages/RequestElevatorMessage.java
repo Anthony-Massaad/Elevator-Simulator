@@ -3,6 +3,7 @@ package project.messageSystem.messages;
 import java.util.ArrayList;
 import java.util.Date;
 
+import project.constants.MotorDirection;
 import project.messageSystem.Message;
 
 public class RequestElevatorMessage extends Message{
@@ -10,6 +11,7 @@ public class RequestElevatorMessage extends Message{
 	private final int floorNumber;
 	private final int elevatorID; 
 	private final ArrayList<Integer> buttonsToBePressed;
+	private final MotorDirection direction; 
 
 	/**
 	 * Constructor for RequestElevatorMessage.
@@ -18,11 +20,12 @@ public class RequestElevatorMessage extends Message{
 	 * @param elevatorID An integer elevatorID.
 	 * @param buttonsToBePressed An arrayList of buttons to be pressed.
 	 */
-	public RequestElevatorMessage(Date timeStamp, int floorNumber, int elevatorID, ArrayList<Integer> buttonsToBePressed){
+	public RequestElevatorMessage(Date timeStamp, int floorNumber, int elevatorID, ArrayList<Integer> buttonsToBePressed, MotorDirection direction){
 		super(timeStamp);
 		this.floorNumber = floorNumber; 
 		this.elevatorID = elevatorID; 
 		this.buttonsToBePressed = buttonsToBePressed;
+		this.direction = direction; 
 	}
 	
 	/**
@@ -39,6 +42,14 @@ public class RequestElevatorMessage extends Message{
 	 */
 	public int getFloorNumber() {
 		return this.floorNumber;
+	}
+
+	/**
+	 * get the direction
+	 * @return MotorDirection, the direction 
+	 */
+	public MotorDirection getDirection(){
+		return this.direction;
 	}
 
 	

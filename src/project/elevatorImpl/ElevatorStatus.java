@@ -115,11 +115,12 @@ public class ElevatorStatus {
      * @param numberOfPassengers The number of passengers.
      * @param nextDestination The next destination.
      */
-    public void update(MotorDirection direction, int currentFloor, int numberOfPassengers, int nextDestination){
+    public void update(MotorDirection direction, int currentFloor, int numberOfPassengers, int nextDestination, boolean isStuck){
         this.motorDir = direction; 
         this.currentFloor = currentFloor;
         this.numberOfPassengers = numberOfPassengers;
         this.nextDestination = nextDestination;
+        this.isStuck = isStuck;
     }
 
 }

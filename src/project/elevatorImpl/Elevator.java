@@ -1,7 +1,7 @@
 package project.elevatorImpl;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -14,6 +14,7 @@ import project.logger.Log;
 import project.messageSystem.Message;
 import project.messageSystem.messages.UpdatePositionMessage;
 import project.statesImpl.State;
+import project.statesImpl.elevatorStates.ElevatorBrokenState;
 import project.statesImpl.elevatorStates.ElevatorCloseDoorState;
 import project.statesImpl.elevatorStates.ElevatorDoorFaultState;
 import project.statesImpl.elevatorStates.ElevatorIdleState;
@@ -34,6 +35,7 @@ public class Elevator implements Runnable{
 	private int id; 
 	private boolean directionLampUp;
 	private boolean directionLampDown;
+	private MotorDirection upcomingDirection; // needed for changing the direction on the initial motordirection of the elvator 
 
 	// declare the states 
 	private State currentState;
@@ -42,7 +44,8 @@ public class Elevator implements Runnable{
 	private State elevatorDoorCloseState; 
 	private State elevatorIdleState; 
 	private State elevatorDoorOpenState; 
-	private State elevatorDoorFaultState; 
+	private State elevatorDoorFaultState;
+	private State elevatorBrokenState; 
 	
 	/**
 	 * Constructor for the Elevator class.
@@ -61,6 +64,7 @@ public class Elevator implements Runnable{
 		this.systemName = systemName; 
 		this.id = id; 
 		this.floorInputButtons = new HashMap<>();
+		this.upcomingDirection = null; 
 		this.sendUpdateStatus();
 		// initialize the states
 		this.requestProcessingState = new ElevatorRequestProcessState(this);
@@ -69,6 +73,7 @@ public class Elevator implements Runnable{
 		this.elevatorIdleState = new ElevatorIdleState(this);
 		this.elevatorMovingState = new ElevatorMovingState(this);
 		this.elevatorDoorFaultState = new ElevatorDoorFaultState(this);
+		this.elevatorBrokenState = new ElevatorBrokenState(this);
 		this.currentState = this.elevatorIdleState;
 	}
 
@@ -82,6 +87,22 @@ public class Elevator implements Runnable{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * get the upcoming direction which the elevator will change to
+	 * @return MotorDirection, the direction
+	 */
+	public MotorDirection getUpcomingDirection(){
+		return this.upcomingDirection;
+	}
+
+	/**
+	 * set the upcoming direction the elevator will change to
+	 * @param dir MotorDirection, the direction
+	 */
+	public void setUpcomingDirection(MotorDirection dir){
+		this.upcomingDirection = dir; 
 	}
 
 	/**
@@ -142,6 +163,14 @@ public class Elevator implements Runnable{
 	}
 
 	/**
+	 * get the elevator Broken State 
+	 * @return State, elevator broken state
+	 */
+	public State getElevatorBrokenState(){
+		return this.elevatorBrokenState;
+	}
+
+	/**
 	 * Getter method for the elevator status.
 	 */
 	public ElevatorStatus getElevatorStatus(){
@@ -163,15 +192,47 @@ public class Elevator implements Runnable{
 	public void setDestinations(ArrayList<Integer> dest){
 		this.destinations = dest; 
 	}
+
+	public void sort(boolean isReverse){
+		int pos; 
+        for (int i = 0; i < this.destinations.size(); i++) { 
+            pos = i; 
+
+			if (this.destinations.get(i) <= 0){
+				continue;
+			}
+
+			for (int j = i + 1; j < this.destinations.size(); j++){
+				
+				if (this.destinations.get(j) <= 0){
+					continue;
+				}
+
+				if (!isReverse){
+					if (this.destinations.get(j) < this.destinations.get(pos)){
+						pos = j; 
+					}
+				}else{
+					if (this.destinations.get(j) > this.destinations.get(pos)){
+						pos = j; 
+					}
+				}	
+			}
+			int temp = this.destinations.get(i);
+			this.destinations.set(i, this.destinations.get(pos));
+			this.destinations.set(pos, temp);
+        } 
+		Log.notification("ELEVATOR", "Sorted Destinations: " + Arrays.toString(this.destinations.toArray()), new Date(), this.systemName);
+	}
 	
 	/**
 	 * Void method for sorting the directions based on the direction the elevator is headed.
 	 */
 	public void sortDestinations() {
 		if (this.elevatorStatus.getMotorDirection() == MotorDirection.UP) {
-			Collections.sort(this.destinations);
+			this.sort(false);
 		}else if (this.elevatorStatus.getMotorDirection() == MotorDirection.DOWN){
-			Collections.reverse(this.destinations);
+			this.sort(true);
 		}else {
 			// error lol 
         	Log.notification("ELEVATOR","Sorting Error", new Date(), this.systemName);
@@ -200,7 +261,7 @@ public class Elevator implements Runnable{
 	 * Void method for sending the update status.
 	 */
 	public void sendUpdateStatus(){
-		UpdatePositionMessage updatePositionMessage = new UpdatePositionMessage(new Date(), this.id, this.elevatorStatus.getNumberOfPassengers(), this.elevatorStatus.getNextDestination(), this.elevatorStatus.getCurrentFloor(), this.elevatorStatus.getMotorDirection());
+		UpdatePositionMessage updatePositionMessage = new UpdatePositionMessage(new Date(), this.id, this.elevatorStatus.getNumberOfPassengers(), this.elevatorStatus.getNextDestination(), this.elevatorStatus.getCurrentFloor(), this.elevatorStatus.getMotorDirection(), this.elevatorStatus.getIsStuck());
 		Log.notification("ELEVATOR", updatePositionMessage.toString(), new Date(), this.systemName);
 		this.responses.addFirst(updatePositionMessage);
 	}
@@ -341,6 +402,15 @@ public class Elevator implements Runnable{
 				// tthrow error
 			}
 		}
+	}
+
+	public static void main(String[] args) {
+		// testing the sorting array
+		Elevator e = new Elevator(1, "test", new ConcurrentLinkedDeque<>());
+		e.setDestinations(new ArrayList<Integer>(){{add(7); add(-1); add(6); add(0);}});
+		System.out.println(Arrays.toString(e.getDestinations().toArray()));
+		e.sort(false);
+		System.out.println(Arrays.toString(e.getDestinations().toArray()));
 	}
 
 }

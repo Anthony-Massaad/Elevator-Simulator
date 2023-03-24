@@ -24,7 +24,7 @@ public class SchedulerProcessElevatorState extends State {
         }else{
             if (this.schedulerMidTask.getReceviedMessage() instanceof UpdatePositionMessage) {
                 UpdatePositionMessage updatePositionMessage = (UpdatePositionMessage) this.schedulerMidTask.getReceviedMessage();
-                this.schedulerMidTask.getElevatorStatus().get(updatePositionMessage.getElevatorID()).update(updatePositionMessage.getDirection(), updatePositionMessage.getCurrentFloor(), updatePositionMessage.getNumberOfPassengers(), updatePositionMessage.getNextDestination());
+                this.schedulerMidTask.getElevatorStatus().get(updatePositionMessage.getElevatorID()).update(updatePositionMessage.getDirection(), updatePositionMessage.getCurrentFloor(), updatePositionMessage.getNumberOfPassengers(), updatePositionMessage.getNextDestination(), updatePositionMessage.getIsStuck());
                 Log.notification("SCHEDULER MID TASK", updatePositionMessage.toString(), new Date(), this.schedulerMidTask.getSystemName());
                 System.out.println("elevator Position update blah blah blah floor: " + this.schedulerMidTask.getElevatorStatus().get(updatePositionMessage.getElevatorID()).getCurrentFloor());
                 this.schedulerMidTask.reset();

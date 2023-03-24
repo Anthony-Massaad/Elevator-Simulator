@@ -11,6 +11,7 @@ public class UpdatePositionMessage extends Message{
 	private final int currentFloor;
 	private final MotorDirection motorDir;
     private final int elevatorID; 
+    private final boolean isStuck; 
 
     /**
      * Constructor for UpdatePositionMessage.
@@ -21,13 +22,14 @@ public class UpdatePositionMessage extends Message{
      * @param currentFloor An int currentFloor.
      * @param motorDir A MotorDirection object motorDir.
      */
-    public UpdatePositionMessage(Date timeStamp, int elevatorID, int numberOfPassengers, int nextDestination, int currentFloor, MotorDirection motorDir) {
+    public UpdatePositionMessage(Date timeStamp, int elevatorID, int numberOfPassengers, int nextDestination, int currentFloor, MotorDirection motorDir, boolean isStuck) {
         super(timeStamp);
         this.numberOfPassengers = numberOfPassengers;
         this.nextDestination = nextDestination;
         this.currentFloor = currentFloor;
         this.motorDir = motorDir;
         this.elevatorID = elevatorID;
+        this.isStuck = isStuck; 
     }
 
     /**
@@ -68,6 +70,14 @@ public class UpdatePositionMessage extends Message{
      */
     public MotorDirection getDirection(){
         return this.motorDir; 
+    }
+
+    /**
+     * getter method for is stuck
+     * @return boolean, true if stuck otherwise false
+     */
+    public boolean getIsStuck(){
+        return this.isStuck;
     }
 
     /**
