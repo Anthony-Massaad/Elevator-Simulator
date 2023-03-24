@@ -16,6 +16,18 @@ public class Log {
 	public static void notification(String system, String msg, Date timestamp, String systemName) {
         System.out.println("[Time: " + timestamp.getTime() + "] " + "[" + system + "] " + "[Class: " + systemName + "] " + "[Notfication] " + msg);
 	}
+
+
+	/**
+	 * Log Messages as notifications (None urgent messages) 
+	 * @param system String, The Class in which is using method
+	 * @param msg String, the message to display
+	 * @param timestamp Date, the date in which it occurred
+	 * @param systemName String, the exact name/index of the system calling this method
+	 */
+	public static void warning(String system, String msg, Date timestamp, String systemName) {
+        System.out.println("[Time: " + timestamp.getTime() + "] " + "[" + system + "] " + "[Class: " + systemName + "] " + "[warning] " + msg);
+	}
 	
 	/**
 	 * Log Messages as Errors (urgent messages) 
@@ -25,7 +37,7 @@ public class Log {
 	 * @param systemName String, the exact name/index of the system calling this method
 	 */
 	public static void error(String system, String msg, Date timestamp, String systemName) {
-		System.out.println("[Time: " + timestamp.getTime() + "] " + "[" + system + "] " + "[Class: " + systemName + "] " + "[Notfication] " + msg);
+		System.out.println("[Time: " + timestamp.getTime() + "] " + "[" + system + "] " + "[Class: " + systemName + "] " + "[Error] " + msg);
 	}
 
 

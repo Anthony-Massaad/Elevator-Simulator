@@ -21,15 +21,19 @@ public class ElevatorCloseDoorState extends State{
         Log.notification("ELEVATOR", "Closing Door", new Date(), this.elevator.getSystemName());
         this.elevator.sleep(Time.CLOSE_DOOR.getTime());
         State returningState; 
-        Log.notification("ELEVATOR", "Doors Closed", new Date(), this.elevator.getSystemName());
         
         // if buttons were pressed, then start moving. Otherwise transition to idle
         if (this.elevator.getDestinations().size() > 0) {
-            this.elevator.getElevatorStatus().setNextDestination(this.elevator.getDestinations().get(0));
-        	this.elevator.getDestinations().remove(0);
-			this.elevator.updateMotorStatus();
-			this.elevator.getResponses().add(new ElevatorLeavingMessage(new Date(), this.elevator.getElevatorStatus().getCurrentFloor(), this.elevator.getElevatorStatus().getMotorDirection()));
-            returningState = this.elevator.getElevatorMovingState();
+            if (this.elevator.getDestinations().get(0) <= 0){
+                returningState = this.elevator.getElevatorDoorFaultState();
+            }else{
+                Log.notification("ELEVATOR", "Doors Closed", new Date(), this.elevator.getSystemName());
+                this.elevator.getElevatorStatus().setNextDestination(this.elevator.getDestinations().get(0));
+                // this.elevator.getDestinations().remove(0);
+                this.elevator.updateMotorStatus();
+                this.elevator.getResponses().add(new ElevatorLeavingMessage(new Date(), this.elevator.getElevatorStatus().getCurrentFloor(), this.elevator.getElevatorStatus().getMotorDirection()));
+                returningState = this.elevator.getElevatorMovingState();
+            }
         }else {
 			this.elevator.getElevatorStatus().setMotorDirection(MotorDirection.IDLE);
 			Log.notification("ELEVATOR", "Motor Direction is " + MotorDirection.toString(this.elevator.getElevatorStatus().getMotorDirection()), new Date(), this.elevator.getSystemName());

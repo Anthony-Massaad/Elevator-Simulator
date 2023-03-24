@@ -70,6 +70,7 @@ public class FloorScheduler extends UDPSend implements Runnable{
         for (int i = this.BUTTON_START_INDEX; i<event.length; i++){
             buttonsToBePressed.add(Integer.parseInt(event[i]));
         }   
+        System.out.println("SIZE OF BUTTONS TO BE PRESSED: " + buttonsToBePressed.size());
 
         if (direction == MotorDirection.UP){
             this.floors.get(floorNumber).setUpBtn(FloorButtonState.ACTIVE);

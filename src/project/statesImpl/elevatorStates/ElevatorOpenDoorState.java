@@ -27,8 +27,10 @@ public class ElevatorOpenDoorState extends State{
 		if (this.elevator.getFloorInputButtons().containsKey(this.elevator.getElevatorStatus().getCurrentFloor())){
 			Log.notification("ELEVATOR", "Loading Passenger", new Date(), this.elevator.getSystemName());
 			this.elevator.sleep(Time.LOAD_PASSENGERS.getTime());
-			this.elevator.setDestinations(this.elevator.appendButtonsToExistingList(this.elevator.getDestinations(), this.elevator.getFloorInputButtons().get(this.elevator.getElevatorStatus().getNextDestination())));
-		}
+			this.elevator.setDestinations(this.elevator.appendButtonsToExistingList(this.elevator.getDestinations(), this.elevator.getFloorInputButtons().get(this.elevator.getElevatorStatus().getCurrentFloor())));
+            System.out.println("New size of destinations is " + this.elevator.getDestinations().size());
+            this.elevator.getFloorInputButtons().remove(this.elevator.getElevatorStatus().getCurrentFloor());
+        }
 
         return this.elevator.getElevatorDoorCloseState();
     }

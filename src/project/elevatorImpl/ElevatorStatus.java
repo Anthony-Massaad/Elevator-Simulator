@@ -7,6 +7,7 @@ public class ElevatorStatus {
     private int numberOfPassengers; 
     private int nextDestination; 
 	private int currentFloor;
+    private boolean isStuck; 
 	private MotorDirection motorDir;
 
 	/**
@@ -28,6 +29,23 @@ public class ElevatorStatus {
         this.nextDestination = nextDestination;
         this.currentFloor = currentFloor;
         this.motorDir = motorDir;
+        this.isStuck = false; 
+    }
+
+    /**
+     * get is stuck boolean 
+     * @return boolean, true if stuck otherwise false 
+     */
+    public boolean getIsStuck(){
+        return this.isStuck;
+    }
+
+    /**
+     * set the is stuck variable
+     * @param isStuck boolean, true if stuck otherwise false
+     */
+    public void setIsStuck(boolean isStuck){
+        this.isStuck = isStuck;
     }
 
     /**

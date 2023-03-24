@@ -15,6 +15,7 @@ import project.messageSystem.Message;
 import project.messageSystem.messages.UpdatePositionMessage;
 import project.statesImpl.State;
 import project.statesImpl.elevatorStates.ElevatorCloseDoorState;
+import project.statesImpl.elevatorStates.ElevatorDoorFaultState;
 import project.statesImpl.elevatorStates.ElevatorIdleState;
 import project.statesImpl.elevatorStates.ElevatorMovingState;
 import project.statesImpl.elevatorStates.ElevatorOpenDoorState;
@@ -41,6 +42,7 @@ public class Elevator implements Runnable{
 	private State elevatorDoorCloseState; 
 	private State elevatorIdleState; 
 	private State elevatorDoorOpenState; 
+	private State elevatorDoorFaultState; 
 	
 	/**
 	 * Constructor for the Elevator class.
@@ -66,6 +68,7 @@ public class Elevator implements Runnable{
 		this.elevatorDoorOpenState = new ElevatorOpenDoorState(this);
 		this.elevatorIdleState = new ElevatorIdleState(this);
 		this.elevatorMovingState = new ElevatorMovingState(this);
+		this.elevatorDoorFaultState = new ElevatorDoorFaultState(this);
 		this.currentState = this.elevatorIdleState;
 	}
 
@@ -103,6 +106,15 @@ public class Elevator implements Runnable{
 	 */
 	public State getElevatorMovingState(){
 		return this.elevatorMovingState;
+	}
+
+
+	/**
+	 * get the door fault state
+	 * @return State, door fault state
+	 */
+	public State getElevatorDoorFaultState(){
+		return this.elevatorDoorFaultState;
 	}
 
 	/**
@@ -223,7 +235,7 @@ public class Elevator implements Runnable{
 		}else{
 			this.floorInputButtons.put(floorNumber, buttons);
 		}
-		System.out.println("Size for upcoming buttons! = " + this.floorInputButtons.size());
+		System.out.println("Size for upcoming buttons for floor " + floorNumber + "= " + this.floorInputButtons.get(floorNumber).size());
 	}
 
 	/**
