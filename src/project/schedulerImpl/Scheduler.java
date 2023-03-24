@@ -4,15 +4,14 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
 import project.constants.MotorDirection;
-import project.constants.SchedulerState;
 import project.constants.SimulationConstants;
 import project.elevatorImpl.ElevatorStatus;
 import project.logger.Log;
 import project.messageSystem.Message;
-import project.messageSystem.messages.FloorRequestElevator;
-import project.messageSystem.messages.RequestElevatorMessage;
+import project.statesImpl.State;
+import project.statesImpl.SchedulerStates.SchedulerIdleState;
+import project.statesImpl.SchedulerStates.SchedulerProcessFloorState;
 import project.udp.UDPBoth;
 
 /*
@@ -22,8 +21,12 @@ import project.udp.UDPBoth;
 public class Scheduler extends UDPBoth{
 
     private ConcurrentHashMap<Integer, ElevatorStatus> elevatorStatuses;
-    private SchedulerState state;     
     private Message receivedMessage; 
+    // declare the states
+    private State currentState; 
+    private State idleState; 
+    private State processFloorState; 
+
     /**
      * Constructor for the Scheduler class.
      * @param port Integer port number.
@@ -32,10 +35,13 @@ public class Scheduler extends UDPBoth{
     public Scheduler(int port, String systemName) {
         super(port, systemName);
         this.elevatorStatuses = new ConcurrentHashMap<>();
-        this.state = SchedulerState.IDLE; 
         System.out.println(this.systemName + " started");
         this.receivedMessage = null; 
 		System.out.println("-------------------------------------------------");
+        // initialize states
+        this.idleState = new SchedulerIdleState(this);
+        this.processFloorState = new SchedulerProcessFloorState(this);
+        this.currentState = this.idleState;
     }
 
     /**
@@ -47,26 +53,47 @@ public class Scheduler extends UDPBoth{
     }
 
     /**
-     * get the current scheduler state
-     * @return state SchedulerState, the current state of the scheduler
+     * get the current state
+     * @return State, the current State
      */
-    public SchedulerState getState(){
-        return this.state; 
+    public State getCurrentState(){
+        return this.currentState;
     }
 
+    /**
+     * get the idle state
+     * @return State, the idle state
+     */
+    public State getIdleState(){
+        return this.idleState;
+    }
+
+    /**
+     * get process floor state
+     * @return State, the process floor state
+     */
+    public State getProcessFloorState(){
+        return this.processFloorState;
+    }
+
+    /**
+     * set the current state 
+     * @param state State, the new current state
+     */
+    public void setCurrentState(State state){
+        this.currentState = state;
+    }
+
+    /**
+     * Get the received message
+     * @return Message, the received message
+     */
     public Message getReceviedMessage(){
         return this.receivedMessage;
     }
 
-    /**
-     * check the state of the scheduler
-     */
-    public void checkState() {
-        if (this.receivedMessage == null){
-            this.state = SchedulerState.IDLE;
-        }else{
-            this.state = SchedulerState.PROCESSING_FLOOR;
-        }
+    public String getSystemName(){
+        return this.systemName;
     }
 
     /**
@@ -127,25 +154,48 @@ public class Scheduler extends UDPBoth{
      */
     public void reset(){
         this.receivedMessage = null; 
-        this.checkState();
     }
 
-    public boolean processMessage() throws IOException, InterruptedException{
-        if (this.receivedMessage == null){
-            return false;
-        }else{
-            if (this.receivedMessage instanceof FloorRequestElevator){
-                FloorRequestElevator requestMessage = (FloorRequestElevator) this.receivedMessage;
-                int elevatorID = this.selectElevator(requestMessage.getFloorNumber(), requestMessage.getDirection());
-                Log.notification("SCHEDULER", requestMessage.toString(), new Date(), this.systemName);
-                this.send(new RequestElevatorMessage(requestMessage.getTimeStamp(), requestMessage.getFloorNumber(), elevatorID, requestMessage.getButtonsToBePressed()), SimulationConstants.ELEVATOR_MANAGER_PORT);
-                this.reset();
-                return true; 
-            }
-            this.reset();
-            return false; 
+    /**
+     * call the receive from udp
+     */
+    public void receive(){
+        try {
+            this.receivedMessage = this.receive(SimulationConstants.BYTE_SIZE);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
         }
     }
+
+    /**
+     * call the send packet from udp
+     * @param message Message, msg to send 
+     * @param port Integer, port to send to 
+     */
+    public void sendPacket(Message message, int port){
+        try {
+            this.send(message, port);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+	
+	/**
+	 * Getter method to get the Elevator statuses.
+	 * @return ConcurrentHashMap<Integer, ElevatorStatus>
+	 */	
+	public ConcurrentHashMap<Integer, ElevatorStatus> getElevatorStatuses() {
+		return this.elevatorStatuses;
+	}
+
+	/**
+	 * Method to add an elevator status.
+	 * @param i Integer, the key value
+	 * @param elevatorStatus ElevatorStatus, the status of elevator 
+	 */
+	public void addElevatorStatus(int i, ElevatorStatus elevatorStatus) {
+		this.elevatorStatuses.put(i, elevatorStatus);
+	}
 
     /**
      * Run method that activates the Scheduler's functionality.
@@ -165,36 +215,12 @@ public class Scheduler extends UDPBoth{
 
         try{
             while (true) {
-                if (this.state == SchedulerState.IDLE){
-                    this.receivedMessage = this.receive(SimulationConstants.BYTE_SIZE);
-                    this.checkState();
-                }
-                
-                if (this.state == SchedulerState.PROCESSING_FLOOR){
-                    this.processMessage();
-                }
+                this.setCurrentState(this.currentState.handleState());
             }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-	
-	/**
-	 * Getter method to get the Elevator statuses.
-	 * @return ConcurrentHashMap<Integer, ElevatorStatus>
-	 */	
-	public ConcurrentHashMap<Integer, ElevatorStatus> getElevatorStatuses() {
-		return this.elevatorStatuses;
-	}
-
-	/**
-	 * Method to add an elevator status.
-	 * @param i
-	 * @param elevatorStatus
-	 */
-	public void addElevatorStatus(int i, ElevatorStatus elevatorStatus) {
-		this.elevatorStatuses.put(i, elevatorStatus);
-	}
 
     /**
      * Main method that allows the Scheduler to run.
@@ -203,14 +229,6 @@ public class Scheduler extends UDPBoth{
     public static void main(String[] args) {
         Scheduler s = new Scheduler(SimulationConstants.SCHEDULER_PORT, "Scheduler");
         s.run();
-        // Testing Distance IF elevatorStauses was public and he selectElevator was also public
-        // Scheduler s = new Scheduler(1000, "Random");
-        // s.elevatorStatuses.put(0, new ElevatorStatus(2, 4, 5, MotorDirection.DOWN));
-        // s.elevatorStatuses.put(1, new ElevatorStatus(5, 10, 8, MotorDirection.UP));
-        // s.elevatorStatuses.put(2, new ElevatorStatus(0, 15, 15, MotorDirection.IDLE));
-        // s.elevatorStatuses.put(3, new ElevatorStatus(6, 10, 2, MotorDirection.UP));
-        // System.out.println(s.selectElevator(3, MotorDirection.UP));
-
     }
 
 }

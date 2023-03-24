@@ -61,12 +61,12 @@ public class Elevator implements Runnable{
 		this.floorInputButtons = new HashMap<>();
 		this.sendUpdateStatus();
 		// initialize the states
-		this.currentState = new ElevatorIdleState(this);
 		this.requestProcessingState = new ElevatorRequestProcessState(this);
 		this.elevatorDoorCloseState = new ElevatorCloseDoorState(this);
 		this.elevatorDoorOpenState = new ElevatorOpenDoorState(this);
 		this.elevatorIdleState = new ElevatorIdleState(this);
 		this.elevatorMovingState = new ElevatorMovingState(this);
+		this.currentState = this.elevatorIdleState;
 	}
 
 	/**

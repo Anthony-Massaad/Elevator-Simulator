@@ -1,17 +1,13 @@
 package project.schedulerImpl;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
-
-import project.constants.SchedulerState;
 import project.constants.SimulationConstants;
 import project.elevatorImpl.ElevatorStatus;
-import project.logger.Log;
 import project.messageSystem.Message;
-import project.messageSystem.messages.ArrivalMessage;
-import project.messageSystem.messages.ElevatorLeavingMessage;
-import project.messageSystem.messages.UpdatePositionMessage;
+import project.statesImpl.State;
+import project.statesImpl.SchedulerStates.SchedulerMidTaskIdleState;
+import project.statesImpl.SchedulerStates.SchedulerProcessElevatorState;
 import project.udp.UDPBoth;
 
 /**
@@ -20,13 +16,19 @@ import project.udp.UDPBoth;
 public class SchedulerMidTask extends UDPBoth implements Runnable{
 
     private ConcurrentHashMap<Integer, ElevatorStatus> elevatorStatuses;
-    private SchedulerState state; 
     private Message receivedMessage; 
+    // declare states
+    private State currentState; 
+    private State idleState; 
+    private State processElevatorState; 
+
     public SchedulerMidTask(int port, String systemName, ConcurrentHashMap<Integer, ElevatorStatus> elevatorStatuses) {
         super(port, systemName);
         this.elevatorStatuses = elevatorStatuses;
-        this.state = SchedulerState.IDLE;
         this.receivedMessage = null;
+        this.idleState = new SchedulerMidTaskIdleState(this);
+        this.processElevatorState = new SchedulerProcessElevatorState(this);
+        this.currentState = this.idleState;
     }
 
     /**
@@ -37,27 +39,56 @@ public class SchedulerMidTask extends UDPBoth implements Runnable{
         this.receivedMessage = msg; 
     }
 
-    /**
-     * get the current scheduler state
-     * @return state SchedulerState, the current state of the scheduler
-     */
-    public SchedulerState getState(){
-        return this.state; 
+    public ConcurrentHashMap<Integer, ElevatorStatus> getElevatorStatus() {
+        return this.elevatorStatuses;
     }
 
+    /**
+     * get the received message
+     * @return Message, received message
+     */
     public Message getReceviedMessage(){
         return this.receivedMessage;
     }
 
     /**
-     * check the state of the scheduler
+     * get the idle state
+     * @return State, state idle
      */
-    public void checkState() {
-        if (this.receivedMessage == null){
-            this.state = SchedulerState.IDLE;
-        }else{
-            this.state = SchedulerState.PROCESSING_ELEVATOR;
-        }
+    public State getIdleState(){
+        return this.idleState;
+    }
+
+    /**
+     * get the process elevator state
+     * @return State, the process elevator state
+     */
+    public State getProcessElevatorState(){
+        return this.processElevatorState;
+    }
+
+    /**
+     * get the current state
+     * @return State, the current state
+     */
+    public State getCurrentState(){
+        return this.currentState; 
+    }
+
+    /**
+     * set new current state
+     * @param state State, the new current state
+     */
+    public void setCurrentState(State state){
+        this.currentState = state;
+    }
+
+    /**
+     * get the system name
+     * @return String, the system name
+     */
+    public String getSystemName(){
+        return this.systemName;
     }
 
     /**
@@ -65,35 +96,29 @@ public class SchedulerMidTask extends UDPBoth implements Runnable{
      */
     public void reset(){
         this.receivedMessage = null; 
-        this.checkState();
     }
 
-    private boolean processMessage() throws IOException, InterruptedException {
-        if (this.receivedMessage == null){
-            return false;
-        }else{
-            if (this.receivedMessage instanceof UpdatePositionMessage) {
-                UpdatePositionMessage updatePositionMessage = (UpdatePositionMessage) this.receivedMessage;
-                this.elevatorStatuses.get(updatePositionMessage.getElevatorID()).update(updatePositionMessage.getDirection(), updatePositionMessage.getCurrentFloor(), updatePositionMessage.getNumberOfPassengers(), updatePositionMessage.getNextDestination());
-                Log.notification("SCHEDULER MID TASK", updatePositionMessage.toString(), new Date(), this.systemName);
-                System.out.println("elevator Position update blah blah blah floor: " + this.elevatorStatuses.get(updatePositionMessage.getElevatorID()).getCurrentFloor());
-                this.reset();
-                return true; 
-            }else if (this.receivedMessage instanceof ArrivalMessage) {
-                ArrivalMessage arrivalMessage = (ArrivalMessage) this.receivedMessage;
-                this.send(arrivalMessage, SimulationConstants.FLOOR_MANAGER_PORT);
-                Log.notification("SCHEDULER MID TASK", arrivalMessage.toString(), new Date(), this.systemName);
-                this.reset();
-                return true; 
-            }else if (this.receivedMessage instanceof ElevatorLeavingMessage){
-                ElevatorLeavingMessage elevatorMoving = (ElevatorLeavingMessage) this.receivedMessage;
-                this.send(elevatorMoving, SimulationConstants.FLOOR_MANAGER_PORT);
-                Log.notification("SCHEDULER MID TASK", elevatorMoving.toString(), new Date(), this.systemName);
-                this.reset();
-                return true; 
-            }
-            this.reset();
-            return false; 
+    /**
+     * call the receive method in udp
+     */
+    public void receive(){
+        try {
+            this.receivedMessage = this.receive(SimulationConstants.BYTE_SIZE);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * call the send packet in udp 
+     * @param msg Message, message to send
+     * @param port Integer, port to send to
+     */
+    public void sendPacket(Message msg, int port){
+        try {
+            this.send(msg, port);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -104,14 +129,7 @@ public class SchedulerMidTask extends UDPBoth implements Runnable{
     public void run() {
         try{
             while (true){
-                if (this.state == SchedulerState.IDLE){
-                    this.receivedMessage = this.receive(SimulationConstants.BYTE_SIZE);
-                    this.checkState();
-                }
-                
-                if (this.state == SchedulerState.PROCESSING_ELEVATOR){
-                    this.processMessage();
-                }
+                this.setCurrentState(this.currentState.handleState());
             }
         }catch (Exception e){
             e.printStackTrace();
