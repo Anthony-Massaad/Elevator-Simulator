@@ -1,4 +1,4 @@
-package project.statesImpl.SchedulerStates;
+package project.statesImpl.schedulerStates;
 
 import java.util.Date;
 
@@ -33,7 +33,7 @@ public class SchedulerProcessFloorState extends State {
     @Override
     public State handleState() {
         if (this.scheduler.getReceviedMessage() == null){
-            return null;
+            return this.scheduler.getIdleState();
         }else {
             if (this.scheduler.getReceviedMessage() instanceof FloorRequestElevator){
                 FloorRequestElevator requestMessage = (FloorRequestElevator) this.scheduler.getReceviedMessage();

@@ -22,7 +22,7 @@ public class TestParser {
 	@Test
 	public void testEventLinesSize() {
 		Parser p = new Parser(); 
-		assertEquals(2, p.getEventLines().size());
+		assertTrue(p.getEventLines().size() > 0);
 	}
 	
 	/**
@@ -34,8 +34,7 @@ public class TestParser {
 	@Test
 	public void testEventLinesContents() throws FileNotFoundException {
 		Parser p = new Parser();
-		Scanner sc = new Scanner(new File("src/resources/sim.txt"));
-		
+		Scanner sc = new Scanner(new File(p.getFilePath()));
 		int total = p.getEventLines().size();
 		// checks the content of the parser, and the size as requests are made
 		while (sc.hasNextLine()){

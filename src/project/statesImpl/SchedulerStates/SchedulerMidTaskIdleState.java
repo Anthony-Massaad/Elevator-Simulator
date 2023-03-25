@@ -1,4 +1,4 @@
-package project.statesImpl.SchedulerStates;
+package project.statesImpl.schedulerStates;
 
 import project.schedulerImpl.SchedulerMidTask;
 import project.statesImpl.State;

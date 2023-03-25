@@ -1,4 +1,4 @@
-package project.statesImpl.SchedulerStates;
+package project.statesImpl.schedulerStates;
 
 import java.util.Date;
 
@@ -33,7 +33,7 @@ public class SchedulerProcessElevatorState extends State {
     @Override
     public State handleState() {
         if (this.schedulerMidTask.getReceviedMessage() == null){
-            return null;
+            return this.schedulerMidTask.getIdleState();
         }else{
             if (this.schedulerMidTask.getReceviedMessage() instanceof UpdatePositionMessage) {
                 UpdatePositionMessage updatePositionMessage = (UpdatePositionMessage) this.schedulerMidTask.getReceviedMessage();

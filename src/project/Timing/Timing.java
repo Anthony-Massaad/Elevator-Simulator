@@ -1,4 +1,4 @@
-package project.Timing;
+package project.timing;
 
 import project.constants.SimulationConstants;
 import project.statesImpl.State;

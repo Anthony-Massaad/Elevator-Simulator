@@ -2,7 +2,6 @@ package project.statesImpl.elevatorStates;
 
 import java.util.Date;
 
-import project.Timing.Timing;
 import project.constants.MotorDirection;
 import project.constants.SimulationConstants;
 import project.constants.Time;
@@ -10,6 +9,7 @@ import project.elevatorImpl.Elevator;
 import project.logger.Log;
 import project.messageSystem.messages.ArrivalMessage;
 import project.statesImpl.State;
+import project.timing.Timing;
 
 /**
  * Elevator moving state

@@ -6,8 +6,8 @@ import project.constants.SimulationConstants;
 import project.elevatorImpl.ElevatorStatus;
 import project.messageSystem.Message;
 import project.statesImpl.State;
-import project.statesImpl.SchedulerStates.SchedulerMidTaskIdleState;
-import project.statesImpl.SchedulerStates.SchedulerProcessElevatorState;
+import project.statesImpl.schedulerStates.SchedulerMidTaskIdleState;
+import project.statesImpl.schedulerStates.SchedulerProcessElevatorState;
 import project.udp.UDPBoth;
 
 /**

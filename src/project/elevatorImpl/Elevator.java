@@ -133,6 +133,14 @@ public class Elevator implements Runnable{
 		return this.elevatorMovingState;
 	}
 
+	/**
+	 * get the processing state
+	 * @return State, the processing state
+	 */
+	public State getProcessingState(){
+		return this.requestProcessingState;
+	}
+
 
 	/**
 	 * get the door fault state

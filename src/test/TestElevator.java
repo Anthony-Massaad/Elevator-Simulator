@@ -3,11 +3,21 @@ package test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import project.constants.MotorDirection;
 import project.messageSystem.Message;
+import project.messageSystem.messages.MoveToMessage;
+import project.messageSystem.messages.UpdatePositionMessage;
+import project.statesImpl.elevatorStates.ElevatorBrokenState;
+import project.statesImpl.elevatorStates.ElevatorCloseDoorState;
+import project.statesImpl.elevatorStates.ElevatorDoorFaultState;
+import project.statesImpl.elevatorStates.ElevatorIdleState;
+import project.statesImpl.elevatorStates.ElevatorMovingState;
+import project.statesImpl.elevatorStates.ElevatorOpenDoorState;
 import project.elevatorImpl.Elevator;
 
 /**
@@ -157,5 +167,83 @@ class TestElevator {
 	@Test
 	void testElevatorGetId() {
 		assertEquals(Elevator.getId(), 0);
+	}
+
+	@Test
+	void testInitialState(){
+		assertTrue(Elevator.getCurrentState() instanceof ElevatorIdleState);
+	}
+
+	@Test
+	void testCloseDoorState(){
+		Elevator.setCurrentState(Elevator.getElevatorDoorCloseState());
+		assertTrue(Elevator.getCurrentState() instanceof ElevatorCloseDoorState);
+		Elevator.setCurrentState(Elevator.getCurrentState().handleState());
+		assertTrue(Elevator.getCurrentState() instanceof ElevatorIdleState);
+	}
+
+	@Test 
+	void testElevatorOpenDoorState(){
+		Elevator.setCurrentState(Elevator.getElevatorDoorOpenState());
+		assertTrue(Elevator.getCurrentState() instanceof ElevatorOpenDoorState);
+		Elevator.setCurrentState(Elevator.getCurrentState().handleState());
+		assertTrue(Elevator.getCurrentState() instanceof ElevatorCloseDoorState);
+	}
+
+	@Test
+	void testElevatorMovingState(){
+		Elevator.setCurrentState(Elevator.getElevatorMovingState());
+		assertTrue(Elevator.getCurrentState() instanceof ElevatorMovingState);
+	}
+
+	// Faults Testing 
+	@Test
+	void testTransientFaultCloseDoor(){
+		Elevator.getDestinations().add(0);
+		Elevator.setCurrentState(Elevator.getElevatorDoorCloseState());
+		assertTrue(Elevator.getCurrentState() instanceof ElevatorCloseDoorState);
+		Elevator.setCurrentState(Elevator.getCurrentState().handleState());
+		assertTrue(Elevator.getCurrentState() instanceof ElevatorDoorFaultState);
+		Elevator.setCurrentState(Elevator.getCurrentState().handleState());
+		assertTrue(Elevator.getCurrentState() instanceof ElevatorCloseDoorState);
+	}
+
+	@Test
+	void testTransientFaultOpenDoor(){
+		Elevator.getDestinations().add(-1);
+		Elevator.setCurrentState(Elevator.getElevatorDoorOpenState());
+		assertTrue(Elevator.getCurrentState() instanceof ElevatorOpenDoorState);
+		Elevator.setCurrentState(Elevator.getCurrentState().handleState());
+		assertTrue(Elevator.getCurrentState() instanceof ElevatorDoorFaultState);
+		Elevator.setCurrentState(Elevator.getCurrentState().handleState());
+		assertTrue(Elevator.getCurrentState() instanceof ElevatorOpenDoorState);
+	}
+
+	@Test
+	void testHardFaultElevatorCrash(){
+		Elevator.getElevatorStatus().setNextDestination(100);
+		Elevator.setCurrentState(Elevator.getElevatorMovingState());
+		assertTrue(Elevator.getCurrentState() instanceof ElevatorMovingState);
+		Elevator.setCurrentState(Elevator.getCurrentState().handleState());
+		assertTrue(Elevator.getCurrentState() instanceof ElevatorBrokenState);
+	}
+
+	@Test
+	void testHandleValidMessage(){
+		Message msg = new MoveToMessage(new Date(), 5, new ArrayList<Integer>(){{add(1);}}, MotorDirection.DOWN);
+		Elevator.addRequest(msg);
+		assertTrue(Elevator.getCurrentState() instanceof ElevatorIdleState);
+		Elevator.setCurrentState(Elevator.getProcessingState().handleState());
+		assertTrue(Elevator.getCurrentState() instanceof ElevatorMovingState);
+	}
+
+	// Handling Error Cases
+	@Test
+	void testHandleInvalidMessageInput(){
+		Message msg = new UpdatePositionMessage(new Date(), 0, 0, 0, 0, MotorDirection.UP, false);
+		Elevator.addRequest(msg);
+		assertTrue(Elevator.getCurrentState() instanceof ElevatorIdleState);
+		Elevator.setCurrentState(Elevator.getProcessingState().handleState());
+		assertTrue(Elevator.getCurrentState() instanceof ElevatorIdleState);
 	}
 }

@@ -2,8 +2,6 @@ package test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.awt.Taskbar.State;
-import java.awt.im.InputMethodRequests;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,12 +13,11 @@ import org.junit.jupiter.api.Test;
 import project.constants.MotorDirection;
 import project.constants.SimulationConstants;
 import project.elevatorImpl.ElevatorStatus;
-import project.messageSystem.Message;
 import project.messageSystem.messages.FloorRequestElevator;
-import project.messageSystem.messages.MoveToMessage;
+import project.messageSystem.messages.UpdatePositionMessage;
 import project.schedulerImpl.Scheduler;
-import project.statesImpl.SchedulerStates.SchedulerIdleState;
-import project.statesImpl.SchedulerStates.SchedulerProcessFloorState;
+import project.statesImpl.schedulerStates.SchedulerIdleState;
+import project.statesImpl.schedulerStates.SchedulerProcessFloorState;
 
 /**
  * Scheduler Test Class.
@@ -66,21 +63,42 @@ class TestScheduler {
 	@Test
 	void testSchedulerReset(){
 		scheduler.reset();
-		
 		assertNull(scheduler.getReceviedMessage());
 	}
 	
 	@Test
-	void testSchedulerAftermathOfValiMessage() throws IOException, InterruptedException{
+	void testInitialState(){
+		assertTrue(scheduler.getCurrentState() instanceof SchedulerIdleState);
+	}
+
+	@Test
+	void testSchedulerAftermathOfValidMessage() throws IOException, InterruptedException{
 		for (int i = 0; i < SimulationConstants.NUM_OF_ELEVATORS; i++){
 			scheduler.addElevatorStatus(i, new ElevatorStatus());
         }
 		scheduler.setReceivedMessage(new FloorRequestElevator(new Date(), 0, MotorDirection.IDLE, new ArrayList<>()));
 		scheduler.setCurrentState(scheduler.getProcessFloorState());
 		project.statesImpl.State state = scheduler.getCurrentState();
-		
 		assertTrue(state instanceof SchedulerProcessFloorState);
 		scheduler.setCurrentState(state.handleState());
+		assertTrue(scheduler.getCurrentState() instanceof SchedulerIdleState);
+	}
+
+	// Error Cases
+	@Test
+	void testNullMessageCase(){
+		scheduler.setCurrentState(scheduler.getProcessFloorState());
+		assertTrue(scheduler.getCurrentState() instanceof SchedulerProcessFloorState);
+		scheduler.setCurrentState(scheduler.getCurrentState().handleState());
+		assertTrue(scheduler.getCurrentState() instanceof SchedulerIdleState);
+	}
+
+	@Test
+	void testInvalidMessageCase(){
+		scheduler.setReceivedMessage(new UpdatePositionMessage(new Date(), 0, 0, 0, 0, MotorDirection.DOWN, false));
+		scheduler.setCurrentState(scheduler.getProcessFloorState());
+		assertTrue(scheduler.getCurrentState() instanceof SchedulerProcessFloorState);
+		scheduler.setCurrentState(scheduler.getCurrentState().handleState());
 		assertTrue(scheduler.getCurrentState() instanceof SchedulerIdleState);
 	}
 }

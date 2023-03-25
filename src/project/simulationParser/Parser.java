@@ -14,7 +14,7 @@ import project.logger.Log;
  *
  */
 public class Parser {
-    private final String FILE = "src/resources/sim4.txt";
+    protected final String FILE = "src/resources/sim4.txt";
     private Scanner sc;
     private static ArrayList<String> eventLines;
 
@@ -43,6 +43,9 @@ public class Parser {
         }
     }
 
+    public String getFilePath(){
+        return this.FILE;
+    }
     
     /**
      * retreive the total requests as an arraylist
