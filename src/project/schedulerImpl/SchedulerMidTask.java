@@ -12,6 +12,7 @@ import project.udp.UDPBoth;
 
 /**
  * Class for communication between the elevator and the floor
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
  */
 public class SchedulerMidTask extends UDPBoth implements Runnable{
 

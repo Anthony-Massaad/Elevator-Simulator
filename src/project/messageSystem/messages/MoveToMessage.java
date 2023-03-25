@@ -6,6 +6,10 @@ import java.util.Date;
 import project.constants.MotorDirection;
 import project.messageSystem.Message;
 
+/**
+ * Move message to elevator
+ * @author Anthony Massaad SYSC3303 Group 2
+ */
 public class MoveToMessage extends Message{
 	
 	private final int destinationFloor; 

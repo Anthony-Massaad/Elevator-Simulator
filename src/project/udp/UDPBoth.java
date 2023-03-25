@@ -5,6 +5,10 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import project.messageSystem.Message;
 
+/**
+ * UDP implementatyion for send and recieve
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public class UDPBoth extends UDPImpl{
     
     private DatagramSocket sendSocket, receiveSocket; 

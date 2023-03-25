@@ -2,6 +2,7 @@ package project.constants;
 
 /**
  * All necessary constants, including our number of elevators, floors, passengers, and ports.
+ * @author Anthony Massaad SYSC3303 Group 2
  */
 public class SimulationConstants {
 	// values 

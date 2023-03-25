@@ -2,6 +2,10 @@ package project.elevatorImpl;
 
 import project.constants.MotorDirection;
 
+/**
+ * Class to log the current status of the Elevator
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public class ElevatorStatus {
     
     private int numberOfPassengers; 

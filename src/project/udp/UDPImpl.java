@@ -13,6 +13,10 @@ import java.util.Arrays;
 import project.logger.Log;
 import project.messageSystem.Message;
 
+/**
+ * General udp implementation
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public abstract class UDPImpl {
 	
 	private DatagramPacket sendPacket, receivePacket; 

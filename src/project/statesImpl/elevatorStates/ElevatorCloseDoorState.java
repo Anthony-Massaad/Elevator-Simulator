@@ -9,14 +9,27 @@ import project.logger.Log;
 import project.messageSystem.messages.ElevatorLeavingMessage;
 import project.statesImpl.State;
 
+/**
+ * State for handling the close door elevator state
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public class ElevatorCloseDoorState extends State{
 
     private Elevator elevator; 
+
+    /**
+     * Constructor for Elevator Close door State
+     * @param elevator Elevator, tthe elevator class which is he super state
+     */
     public ElevatorCloseDoorState(Elevator elevator){
         super();
         this.elevator = elevator;
     }
 
+    /**
+     * Handle current state
+     * @return State, the new state
+     */
     @Override
     public State handleState() {
         Log.notification("ELEVATOR", "Closing Door", new Date(), this.elevator.getSystemName());
@@ -37,6 +50,7 @@ public class ElevatorCloseDoorState extends State{
                 returningState = this.elevator.getElevatorMovingState();
             }
         }else {
+            // no more destinations, idle the elevator
 			this.elevator.getElevatorStatus().setMotorDirection(MotorDirection.IDLE);
 			Log.notification("ELEVATOR", "Motor Direction is " + MotorDirection.toString(this.elevator.getElevatorStatus().getMotorDirection()), new Date(), this.elevator.getSystemName());
         	returningState = this.elevator.getElevatorIdleState();

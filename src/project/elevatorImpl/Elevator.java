@@ -22,6 +22,10 @@ import project.statesImpl.elevatorStates.ElevatorMovingState;
 import project.statesImpl.elevatorStates.ElevatorOpenDoorState;
 import project.statesImpl.elevatorStates.ElevatorRequestProcessState;
 
+/**
+ * Elevator instance which is a thread 
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public class Elevator implements Runnable{
 	
 	private ConcurrentLinkedDeque<Message> responses; 
@@ -193,31 +197,42 @@ public class Elevator implements Runnable{
 		this.destinations = dest; 
 	}
 
+	/**
+	 * Sorting algorithm for the destinations of the elevator
+	 * Faults inputs stays in the index provided from the input file
+	 * @param isReverse boolean, True to sort in reverse, otherwise false
+	 */
 	public void sort(boolean isReverse){
 		int pos; 
         for (int i = 0; i < this.destinations.size(); i++) { 
             pos = i; 
 
+			// the value at the index is a fault
 			if (this.destinations.get(i) <= 0 || this.destinations.get(i) == SimulationConstants.ELEVATOR_BROKEN_FAULT_INPUT){
 				continue;
 			}
 
 			for (int j = i + 1; j < this.destinations.size(); j++){
 				
+				// the value at the index is a fault
 				if (this.destinations.get(j) <= 0 || this.destinations.get(j) == SimulationConstants.ELEVATOR_BROKEN_FAULT_INPUT){
 					continue;
 				}
 
 				if (!isReverse){
+					// sort in accending
 					if (this.destinations.get(j) < this.destinations.get(pos)){
 						pos = j; 
 					}
 				}else{
+					// sort in deccending
 					if (this.destinations.get(j) > this.destinations.get(pos)){
 						pos = j; 
 					}
 				}	
 			}
+
+			//swap
 			int temp = this.destinations.get(i);
 			this.destinations.set(i, this.destinations.get(pos));
 			this.destinations.set(pos, temp);
@@ -405,15 +420,6 @@ public class Elevator implements Runnable{
 		this.elevatorStatus.setIsStuck(true);
 		this.sendUpdateStatus();
 		Log.error("ELEVATOR", "Elevator Off", new Date(), this.systemName);
-	}
-
-	public static void main(String[] args) {
-		// testing the sorting array
-		Elevator e = new Elevator(1, "test", new ConcurrentLinkedDeque<>());
-		e.setDestinations(new ArrayList<Integer>(){{add(7); add(-1); add(6); add(0);}});
-		System.out.println(Arrays.toString(e.getDestinations().toArray()));
-		e.sort(false);
-		System.out.println(Arrays.toString(e.getDestinations().toArray()));
 	}
 
 }

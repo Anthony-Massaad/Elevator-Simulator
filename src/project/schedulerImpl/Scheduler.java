@@ -15,8 +15,8 @@ import project.statesImpl.SchedulerStates.SchedulerProcessFloorState;
 import project.udp.UDPBoth;
 
 /*
- * Class for communication between the floor to elevator and determining the nearest elevator 
- * Given request from floor
+ * Class for communication between the floor to elevator and determining the nearest elevator Given request from floor
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
  */
 public class Scheduler extends UDPBoth{
 

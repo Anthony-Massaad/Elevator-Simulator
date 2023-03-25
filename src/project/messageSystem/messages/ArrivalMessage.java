@@ -5,6 +5,10 @@ import java.util.Date;
 import project.constants.MotorDirection;
 import project.messageSystem.Message;
 
+/**
+ * ArrivalMessage for when the elevator arrived
+ * @author Anthony Massaad SYSC3303 Group 2
+ */
 public class ArrivalMessage extends Message{
 	
 	private final int floorNumber; 

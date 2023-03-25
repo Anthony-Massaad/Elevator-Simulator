@@ -11,28 +11,45 @@ import project.logger.Log;
 import project.messageSystem.messages.ArrivalMessage;
 import project.statesImpl.State;
 
+/**
+ * Elevator moving state
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public class ElevatorMovingState extends State{
 
     private Elevator elevator;
+
+    /**
+     * constructor for the elevator moving state
+     * @param elevator Elevator, the elevator which is the super state
+     */
     public ElevatorMovingState(Elevator elevator){
         super();
         this.elevator = elevator;
     }
 
+    /**
+     * Handle the current state
+     * @return State, the new state
+     */
     @Override
     public State handleState() {
         State returningState = null; 
         Log.notification("ELEVATOR", "Current floor " + this.elevator.getElevatorStatus().getCurrentFloor(), new Date(), this.elevator.getSystemName());
         Log.notification("ELEVATOR", "Moving now", new Date(), this.elevator.getSystemName());
 
+        // activate the timer depending on input
         Timing timer; 
         if (this.elevator.getElevatorStatus().getNextDestination() == SimulationConstants.ELEVATOR_BROKEN_FAULT_INPUT){
+            // input is fault, timer takes longer
             timer = new Timing(this, Time.MOVE.getTime() + 4, 1);
         }else{
+            // input is normal, timer is correc
             timer = new Timing(this, Time.MOVE.getTime(), 1);
         }
         Thread timerThread = new Thread(timer);
         timerThread.start();
+        // wait until notified by the timer
         synchronized(this){
             try {
                 this.wait();
@@ -41,10 +58,12 @@ public class ElevatorMovingState extends State{
             }
         }
 
+        // fault was active, retturn the broken elevator state
         if (this.isDieCalled){
             return this.elevator.getElevatorBrokenState();
         }
         
+        // move elevaor
         if (this.elevator.getElevatorStatus().getCurrentFloor() < this.elevator.getElevatorStatus().getNextDestination()) {
 			this.elevator.getElevatorStatus().setCurrentFloor(this.elevator.getElevatorStatus().getCurrentFloor() + 1);
     	}else if (this.elevator.getElevatorStatus().getCurrentFloor() > this.elevator.getElevatorStatus().getNextDestination()) {

@@ -9,14 +9,26 @@ import project.messageSystem.Message;
 import project.messageSystem.messages.MoveToMessage;
 import project.statesImpl.State;
 
+/**
+ * Elevator sttate for processing message
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public class ElevatorRequestProcessState extends State{
     private Elevator elevator; 
 
+	/**
+	 * Constructor for elevator request process 
+	 * @param elevator Elevator, 
+	 */
     public ElevatorRequestProcessState(Elevator elevator){
 		super();
         this.elevator = elevator;
     }
     
+	/**
+	 * Handle current state
+	 * @return State, the current state
+	 */
     @Override
     public State handleState() {
         State returningState = null; 
