@@ -26,7 +26,6 @@ public class ElevatorMovingState extends State{
         Log.notification("ELEVATOR", "Moving now", new Date(), this.elevator.getSystemName());
 
         Timing timer; 
-    	this.elevator.sleep(Time.MOVE.getTime());
         if (this.elevator.getElevatorStatus().getNextDestination() == SimulationConstants.ELEVATOR_BROKEN_FAULT_INPUT){
             timer = new Timing(this, Time.MOVE.getTime() + 4, 1);
         }else{
