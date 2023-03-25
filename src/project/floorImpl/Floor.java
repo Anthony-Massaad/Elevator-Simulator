@@ -4,6 +4,10 @@ import java.util.Date;
 import project.constants.FloorButtonState;
 import project.logger.Log;
 
+/**
+ * Floor Class 
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public class Floor {
 
     private final int floorNumber; 
@@ -53,10 +57,18 @@ public class Floor {
         return this.downBtn;
     }
 
+    /**
+     * Get the lamp up 
+     * @return boolean, true if on otherwise false
+     */
     public boolean getUpLamp(){
         return this.upLamp;
     }
 
+    /**
+     * get the lamp down
+     * @return boolean, true if on otherwise false
+     */
     public boolean getDownLamp(){
         return this.downLamp;
     }

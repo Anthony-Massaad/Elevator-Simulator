@@ -4,6 +4,10 @@ import java.util.Date;
 import project.constants.MotorDirection;
 import project.messageSystem.Message;
 
+/**
+ * Update position message from elevator to floor
+ * @author Anthony Massaad SYSC3303 Group 2
+ */
 public class UpdatePositionMessage extends Message{
 
     private final int numberOfPassengers; 

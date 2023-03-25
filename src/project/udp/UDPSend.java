@@ -6,6 +6,10 @@ import java.net.SocketException;
 
 import project.messageSystem.Message;
 
+/**
+ * udp implemnentation for sending
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public class UDPSend extends UDPImpl{
 
 	/**

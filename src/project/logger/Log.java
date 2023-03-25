@@ -19,7 +19,7 @@ public class Log {
 
 
 	/**
-	 * Log Messages as notifications (None urgent messages) 
+	 * Log Messages as warning 
 	 * @param system String, The Class in which is using method
 	 * @param msg String, the message to display
 	 * @param timestamp Date, the date in which it occurred

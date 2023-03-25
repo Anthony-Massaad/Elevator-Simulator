@@ -15,6 +15,10 @@ import project.messageSystem.messages.ElevatorLeavingMessage;
 import project.simulationParser.Parser;
 import project.udp.UDPReceive;
 
+/**
+ * class that handles the Floors 
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public class FloorManager extends UDPReceive{
 
     private ConcurrentHashMap<Integer, Floor> floors;
@@ -72,6 +76,7 @@ public class FloorManager extends UDPReceive{
                 Message msg = this.receive(SimulationConstants.BYTE_SIZE);
                 
                 if (msg instanceof ArrivalMessage){
+                    // elevator arrived
                     ArrivalMessage arrivalMessage = (ArrivalMessage) msg; 
                     int floorNumber = arrivalMessage.getFloorNumber();
                     MotorDirection direction = arrivalMessage.getDirection();
@@ -85,6 +90,7 @@ public class FloorManager extends UDPReceive{
                         throw new Error("Pased an unknown direction for the floor events");
                     }
                 }else if (msg instanceof ElevatorLeavingMessage){
+                    // elevator is leaving the floor
                     ElevatorLeavingMessage leavingMessage = (ElevatorLeavingMessage) msg; 
                     if (leavingMessage.getDirection() == MotorDirection.UP){
                         this.floors.get(leavingMessage.getFloorNumber()).setUpLamp(false);

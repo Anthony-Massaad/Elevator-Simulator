@@ -4,6 +4,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Clock Class responsible for real time system and events time checking 
+ * @author Anthony SYSC3303 Group 2
+ */
 public class Clock {
     private final int INCREMENT_MS = 1000;
     private final String DATE_FORMAT = "HH:mm:ss";

@@ -6,6 +6,10 @@ import project.constants.SimulationConstants;
 import project.messageSystem.Message;
 import project.udp.UDPSend;
 
+/**
+ * Elevator Communicator class from Elevator to Floor
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public class ElevatorComReceiver extends UDPSend implements Runnable{
 
 	private ConcurrentLinkedDeque<Message> elevatorResponses;

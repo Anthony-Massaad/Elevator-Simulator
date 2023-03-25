@@ -11,6 +11,10 @@ import project.messageSystem.messages.MoveToMessage;
 import project.messageSystem.messages.RequestElevatorMessage;
 import project.udp.UDPReceive;
 
+/**
+ * Class handing the elevators. Receives from the floor
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public class ElevatorSubSystem extends UDPReceive{
 	
 	private boolean isDead; 

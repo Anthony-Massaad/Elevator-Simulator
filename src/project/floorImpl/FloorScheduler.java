@@ -13,6 +13,10 @@ import project.logger.Log;
 import project.messageSystem.messages.FloorRequestElevator;
 import project.udp.UDPSend;
 
+/**
+ * Scheduler class that is a thread and handles the sending to the scheduler
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public class FloorScheduler extends UDPSend implements Runnable{
     private final int TIME_INDEX = 0;
     private final int FLOOR_INDEX = 1; 
@@ -65,7 +69,7 @@ public class FloorScheduler extends UDPSend implements Runnable{
         Log.notification("FLOOR SCHEDULER", "Proccessing Event", new Date(), this.systemName);
         int floorNumber = Integer.parseInt(event[this.FLOOR_INDEX]);
         MotorDirection direction = MotorDirection.getDirection(event[this.DIRECTION_INDEX]);
-        // will be an arraylist I'd presume.
+        
         ArrayList<Integer> buttonsToBePressed = new ArrayList<>();
         for (int i = this.BUTTON_START_INDEX; i<event.length; i++){
             buttonsToBePressed.add(Integer.parseInt(event[i]));

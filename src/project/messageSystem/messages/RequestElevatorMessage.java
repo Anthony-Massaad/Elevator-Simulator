@@ -6,6 +6,10 @@ import java.util.Date;
 import project.constants.MotorDirection;
 import project.messageSystem.Message;
 
+/**
+ * Scheduler to floor elevattor request message
+ * @author Anthony Massaad SYSC3303 Group 2
+ */
 public class RequestElevatorMessage extends Message{
 	
 	private final int floorNumber;

@@ -6,6 +6,10 @@ import java.util.Date;
 import project.constants.MotorDirection;
 import project.messageSystem.Message;
 
+/**
+ * Floor sending request for elevator
+ * @author Anthony Massaad SYSC3303 Group 2
+ */
 public class FloorRequestElevator extends Message {
     private final int floorNumber;
     private final MotorDirection direction; 

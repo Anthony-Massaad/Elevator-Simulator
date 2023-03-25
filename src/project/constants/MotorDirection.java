@@ -2,6 +2,7 @@ package project.constants;
 
 /**
  * Enum for defining the motor directions.
+ * @author Anthony Massaad SYSC3303 group 2
  */
 public enum MotorDirection {
 	UP, DOWN, IDLE;
@@ -24,6 +25,11 @@ public enum MotorDirection {
 		return direction == MotorDirection.DOWN ? MotorDirection.UP : MotorDirection.DOWN;
 	}
 
+	/**
+	 * convert the motor direction to a string output
+	 * @param direction MotorDirection, the direction
+	 * @return String, the direction as String
+	 */
 	public static String toString(MotorDirection direction){
 		return direction == MotorDirection.DOWN ? "DOWN" : "UP";
 	}

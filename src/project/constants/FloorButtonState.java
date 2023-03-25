@@ -2,6 +2,7 @@ package project.constants;
 
 /**
  * Enum that defines the Floor button states.
+ * @author Anthony SYSC3303 Group 2
  */
 public enum FloorButtonState {
     ACTIVE, NOT_ACTIVE, NON_EXISTENT;

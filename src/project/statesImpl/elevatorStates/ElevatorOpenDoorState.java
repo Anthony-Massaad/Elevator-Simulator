@@ -9,14 +9,26 @@ import project.elevatorImpl.Elevator;
 import project.logger.Log;
 import project.statesImpl.State;
 
+/**
+ * Open door statte
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public class ElevatorOpenDoorState extends State{
     private Elevator elevator; 
 
+    /** 
+     * Constructor for open door state
+     * @param elevator Elevator, the elevator which is the super state
+     */
     public ElevatorOpenDoorState(Elevator elevator){
         super();
         this.elevator = elevator;
     }
 
+    /**
+     * Handle current state
+     * @return State, new state
+     */
     @Override
     public State handleState() {
         Log.notification("ELEVATOR", "Opening Door", new Date(), this.elevator.getSystemName());

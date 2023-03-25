@@ -9,15 +9,27 @@ import project.messageSystem.messages.RequestElevatorMessage;
 import project.schedulerImpl.Scheduler;
 import project.statesImpl.State;
 
+/**
+ * Scheduler process Floor state
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public class SchedulerProcessFloorState extends State {
 
     private Scheduler scheduler; 
 
+    /**
+     * constructor for process floor state
+     * @param scheduler Scheduler, the scheduler super state
+     */
     public SchedulerProcessFloorState(Scheduler scheduler){
         super();
         this.scheduler = scheduler; 
     }
 
+    /**
+     * Handle sate 
+     * @return State, the new state
+     */
     @Override
     public State handleState() {
         if (this.scheduler.getReceviedMessage() == null){
