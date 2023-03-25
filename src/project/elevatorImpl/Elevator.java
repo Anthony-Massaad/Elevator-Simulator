@@ -198,13 +198,13 @@ public class Elevator implements Runnable{
         for (int i = 0; i < this.destinations.size(); i++) { 
             pos = i; 
 
-			if (this.destinations.get(i) <= 0){
+			if (this.destinations.get(i) <= 0 || this.destinations.get(i) == SimulationConstants.ELEVATOR_BROKEN_FAULT_INPUT){
 				continue;
 			}
 
 			for (int j = i + 1; j < this.destinations.size(); j++){
 				
-				if (this.destinations.get(j) <= 0){
+				if (this.destinations.get(j) <= 0 || this.destinations.get(j) == SimulationConstants.ELEVATOR_BROKEN_FAULT_INPUT){
 					continue;
 				}
 
@@ -392,7 +392,7 @@ public class Elevator implements Runnable{
      */
 	@Override
 	public void run() {
-		while (true) {
+		while (!(this.currentState instanceof ElevatorBrokenState)) {
 			try {
 				if (this.requests.size() > 0) {
 					this.setCurrentState(this.requestProcessingState.handleState());
@@ -402,6 +402,9 @@ public class Elevator implements Runnable{
 				// tthrow error
 			}
 		}
+		this.elevatorStatus.setIsStuck(true);
+		this.sendUpdateStatus();
+		Log.error("ELEVATOR", "Elevator Off", new Date(), this.systemName);
 	}
 
 	public static void main(String[] args) {

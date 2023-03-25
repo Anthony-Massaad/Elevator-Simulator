@@ -109,7 +109,7 @@ public class Scheduler extends UDPBoth{
         for (Map.Entry<Integer, ElevatorStatus> entry : this.elevatorStatuses.entrySet()){
             ElevatorStatus status = entry.getValue();  
 
-            if (status.getNumberOfPassengers() == SimulationConstants.MAX_PASSENGERS){
+            if (status.getNumberOfPassengers() == SimulationConstants.MAX_PASSENGERS || status.getIsStuck()){
                 continue;
             }
 

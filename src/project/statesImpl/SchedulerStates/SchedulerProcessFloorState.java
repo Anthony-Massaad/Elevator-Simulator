@@ -14,6 +14,7 @@ public class SchedulerProcessFloorState extends State {
     private Scheduler scheduler; 
 
     public SchedulerProcessFloorState(Scheduler scheduler){
+        super();
         this.scheduler = scheduler; 
     }
 

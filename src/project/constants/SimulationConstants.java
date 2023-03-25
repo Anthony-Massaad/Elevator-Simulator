@@ -20,5 +20,7 @@ public class SimulationConstants {
 	public static int DOOR_CLOSE_STUCK_INPUT = 0;
 	public static int DOOR_CLOSE_STUCK_INDEX = 0;
 	public static int DOOR_OPEN_STUCK_INDEX = 0;
+	public static int ELEVATOR_BROKEN_FAULT_INPUT = 100; 
+	public static int MAX_ELEVATOR_DURATION = Time.MOVE.getTime();
 
 }

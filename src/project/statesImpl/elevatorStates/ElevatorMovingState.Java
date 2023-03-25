@@ -2,7 +2,9 @@ package project.statesImpl.elevatorStates;
 
 import java.util.Date;
 
+import project.Timing.Timing;
 import project.constants.MotorDirection;
+import project.constants.SimulationConstants;
 import project.constants.Time;
 import project.elevatorImpl.Elevator;
 import project.logger.Log;
@@ -13,6 +15,7 @@ public class ElevatorMovingState extends State{
 
     private Elevator elevator;
     public ElevatorMovingState(Elevator elevator){
+        super();
         this.elevator = elevator;
     }
 
@@ -20,14 +23,36 @@ public class ElevatorMovingState extends State{
     public State handleState() {
         State returningState = null; 
         Log.notification("ELEVATOR", "Current floor " + this.elevator.getElevatorStatus().getCurrentFloor(), new Date(), this.elevator.getSystemName());
-    	
+        Log.notification("ELEVATOR", "Moving now", new Date(), this.elevator.getSystemName());
+
+        Timing timer; 
+    	this.elevator.sleep(Time.MOVE.getTime());
+        if (this.elevator.getElevatorStatus().getNextDestination() == SimulationConstants.ELEVATOR_BROKEN_FAULT_INPUT){
+            timer = new Timing(this, Time.MOVE.getTime() + 4, 1);
+        }else{
+            timer = new Timing(this, Time.MOVE.getTime(), 1);
+        }
+        Thread timerThread = new Thread(timer);
+        timerThread.start();
+        synchronized(this){
+            try {
+                this.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (this.isDieCalled){
+            return this.elevator.getElevatorBrokenState();
+        }
+        
         if (this.elevator.getElevatorStatus().getCurrentFloor() < this.elevator.getElevatorStatus().getNextDestination()) {
 			this.elevator.getElevatorStatus().setCurrentFloor(this.elevator.getElevatorStatus().getCurrentFloor() + 1);
     	}else if (this.elevator.getElevatorStatus().getCurrentFloor() > this.elevator.getElevatorStatus().getNextDestination()) {
 			this.elevator.getElevatorStatus().setCurrentFloor(this.elevator.getElevatorStatus().getCurrentFloor() - 1);
     	}
 
-        this.elevator.sleep(Time.MOVE.getTime());
+        
     	Log.notification("ELEVATOR", "Reached floor " + this.elevator.getElevatorStatus().getCurrentFloor(), new Date(), this.elevator.getSystemName());
     	// update the scheduler through the ElevatorSubsystem
     	this.elevator.sendUpdateStatus();

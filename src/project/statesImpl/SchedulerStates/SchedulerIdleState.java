@@ -8,6 +8,7 @@ public class SchedulerIdleState extends State{
     private Scheduler scheduler; 
     
     public SchedulerIdleState(Scheduler scheduler){
+        super();
         this.scheduler = scheduler; 
     }
 

@@ -11,6 +11,7 @@ public class ElevatorDoorFaultState extends State{
     private Elevator elevator; 
     
     public ElevatorDoorFaultState(Elevator elevator){
+        super();
         this.elevator = elevator;
     }
 

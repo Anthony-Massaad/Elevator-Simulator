@@ -13,6 +13,7 @@ public class ElevatorCloseDoorState extends State{
 
     private Elevator elevator; 
     public ElevatorCloseDoorState(Elevator elevator){
+        super();
         this.elevator = elevator;
     }
 

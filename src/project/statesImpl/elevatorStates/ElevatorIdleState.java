@@ -7,6 +7,7 @@ public class ElevatorIdleState extends State{
     private Elevator elevator; 
 
     public ElevatorIdleState(Elevator elevator){
+        super();
         this.elevator = elevator; 
     }
 

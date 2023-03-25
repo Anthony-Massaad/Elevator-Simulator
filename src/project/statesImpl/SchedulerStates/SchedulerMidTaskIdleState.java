@@ -7,6 +7,7 @@ public class SchedulerMidTaskIdleState extends State{
     private SchedulerMidTask schedulerMidTask; 
     
     public SchedulerMidTaskIdleState(SchedulerMidTask schedulerMidTask){
+        super();
         this.schedulerMidTask = schedulerMidTask;
     }
 

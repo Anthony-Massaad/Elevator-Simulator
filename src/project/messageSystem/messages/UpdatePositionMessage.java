@@ -85,7 +85,7 @@ public class UpdatePositionMessage extends Message{
 	 */
 	@Override
 	public String toString() {
-		return "Update Position with Scheduler Message, position to be updated for elevator=" + this.elevatorID + " currentfloor=" + this.currentFloor;
+		return "Update Position with Scheduler Message, position to be updated for elevator=" + this.elevatorID + " currentfloor=" + this.currentFloor + " stuck=" + this.isStuck;
 	}
     
 }

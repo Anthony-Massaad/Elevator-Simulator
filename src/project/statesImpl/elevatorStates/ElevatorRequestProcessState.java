@@ -13,6 +13,7 @@ public class ElevatorRequestProcessState extends State{
     private Elevator elevator; 
 
     public ElevatorRequestProcessState(Elevator elevator){
+		super();
         this.elevator = elevator;
     }
     
