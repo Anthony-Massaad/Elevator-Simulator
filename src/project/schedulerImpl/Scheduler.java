@@ -121,7 +121,7 @@ public class Scheduler extends UDPBoth{
 
             int diffFloor = elCurrPosition - floorNumber;
 
-            if (elCurrPosition == elDest) {
+            if (elCurrPosition == elDest || elDirection == MotorDirection.IDLE) {
                 distance = Math.abs(diffFloor);
             } else if ((diffFloor > 0 && direction == MotorDirection.DOWN && elDirection == MotorDirection.DOWN) || (diffFloor < 0 && direction == MotorDirection.UP && elDirection == MotorDirection.UP)) {
                 distance = Math.min(Math.abs(diffFloor), Math.abs(elDest - floorNumber));
@@ -132,12 +132,13 @@ public class Scheduler extends UDPBoth{
                     distance = (SimulationConstants.NUM_OF_FLOORS - elCurrPosition) + (SimulationConstants.NUM_OF_FLOORS - floorNumber);
                 }
             }
-
             if (distance < shortestDistance){
                 shortestDistance = distance;
                 elNumber = entry.getKey();
             }
 
+            System.out.println("el number: " + elNumber + " Distance: " + distance);
+            
         }
 
         if (elNumber == -1){

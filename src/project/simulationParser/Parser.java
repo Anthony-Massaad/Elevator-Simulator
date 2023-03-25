@@ -14,7 +14,7 @@ import project.logger.Log;
  *
  */
 public class Parser {
-    private final String FILE = "src/resources/sim.txt";
+    private final String FILE = "src/resources/sim4.txt";
     private Scanner sc;
     private static ArrayList<String> eventLines;
 
