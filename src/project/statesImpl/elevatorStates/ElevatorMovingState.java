@@ -9,7 +9,7 @@ import project.elevatorImpl.Elevator;
 import project.logger.Log;
 import project.messageSystem.messages.ArrivalMessage;
 import project.statesImpl.State;
-import project.timing.Timing;
+import project.Timing.Timing;
 
 /**
  * Elevator moving state

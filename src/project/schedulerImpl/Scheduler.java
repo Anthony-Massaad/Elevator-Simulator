@@ -10,8 +10,8 @@ import project.elevatorImpl.ElevatorStatus;
 import project.logger.Log;
 import project.messageSystem.Message;
 import project.statesImpl.State;
-import project.statesImpl.schedulerStates.SchedulerIdleState;
-import project.statesImpl.schedulerStates.SchedulerProcessFloorState;
+import project.statesImpl.SchedulerStates.SchedulerIdleState;
+import project.statesImpl.SchedulerStates.SchedulerProcessFloorState;
 import project.udp.UDPBoth;
 
 /*

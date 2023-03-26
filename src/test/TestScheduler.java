@@ -16,8 +16,8 @@ import project.elevatorImpl.ElevatorStatus;
 import project.messageSystem.messages.FloorRequestElevator;
 import project.messageSystem.messages.UpdatePositionMessage;
 import project.schedulerImpl.Scheduler;
-import project.statesImpl.schedulerStates.SchedulerIdleState;
-import project.statesImpl.schedulerStates.SchedulerProcessFloorState;
+import project.statesImpl.SchedulerStates.SchedulerIdleState;
+import project.statesImpl.SchedulerStates.SchedulerProcessFloorState;
 
 /**
  * Scheduler Test Class.

@@ -1,4 +1,4 @@
-package project.statesImpl.schedulerStates;
+package project.statesImpl.SchedulerStates;
 
 import java.util.Date;
 

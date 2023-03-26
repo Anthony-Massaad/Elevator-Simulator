@@ -1,4 +1,4 @@
-package project.statesImpl.schedulerStates;
+package project.statesImpl.SchedulerStates;
 
 import project.schedulerImpl.Scheduler;
 import project.statesImpl.State;
