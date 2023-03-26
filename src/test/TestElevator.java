@@ -169,11 +169,17 @@ class TestElevator {
 		assertEquals(Elevator.getId(), 0);
 	}
 
+	/**
+	 * test the initial state of elevator
+	 */
 	@Test
 	void testInitialState(){
 		assertTrue(Elevator.getCurrentState() instanceof ElevatorIdleState);
 	}
 
+	/**
+	 * Test the close door state
+	 */
 	@Test
 	void testCloseDoorState(){
 		Elevator.setCurrentState(Elevator.getElevatorDoorCloseState());
@@ -182,6 +188,9 @@ class TestElevator {
 		assertTrue(Elevator.getCurrentState() instanceof ElevatorIdleState);
 	}
 
+	/**
+	 * test the open door state
+	 */
 	@Test 
 	void testElevatorOpenDoorState(){
 		Elevator.setCurrentState(Elevator.getElevatorDoorOpenState());
@@ -190,6 +199,9 @@ class TestElevator {
 		assertTrue(Elevator.getCurrentState() instanceof ElevatorCloseDoorState);
 	}
 
+	/** 
+	 * Test the moving state
+	 */
 	@Test
 	void testElevatorMovingState(){
 		Elevator.setCurrentState(Elevator.getElevatorMovingState());
@@ -197,6 +209,11 @@ class TestElevator {
 	}
 
 	// Faults Testing 
+
+	/**
+	 * Test the transient fault of close door
+	 * Expected to recover
+	 */
 	@Test
 	void testTransientFaultCloseDoor(){
 		Elevator.getDestinations().add(0);
@@ -208,6 +225,10 @@ class TestElevator {
 		assertTrue(Elevator.getCurrentState() instanceof ElevatorCloseDoorState);
 	}
 
+	/**
+	 * Test the transient fault of open door
+	 * Expected to recover
+	 */
 	@Test
 	void testTransientFaultOpenDoor(){
 		Elevator.getDestinations().add(-1);
@@ -219,6 +240,10 @@ class TestElevator {
 		assertTrue(Elevator.getCurrentState() instanceof ElevatorOpenDoorState);
 	}
 
+	/**
+	 * Test the Hard fault while moving
+	 * Expected to die
+	 */
 	@Test
 	void testHardFaultElevatorCrash(){
 		Elevator.getElevatorStatus().setNextDestination(100);
@@ -228,6 +253,9 @@ class TestElevator {
 		assertTrue(Elevator.getCurrentState() instanceof ElevatorBrokenState);
 	}
 
+	/**
+	 * test elevator provided valid message
+	 */
 	@Test
 	void testHandleValidMessage(){
 		Message msg = new MoveToMessage(new Date(), 5, new ArrayList<Integer>(){{add(1);}}, MotorDirection.DOWN);
@@ -238,6 +266,10 @@ class TestElevator {
 	}
 
 	// Handling Error Cases
+	/**
+	 * test elevator provided an invalid input 
+	 * expected to not break
+	 */
 	@Test
 	void testHandleInvalidMessageInput(){
 		Message msg = new UpdatePositionMessage(new Date(), 0, 0, 0, 0, MotorDirection.UP, false);

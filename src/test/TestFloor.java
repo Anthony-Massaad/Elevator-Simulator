@@ -47,6 +47,9 @@ class TestFloor {
 		assertEquals(floor.getDownBtn(), FloorButtonState.ACTIVE);
 	}
 
+	/**
+	 * test the down lamp
+	 */
 	@Test
 	void testFloorDownLamp(){
 		assertFalse(floor.getDownLamp());
@@ -54,6 +57,9 @@ class TestFloor {
 		assertTrue(floor.getDownLamp());
 	}
 
+	/**
+	 * ttest the up lamp
+	 */
 	@Test
 	void testFloorUpLamp(){
 		assertFalse(floor.getUpLamp());

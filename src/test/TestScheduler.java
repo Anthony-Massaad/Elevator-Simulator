@@ -51,6 +51,9 @@ class TestScheduler {
 		assertEquals(scheduler.selectElevator(6, MotorDirection.UP), 0);
 	}
 
+	/**
+	 * test the scheduler provided a valid message
+	 */
 	@Test
 	void testSchedulerStateValidMessage(){
 		scheduler.setReceivedMessage(new FloorRequestElevator(new Date(), 0, MotorDirection.IDLE, new ArrayList<>()));
@@ -60,17 +63,28 @@ class TestScheduler {
 		assertTrue(state instanceof SchedulerProcessFloorState);
 	}
 
+	/**
+	 * test the scheduler reset received message
+	 */
 	@Test
 	void testSchedulerReset(){
 		scheduler.reset();
 		assertNull(scheduler.getReceviedMessage());
 	}
 	
+	/**
+	 * test the scheduler initial state
+	 */
 	@Test
 	void testInitialState(){
 		assertTrue(scheduler.getCurrentState() instanceof SchedulerIdleState);
 	}
 
+	/**
+	 * Test the scheduler provided a valid message
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	@Test
 	void testSchedulerAftermathOfValidMessage() throws IOException, InterruptedException{
 		for (int i = 0; i < SimulationConstants.NUM_OF_ELEVATORS; i++){
@@ -85,6 +99,10 @@ class TestScheduler {
 	}
 
 	// Error Cases
+	/**
+	 * Test scheduler provided a null message
+	 * expected to continue
+	 */
 	@Test
 	void testNullMessageCase(){
 		scheduler.setCurrentState(scheduler.getProcessFloorState());
@@ -93,6 +111,10 @@ class TestScheduler {
 		assertTrue(scheduler.getCurrentState() instanceof SchedulerIdleState);
 	}
 
+	/**
+	 * Test scheduler provided a invalid message
+	 * expected to continue
+	 */
 	@Test
 	void testInvalidMessageCase(){
 		scheduler.setReceivedMessage(new UpdatePositionMessage(new Date(), 0, 0, 0, 0, MotorDirection.DOWN, false));
