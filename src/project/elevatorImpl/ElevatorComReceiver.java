@@ -19,8 +19,8 @@ public class ElevatorComReceiver extends UDPSend implements Runnable{
 	 * @param systemName String systemName.
 	 * @param elevatorResponses ArrayList of elevator responses.
 	 */
-	public ElevatorComReceiver(String systemName, ConcurrentLinkedDeque<Message> elevatorResponses) {
-		super(systemName);
+	public ElevatorComReceiver(String systemName, ConcurrentLinkedDeque<Message> elevatorResponses, String addr) {
+		super(systemName, addr);
 		this.elevatorResponses = elevatorResponses;
 	}
 

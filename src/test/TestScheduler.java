@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import project.constants.Addresses;
 import project.constants.MotorDirection;
 import project.constants.SimulationConstants;
 import project.elevatorImpl.ElevatorStatus;
@@ -28,7 +29,7 @@ class TestScheduler {
 	private Scheduler scheduler;
 	@BeforeEach
 	public void init(){
-		scheduler = new Scheduler(SimulationConstants.SCHEDULER_PORT, "Scheduler");
+		scheduler = new Scheduler(SimulationConstants.SCHEDULER_PORT, "Scheduler", Addresses.DEFAULT.getAddress());
 	}
 	
 	/**

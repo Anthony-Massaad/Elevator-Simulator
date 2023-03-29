@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import project.constants.Addresses;
 import project.constants.MotorDirection;
 import project.constants.SimulationConstants;
 import project.elevatorImpl.ElevatorStatus;
@@ -32,8 +34,8 @@ public class Scheduler extends UDPBoth{
      * @param port Integer port number.
      * @param systemName String system name.
      */
-    public Scheduler(int port, String systemName) {
-        super(port, systemName);
+    public Scheduler(int port, String systemName, String addr) {
+        super(port, systemName, addr);
         this.elevatorStatuses = new ConcurrentHashMap<>();
         System.out.println(this.systemName + " started");
         this.receivedMessage = null; 
@@ -209,7 +211,8 @@ public class Scheduler extends UDPBoth{
         }
 
         // start the communication between the scheduler and elevator 
-        SchedulerMidTask schedulerMidTask = new SchedulerMidTask(SimulationConstants.SCHEDULER_MID_TASK_PORT, "Schedular Mid Task", this.elevatorStatuses);
+        String addressToSend = Addresses.FLOOR.getAddress();
+        SchedulerMidTask schedulerMidTask = new SchedulerMidTask(SimulationConstants.SCHEDULER_MID_TASK_PORT, "Schedular Mid Task", this.elevatorStatuses, addressToSend);
         Thread tMidTask = new Thread(schedulerMidTask);
         tMidTask.start();
         Log.notification("SCHEDULER", "Schedular Mid Task Started", new Date(), this.systemName);
@@ -228,7 +231,8 @@ public class Scheduler extends UDPBoth{
      * @param args Typical of main functions. Not used in this iteration.
      */
     public static void main(String[] args) {
-        Scheduler s = new Scheduler(SimulationConstants.SCHEDULER_PORT, "Scheduler");
+        String addressToSend = Addresses.ELEVATOR.getAddress();
+        Scheduler s = new Scheduler(SimulationConstants.SCHEDULER_PORT, "Scheduler", addressToSend);
         s.run();
     }
 

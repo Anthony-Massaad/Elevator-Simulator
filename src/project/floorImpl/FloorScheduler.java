@@ -33,8 +33,8 @@ public class FloorScheduler extends UDPSend implements Runnable{
      * @param events An arrayList of events.
      * @param floors A hashmap of floors.
      */
-    public FloorScheduler(String systemName, ArrayList<String> events, ConcurrentHashMap<Integer, Floor> floors) {
-        super(systemName);
+    public FloorScheduler(String systemName, ArrayList<String> events, ConcurrentHashMap<Integer, Floor> floors, String addr) {
+        super(systemName, addr);
         this.events = events;
         this.clock = new Clock();
         this.floors = floors; 

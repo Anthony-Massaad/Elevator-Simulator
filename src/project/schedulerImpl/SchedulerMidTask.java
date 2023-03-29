@@ -2,6 +2,7 @@ package project.schedulerImpl;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
+
 import project.constants.SimulationConstants;
 import project.elevatorImpl.ElevatorStatus;
 import project.messageSystem.Message;
@@ -23,8 +24,8 @@ public class SchedulerMidTask extends UDPBoth implements Runnable{
     private State idleState; 
     private State processElevatorState; 
 
-    public SchedulerMidTask(int port, String systemName, ConcurrentHashMap<Integer, ElevatorStatus> elevatorStatuses) {
-        super(port, systemName);
+    public SchedulerMidTask(int port, String systemName, ConcurrentHashMap<Integer, ElevatorStatus> elevatorStatuses, String addr) {
+        super(port, systemName, addr);
         this.elevatorStatuses = elevatorStatuses;
         this.receivedMessage = null;
         this.idleState = new SchedulerMidTaskIdleState(this);

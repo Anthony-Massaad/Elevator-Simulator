@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
+import project.constants.Addresses;
 import project.constants.FloorButtonState;
 import project.constants.MotorDirection;
 import project.constants.SimulationConstants;
@@ -67,7 +68,8 @@ public class FloorManager extends UDPReceive{
         this.initializeFloors();
 
         // initialize and start real time floor scheduler 
-        FloorScheduler fS = new FloorScheduler("Floor Scheduler", this.events, this.floors);
+        String addressToSend = Addresses.SCHEDULER.getAddress();
+        FloorScheduler fS = new FloorScheduler("Floor Scheduler", this.events, this.floors, addressToSend);
         Thread fST = new Thread(fS);
         fST.start();
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+import project.constants.Addresses;
 import project.constants.SimulationConstants;
 import project.logger.Log;
 import project.messageSystem.Message;
@@ -68,7 +69,8 @@ public class ElevatorSubSystem extends UDPReceive{
 		// begin initialize elevator //
 		// initialize the elevatorCommuniocation
 		// this communication is a thread that will receive the responses from the elevators and send to the scheduler mid task
-		ElevatorComReceiver elReceiver = new ElevatorComReceiver("Elevaor Communicator", this.elevatorResponses);
+		String addressToSend = Addresses.SCHEDULER.getAddress();
+		ElevatorComReceiver elReceiver = new ElevatorComReceiver("Elevaor Communicator", this.elevatorResponses, addressToSend);
 		Thread elReceiverT = new Thread(elReceiver);
 		elReceiverT.start();
 		Log.notification("ELEVATOR SUBSYSTEM", "Elevator Communicator Started", new Date(), this.systemName);

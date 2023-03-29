@@ -2,8 +2,11 @@ package project.udp;
 
 import java.io.IOException;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 
+import project.constants.Addresses;
 import project.messageSystem.Message;
 
 /**
@@ -12,16 +15,25 @@ import project.messageSystem.Message;
  */
 public class UDPSend extends UDPImpl{
 
+    private InetAddress addr;
+
 	/**
 	 * Constructor for UDPSend.
 	 */
     private DatagramSocket sendSocket; 
-    public UDPSend(String systemName){
+    public UDPSend(String systemName, String addr){
         super(systemName);
         try {
             this.sendSocket = new DatagramSocket();
+
+            // use localhost address for defualt, otherwise use custom address
+            if (addr.equals(Addresses.DEFAULT.getAddress())) {
+                this.addr = InetAddress.getLocalHost();
+            }else{
+                this.addr = InetAddress.getByName(addr);
+            }
             // this.sendSocket.setSoTimeout(30000);
-        } catch (SocketException e) {
+        } catch (SocketException | UnknownHostException e) {
             e.printStackTrace();
         }
     }
@@ -34,7 +46,7 @@ public class UDPSend extends UDPImpl{
      * @throws InterruptedException
      */
     protected void send(Message msg, int destinationPort) throws IOException, InterruptedException {
-        this.send(this.sendSocket, msg, destinationPort);
+        this.send(this.sendSocket, msg, destinationPort, this.addr);
     }
 
     /**

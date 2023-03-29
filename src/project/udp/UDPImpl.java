@@ -76,9 +76,9 @@ public abstract class UDPImpl {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	protected void send(DatagramSocket sendSocket, Message msg, int destinationPort) throws IOException, InterruptedException {
+	protected void send(DatagramSocket sendSocket, Message msg, int destinationPort, InetAddress addr) throws IOException, InterruptedException {
 		byte[] data = this.serializeMessage(msg);  
-		this.sendPacket = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), destinationPort);
+		this.sendPacket = new DatagramPacket(data, data.length, addr, destinationPort);
 		Log.logSendMsg(this.systemName, this.sendPacket, msg.toString());
 		Thread.sleep(1000);		// slow things down
 		sendSocket.send(this.sendPacket);
