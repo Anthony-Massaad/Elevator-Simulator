@@ -27,6 +27,7 @@ import project.statesImpl.SchedulerStates.SchedulerProcessFloorState;
 class TestScheduler {
 
 	private Scheduler scheduler;
+	
 	@BeforeEach
 	public void init(){
 		scheduler = new Scheduler(SimulationConstants.SCHEDULER_PORT, "Scheduler", Addresses.DEFAULT.getAddress());
@@ -93,9 +94,8 @@ class TestScheduler {
         }
 		scheduler.setReceivedMessage(new FloorRequestElevator(new Date(), 0, MotorDirection.IDLE, new ArrayList<>()));
 		scheduler.setCurrentState(scheduler.getProcessFloorState());
-		project.statesImpl.State state = scheduler.getCurrentState();
-		assertTrue(state instanceof SchedulerProcessFloorState);
-		scheduler.setCurrentState(state.handleState());
+		assertTrue(scheduler.getCurrentState() instanceof SchedulerProcessFloorState);
+		scheduler.setCurrentState(scheduler.getCurrentState().handleState());
 		assertTrue(scheduler.getCurrentState() instanceof SchedulerIdleState);
 	}
 
