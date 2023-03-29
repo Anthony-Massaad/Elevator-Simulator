@@ -5,7 +5,7 @@ package project.constants;
 // default is ""
 
 public enum Addresses {
-    SCHEDULER("192.168.56.1"), ELEVATOR("192.168.56.1"), FLOOR("192.168.56.1"), DEFAULT("");
+    DEFAULT(""), SCHEDULER("192.168.56.1"), ELEVATOR("192.168.56.1"), FLOOR("192.168.56.1");
 
     private final String address;
     Addresses(String addr){

@@ -4,7 +4,7 @@ import java.net.DatagramPacket;
 import java.util.Date;
 
 public class Log {
-	private static boolean logPackets = false; 
+	private static boolean logPackets = true; 
 
 	/**
 	 * Log Messages as notifications (None urgent messages) 
