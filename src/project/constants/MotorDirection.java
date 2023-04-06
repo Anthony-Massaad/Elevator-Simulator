@@ -31,7 +31,13 @@ public enum MotorDirection {
 	 * @return String, the direction as String
 	 */
 	public static String toString(MotorDirection direction){
-		return direction == MotorDirection.DOWN ? "DOWN" : "UP";
+		if (direction == MotorDirection.UP){
+			return "UP";
+		}else if (direction == MotorDirection.DOWN){
+			return "DOWN";
+		}else{
+			return "IDLE";
+		}
 	}
 
 }

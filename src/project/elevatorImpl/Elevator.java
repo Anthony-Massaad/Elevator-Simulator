@@ -63,7 +63,7 @@ public class Elevator implements Runnable{
 		// responsible for the basic statuses shared with the scheduler 
 		// new Random().nextInt(SimulationConstants.NUM_OF_FLOORS) + 1 = (0-21) + 1 = (1-22)
 		this.destinations = new ArrayList<>(); 
-		elevatorStatus = new ElevatorStatus(this.destinations.size(), 0, new Random().nextInt(SimulationConstants.NUM_OF_FLOORS) + 1, MotorDirection.IDLE);
+		this.elevatorStatus = new ElevatorStatus(this.destinations.size(), 0, new Random().nextInt(SimulationConstants.NUM_OF_FLOORS) + 1, MotorDirection.IDLE);
 		this.lamps = new boolean[SimulationConstants.NUM_OF_FLOORS];
 		this.systemName = systemName; 
 		this.id = id; 
