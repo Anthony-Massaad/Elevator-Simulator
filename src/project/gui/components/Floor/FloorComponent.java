@@ -9,7 +9,7 @@ import java.awt.*;
 public class FloorComponent extends JPanel{
     
     private FloorInfo floorInfo; 
-    public FloorComponent(int height, String floorNumber){
+    public FloorComponent(int height, String floorNumber) {
         super(); 
         this.floorInfo = new FloorInfo(floorNumber, this.getHeight(), 64);
         this.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -18,11 +18,11 @@ public class FloorComponent extends JPanel{
         this.setPreferredSize(new Dimension(this.getWidth(), height));
     }
 
-    public void enableButtons(MotorDirection isUp){
+    public void enableButtons(MotorDirection isUp) {
         this.floorInfo.enableButton(isUp);
     }
 
-    public void disableButton(MotorDirection isUp){
+    public void disableButton(MotorDirection isUp) {
         this.floorInfo.disableButton(isUp);
     }
 
