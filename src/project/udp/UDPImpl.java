@@ -99,6 +99,7 @@ public abstract class UDPImpl {
 		receiveSocket.receive(this.receivePacket);
 		Message msg = this.deserializeMessage(this.receivePacket.getData());
 		Log.logReceiveMsg(this.systemName, this.receivePacket, msg.toString());
+		Thread.sleep(1000); // slow things down
 		return msg; 
 	}
 	

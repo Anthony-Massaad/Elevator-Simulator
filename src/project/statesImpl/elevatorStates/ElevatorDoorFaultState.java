@@ -34,7 +34,7 @@ public class ElevatorDoorFaultState extends State{
         this.elevator.getElevatorStatus().setIsStuck(true);
         Log.notification("ELEVATOR", "Elevator is Stuck True", new Date(), this.elevator.getSystemName());
         this.elevator.sendUpdateStatus();
-        this.elevator.sleep(2000);
+        this.elevator.sleep(3000);
         // elevator door is unstuck
         Log.warning("ELEVATOR", "DOOR FAULT, FIXED", new Date(), this.elevator.getSystemName());
         this.elevator.getElevatorStatus().setIsStuck(false);
@@ -50,7 +50,11 @@ public class ElevatorDoorFaultState extends State{
             this.elevator.getDestinations().remove(SimulationConstants.DOOR_OPEN_STUCK_INDEX);
             return this.elevator.getElevatorDoorOpenState();
         }
-        
+    }
+
+    @Override
+    public String toString(){
+        return "Door Fault";
     }
 
 }

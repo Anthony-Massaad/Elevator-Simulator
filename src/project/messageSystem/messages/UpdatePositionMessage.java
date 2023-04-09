@@ -1,5 +1,6 @@
 package project.messageSystem.messages;
 
+import java.util.ArrayList;
 import java.util.Date;
 import project.constants.MotorDirection;
 import project.messageSystem.Message;
@@ -16,6 +17,8 @@ public class UpdatePositionMessage extends Message{
 	private final MotorDirection motorDir;
     private final int elevatorID; 
     private final boolean isStuck; 
+    private final ArrayList<Integer> destinations;
+    private final String state;
 
     /**
      * Constructor for UpdatePositionMessage.
@@ -26,7 +29,7 @@ public class UpdatePositionMessage extends Message{
      * @param currentFloor An int currentFloor.
      * @param motorDir A MotorDirection object motorDir.
      */
-    public UpdatePositionMessage(Date timeStamp, int elevatorID, int numberOfPassengers, int nextDestination, int currentFloor, MotorDirection motorDir, boolean isStuck) {
+    public UpdatePositionMessage(Date timeStamp, int elevatorID, int numberOfPassengers, int nextDestination, int currentFloor, MotorDirection motorDir, boolean isStuck, ArrayList<Integer> destinations, String state) {
         super(timeStamp);
         this.numberOfPassengers = numberOfPassengers;
         this.nextDestination = nextDestination;
@@ -34,6 +37,8 @@ public class UpdatePositionMessage extends Message{
         this.motorDir = motorDir;
         this.elevatorID = elevatorID;
         this.isStuck = isStuck; 
+        this.destinations = destinations;
+        this.state = state;
     }
 
     /**
@@ -82,6 +87,14 @@ public class UpdatePositionMessage extends Message{
      */
     public boolean getIsStuck(){
         return this.isStuck;
+    }
+
+    public ArrayList<Integer> getDestinations(){
+        return this.destinations; 
+    }
+
+    public String getState(){
+        return this.state;
     }
 
     /**

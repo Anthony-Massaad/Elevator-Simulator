@@ -29,5 +29,10 @@ public class SchedulerIdleState extends State{
         this.scheduler.receive();
         return this.scheduler.getProcessFloorState(); 
     }
+
+    @Override
+    public String toString(){
+        return "Idle";
+    }
     
 }

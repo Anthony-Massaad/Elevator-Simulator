@@ -28,5 +28,10 @@ public class SchedulerMidTaskIdleState extends State{
         this.schedulerMidTask.receive();
         return this.schedulerMidTask.getProcessElevatorState(); 
     }
+
+    @Override
+    public String toString(){
+        return "Idle";
+    }
     
 }

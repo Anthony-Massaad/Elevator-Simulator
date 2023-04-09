@@ -118,7 +118,7 @@ class TestScheduler {
 	 */
 	@Test
 	void testInvalidMessageCase(){
-		scheduler.setReceivedMessage(new UpdatePositionMessage(new Date(), 0, 0, 0, 0, MotorDirection.DOWN, false));
+		scheduler.setReceivedMessage(new UpdatePositionMessage(new Date(), 0, 0, 0, 0, MotorDirection.DOWN, false, new ArrayList<>(), ""));
 		scheduler.setCurrentState(scheduler.getProcessFloorState());
 		assertTrue(scheduler.getCurrentState() instanceof SchedulerProcessFloorState);
 		scheduler.setCurrentState(scheduler.getCurrentState().handleState());

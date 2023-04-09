@@ -272,7 +272,7 @@ class TestElevator {
 	 */
 	@Test
 	void testHandleInvalidMessageInput(){
-		Message msg = new UpdatePositionMessage(new Date(), 0, 0, 0, 0, MotorDirection.UP, false);
+		Message msg = new UpdatePositionMessage(new Date(), 0, 0, 0, 0, MotorDirection.UP, false, new ArrayList<>(), "");
 		Elevator.addRequest(msg);
 		assertTrue(Elevator.getCurrentState() instanceof ElevatorIdleState);
 		Elevator.setCurrentState(Elevator.getProcessingState().handleState());

@@ -37,6 +37,7 @@ public class ElevatorMovingState extends State{
         State returningState = null; 
         Log.notification("ELEVATOR", "Current floor " + this.elevator.getElevatorStatus().getCurrentFloor(), new Date(), this.elevator.getSystemName());
         Log.notification("ELEVATOR", "Moving now", new Date(), this.elevator.getSystemName());
+        this.elevator.sendUpdateStatus();
 
         // activate the timer depending on input
         Timing timer; 
@@ -80,7 +81,7 @@ public class ElevatorMovingState extends State{
             this.elevator.getLamps()[this.elevator.getElevatorStatus().getNextDestination() - 1] = false; 
             Log.notification("ELEVATOR", "Button Lamp " + (this.elevator.getElevatorStatus().getNextDestination())  + " is off", new Date(), this.elevator.getSystemName());
             ArrivalMessage arrivalMessage;
-			if (this.elevator.getDestinations().size() == 0){
+			if (this.elevator.getDestinations().size() == 0 && this.elevator.getUpcomingDirection() != this.elevator.getElevatorStatus().getMotorDirection()){
 				arrivalMessage = new ArrivalMessage(new Date(), this.elevator.getElevatorStatus().getNextDestination(), MotorDirection.oppositeDirection(this.elevator.getElevatorStatus().getMotorDirection()));
 			}else{
 				arrivalMessage = new ArrivalMessage(new Date(), this.elevator.getElevatorStatus().getNextDestination(), this.elevator.getElevatorStatus().getMotorDirection());
@@ -89,6 +90,7 @@ public class ElevatorMovingState extends State{
 			Log.notification("ELEVATOR", "Lamp " + this.elevator.getElevatorStatus().getNextDestination() + " off", new Date(), this.elevator.getSystemName());
         	this.elevator.getResponses().addFirst(arrivalMessage);
             returningState = this.elevator.getElevatorDoorOpenState();
+            this.elevator.sendUpdateStatus();
         }
 
         if (returningState == null){
@@ -98,5 +100,10 @@ public class ElevatorMovingState extends State{
         return returningState; 
 
     } 
+
+    @Override
+    public String toString(){
+        return "Moving";
+    }
 
 }

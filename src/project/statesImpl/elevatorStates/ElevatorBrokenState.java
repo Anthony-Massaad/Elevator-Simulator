@@ -32,5 +32,10 @@ public class ElevatorBrokenState extends State{
         Log.error("ELEVATOR", "Elevator Entirely Broken!!!!!!!", new Date(), this.elevator.getSystemName());
         return this.elevator.getElevatorBrokenState();
     }
+
+    @Override
+    public String toString(){
+        return "Broken";
+    }
     
 }

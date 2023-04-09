@@ -26,5 +26,10 @@ public abstract class State {
     public void die(){
         this.isDieCalled = true; 
     }
+
+    /**
+     * to string to translate the state
+     */
+    public abstract String toString();
     
 }

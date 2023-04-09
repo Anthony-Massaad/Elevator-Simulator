@@ -42,12 +42,14 @@ public class SchedulerProcessElevatorState extends State {
                     Log.notification("SCHEDULER MID TASK", "Elevator " + updatePositionMessage.getElevatorID() + " Stuck received", new Date(), this.schedulerMidTask.getSystemName());
                 }
                 // update the status
+                this.schedulerMidTask.getGui().updateElevatorInfo(updatePositionMessage.getElevatorID(), updatePositionMessage);
                 this.schedulerMidTask.getElevatorStatus().get(updatePositionMessage.getElevatorID()).update(updatePositionMessage.getDirection(), updatePositionMessage.getCurrentFloor(), updatePositionMessage.getNumberOfPassengers(), updatePositionMessage.getNextDestination(), updatePositionMessage.getIsStuck());
                 Log.notification("SCHEDULER MID TASK", updatePositionMessage.toString(), new Date(), this.schedulerMidTask.getSystemName());
                 this.schedulerMidTask.reset();
             }else if (this.schedulerMidTask.getReceviedMessage() instanceof ArrivalMessage) {
                 ArrivalMessage arrivalMessage = (ArrivalMessage) this.schedulerMidTask.getReceviedMessage();
                 this.schedulerMidTask.sendPacket(arrivalMessage, SimulationConstants.FLOOR_MANAGER_PORT);
+                this.schedulerMidTask.getGui().updateFloorComponentArrive(arrivalMessage.getFloorNumber(), arrivalMessage.getDirection());
                 Log.notification("SCHEDULER MID TASK", arrivalMessage.toString(), new Date(), this.schedulerMidTask.getSystemName());
                 this.schedulerMidTask.reset();
             }else if (this.schedulerMidTask.getReceviedMessage() instanceof ElevatorLeavingMessage){
@@ -60,6 +62,10 @@ public class SchedulerProcessElevatorState extends State {
         }
 
         return this.schedulerMidTask.getIdleState(); 
+    }
+
+    public String toString(){
+        return "Processing Elevator";
     }
     
 }

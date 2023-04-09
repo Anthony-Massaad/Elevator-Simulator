@@ -99,4 +99,9 @@ public class ElevatorRequestProcessState extends State{
 		return returningState;
     }
     
+	@Override
+	public String toString(){
+		return "Processing";
+	}
+
 }

@@ -28,5 +28,10 @@ public class ElevatorIdleState extends State{
         this.elevator.sleep(500);
         return this.elevator.getElevatorIdleState();
     }
+
+    @Override
+    public String toString(){
+        return "Idle";
+    }
     
 }

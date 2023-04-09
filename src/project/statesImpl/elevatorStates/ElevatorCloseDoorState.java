@@ -32,6 +32,7 @@ public class ElevatorCloseDoorState extends State{
      */
     @Override
     public State handleState() {
+        this.elevator.sendUpdateStatus();
         Log.notification("ELEVATOR", "Closing Door", new Date(), this.elevator.getSystemName());
         this.elevator.sleep(Time.CLOSE_DOOR.getTime());
         State returningState; 
@@ -63,5 +64,10 @@ public class ElevatorCloseDoorState extends State{
 
 		this.elevator.sendUpdateStatus();
         return returningState; 
+    }
+
+    @Override
+    public String toString(){
+        return "Close Door";
     }
 }

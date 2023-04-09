@@ -69,7 +69,6 @@ public class Elevator implements Runnable{
 		this.id = id; 
 		this.floorInputButtons = new HashMap<>();
 		this.upcomingDirection = null; 
-		this.sendUpdateStatus();
 		// initialize the states
 		this.requestProcessingState = new ElevatorRequestProcessState(this);
 		this.elevatorDoorCloseState = new ElevatorCloseDoorState(this);
@@ -79,6 +78,7 @@ public class Elevator implements Runnable{
 		this.elevatorDoorFaultState = new ElevatorDoorFaultState(this);
 		this.elevatorBrokenState = new ElevatorBrokenState(this);
 		this.currentState = this.elevatorIdleState;
+		this.sendUpdateStatus();
 	}
 
 	/**
@@ -114,7 +114,11 @@ public class Elevator implements Runnable{
 	 * @param state State, the new current state
 	 */
 	public void setCurrentState(State state){
+		State tpm = this.currentState;
 		this.currentState = state; 
+		if (state instanceof ElevatorIdleState && !(tpm instanceof ElevatorIdleState)){
+			this.sendUpdateStatus();
+		}
 	}
 
 	/**
@@ -284,9 +288,9 @@ public class Elevator implements Runnable{
 	 * Void method for sending the update status.
 	 */
 	public void sendUpdateStatus(){
-		UpdatePositionMessage updatePositionMessage = new UpdatePositionMessage(new Date(), this.id, this.elevatorStatus.getNumberOfPassengers(), this.elevatorStatus.getNextDestination(), this.elevatorStatus.getCurrentFloor(), this.elevatorStatus.getMotorDirection(), this.elevatorStatus.getIsStuck());
+		UpdatePositionMessage updatePositionMessage = new UpdatePositionMessage(new Date(), this.id, this.elevatorStatus.getNumberOfPassengers(), this.elevatorStatus.getNextDestination(), this.elevatorStatus.getCurrentFloor(), this.elevatorStatus.getMotorDirection(), this.elevatorStatus.getIsStuck(), this.destinations, this.currentState.toString());
 		Log.notification("ELEVATOR", updatePositionMessage.toString(), new Date(), this.systemName);
-		this.responses.addFirst(updatePositionMessage);
+		this.responses.addLast(updatePositionMessage);
 	}
 
 	/**
@@ -420,6 +424,7 @@ public class Elevator implements Runnable{
 				if (this.requests.size() > 0) {
 					this.setCurrentState(this.requestProcessingState.handleState());
 				}
+
 				this.setCurrentState(this.currentState.handleState());
 			}catch (Exception e) {
 				// tthrow error
