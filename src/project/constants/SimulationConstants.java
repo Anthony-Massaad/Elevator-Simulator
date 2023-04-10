@@ -16,6 +16,7 @@ public class SimulationConstants {
 	public static final int ELEVATOR_MANAGER_PORT = 1500; 
 	public static final int FLOOR_MANAGER_PORT = 3500; 
 	public static final int SCHEDULER_MID_TASK_PORT = 3000;
+	public static final int GUI_PORT = 4000; 
 
 	// indexes to check within elevator destinations arraylist for stuck inputs
 	public static int DOOR_CLOSE_STUCK_INPUT = 0;

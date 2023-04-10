@@ -7,32 +7,27 @@ import project.constants.SimulationConstants;
 import project.gui.components.Floor.FloorComponent;
 import project.gui.components.Text.ElevatorInput.ElevatorInfo;
 import project.gui.components.Text.FloorInput.FloorInputText;
+import project.messageSystem.Message;
 import project.messageSystem.messages.ElevatorMoved;
+import project.messageSystem.messages.FloorInputMessage;
+import project.messageSystem.messages.FloorUpdateMessage;
 import project.messageSystem.messages.UpdatePositionMessage;
+import project.udp.UDPReceive;
 
 import java.awt.*;
+import java.io.IOException;
 
-public class MainGui extends JFrame{
-    private static int WIDTH = 1400; 
-    private static int HEIGHT = 760; 
-
+public class MainGui extends UDPReceive implements Runnable{
     private JPanel mainPanel, simPanel, textPanel, elevatorInfoPanel; 
     private FloorComponent[] floorComponents;
     private ElevatorInfo[] elevatorInfos; 
     private FloorInputText floorInputText; 
+    private JFrame mainFrame; 
 
     public MainGui(){
-        super("Elevator Project");
+        super(SimulationConstants.GUI_PORT, "GUI");
         GridBagConstraints constraints = new GridBagConstraints();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int widthScreen = screenSize.width;
-        int heightScreen = screenSize.height;
-        
-        if (WIDTH < widthScreen){
-            // create a maximum width the frame can be
-            WIDTH = widthScreen;
-        }
-        HEIGHT = heightScreen; 
+        this.mainFrame = new JFrame("Elevator Simulation");
         // initialize the panels
         this.mainPanel = new JPanel();
         this.simPanel = new JPanel();
@@ -51,7 +46,7 @@ public class MainGui extends JFrame{
 
         // add components to sim panel
         for (int i = SimulationConstants.NUM_OF_FLOORS - 1; i >= 0; i--){
-            this.floorComponents[i] = new FloorComponent(HEIGHT/SimulationConstants.NUM_OF_FLOORS, Integer.toString(i + 1));
+            this.floorComponents[i] = new FloorComponent(800/SimulationConstants.NUM_OF_FLOORS, Integer.toString(i + 1));
             this.simPanel.add(this.floorComponents[i]);
         }
 
@@ -87,16 +82,12 @@ public class MainGui extends JFrame{
         this.mainPanel.add(this.textPanel, constraints);
 
         // finish setup for the frame
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.add(this.mainPanel);
-        // this.moveElevator(1, 0);
-        // this.moveElevator(1, 1);
-        // this.moveElevator(1, 2);
-        // this.moveElevator(1, 3);
+        this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.mainFrame.add(this.mainPanel);
 
-        this.pack();
-        this.setResizable(false);
-        this.setVisible(true);
+        this.mainFrame.pack();
+        this.mainFrame.setResizable(false);
+        this.mainFrame.setVisible(true);
     }
 
     public void updateElevatorInfo(int elevatorID, UpdatePositionMessage msg){
@@ -115,11 +106,11 @@ public class MainGui extends JFrame{
     }
 
     public void updateFloorComponentRequest(int floorNumber, MotorDirection direction){
-        this.floorComponents[floorNumber - 1].enableButtons(direction);
+        this.floorComponents[floorNumber-1].enableButtons(direction);
     }
 
     public void updateFloorComponentArrive(int floorNumber, MotorDirection direction){
-        this.floorComponents[floorNumber - 1].disableButton(direction);
+        this.floorComponents[floorNumber-1].disableButton(direction);
     }
 
     public void moveElevator(int floorNumber, int elevatorID){
@@ -135,7 +126,41 @@ public class MainGui extends JFrame{
         this.moveElevator(msg.getCurrentFloor(), msg.getElevatorId());
     }
 
-    public static void main(String[] args) {
-        new MainGui();
+    @Override
+    public void run() {
+        while(true){
+            Message msg = null;
+            try {
+                msg = this.receive(SimulationConstants.BYTE_SIZE);
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if (msg instanceof ElevatorMoved){
+                // elevator is moving
+                ElevatorMoved moved = (ElevatorMoved) msg; 
+                this.removeElevator(moved.getPreviousFloor(), moved.getElevatorId());
+                this.moveElevator(moved.getCurrentFloor(), moved.getElevatorId());
+            }else if (msg instanceof UpdatePositionMessage){
+                // update everything about the elevator
+                UpdatePositionMessage updatepositionMessage = (UpdatePositionMessage) msg;
+                this.updateElevatorInfo(updatepositionMessage.getElevatorID(), updatepositionMessage);
+            }else if (msg instanceof FloorUpdateMessage){
+                FloorUpdateMessage updateMessage = (FloorUpdateMessage) msg;
+                this.updateFloorComponentArrive(updateMessage.getFloorNumber(), updateMessage.getDirection());
+            }else if (msg instanceof FloorInputMessage){
+                FloorInputMessage floorInput = (FloorInputMessage) msg;
+                this.appendFloorInput(floorInput.getInput());
+                this.updateFloorComponentRequest(floorInput.getFloorNumber(), floorInput.getDirection());
+            }
+
+        }
     }
+
+    public static void main(String[] args) {
+        MainGui g = new MainGui();
+        Thread t = new Thread(g);
+        t.start();
+    }
+
 }

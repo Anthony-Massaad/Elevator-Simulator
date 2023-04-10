@@ -5,7 +5,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import project.constants.SimulationConstants;
 import project.elevatorImpl.ElevatorStatus;
-import project.gui.MainGui;
 import project.messageSystem.Message;
 import project.statesImpl.State;
 import project.statesImpl.SchedulerStates.SchedulerMidTaskIdleState;
@@ -24,20 +23,14 @@ public class SchedulerMidTask extends UDPBoth implements Runnable{
     private State currentState; 
     private State idleState; 
     private State processElevatorState; 
-    private MainGui gui;
 
-    public SchedulerMidTask(int port, String systemName, ConcurrentHashMap<Integer, ElevatorStatus> elevatorStatuses, String addr, MainGui gui) {
+    public SchedulerMidTask(int port, String systemName, ConcurrentHashMap<Integer, ElevatorStatus> elevatorStatuses, String addr) {
         super(port, systemName, addr);
         this.elevatorStatuses = elevatorStatuses;
         this.receivedMessage = null;
         this.idleState = new SchedulerMidTaskIdleState(this);
         this.processElevatorState = new SchedulerProcessElevatorState(this);
         this.currentState = this.idleState;
-        this.gui = gui;
-    }
-
-    public MainGui getGui(){
-        return this.gui;
     }
 
     /**

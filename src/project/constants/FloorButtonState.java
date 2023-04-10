@@ -15,4 +15,5 @@ public enum FloorButtonState {
     public static String parseState(FloorButtonState state){
         return state == FloorButtonState.ACTIVE ? "Active" : "Not Active";
     }
+
 }

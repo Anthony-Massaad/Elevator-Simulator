@@ -9,7 +9,6 @@ import project.constants.Addresses;
 import project.constants.MotorDirection;
 import project.constants.SimulationConstants;
 import project.elevatorImpl.ElevatorStatus;
-import project.gui.MainGui;
 import project.logger.Log;
 import project.messageSystem.Message;
 import project.statesImpl.State;
@@ -29,9 +28,6 @@ public class Scheduler extends UDPBoth{
     private State currentState; 
     private State idleState; 
     private State processFloorState; 
-
-    private MainGui gui; 
-
     /**
      * Constructor for the Scheduler class.
      * @param port Integer port number.
@@ -47,7 +43,6 @@ public class Scheduler extends UDPBoth{
         this.idleState = new SchedulerIdleState(this);
         this.processFloorState = new SchedulerProcessFloorState(this);
         this.currentState = this.idleState;
-        this.gui = new MainGui();
     }
 
     /**
@@ -204,10 +199,6 @@ public class Scheduler extends UDPBoth{
 		this.elevatorStatuses.put(i, elevatorStatus);
 	}
 
-    public MainGui getGui(){
-        return this.gui;
-    }
-
     /**
      * Run method that activates the Scheduler's functionality.
      */
@@ -220,7 +211,7 @@ public class Scheduler extends UDPBoth{
 
         // start the communication between the scheduler and elevator 
         String addressToSend = Addresses.FLOOR.getAddress();
-        SchedulerMidTask schedulerMidTask = new SchedulerMidTask(SimulationConstants.SCHEDULER_MID_TASK_PORT, "Schedular Mid Task", this.elevatorStatuses, addressToSend, this.gui);
+        SchedulerMidTask schedulerMidTask = new SchedulerMidTask(SimulationConstants.SCHEDULER_MID_TASK_PORT, "Schedular Mid Task", this.elevatorStatuses, addressToSend);
         Thread tMidTask = new Thread(schedulerMidTask);
         tMidTask.start();
         Log.notification("SCHEDULER", "Schedular Mid Task Started", new Date(), this.systemName);

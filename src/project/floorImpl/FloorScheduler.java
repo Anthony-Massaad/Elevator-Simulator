@@ -10,6 +10,7 @@ import project.constants.FloorButtonState;
 import project.constants.MotorDirection;
 import project.constants.SimulationConstants;
 import project.logger.Log;
+import project.messageSystem.messages.FloorInputMessage;
 import project.messageSystem.messages.FloorRequestElevator;
 import project.udp.UDPSend;
 
@@ -51,7 +52,7 @@ public class FloorScheduler extends UDPSend implements Runnable{
             String[] currEvent = event.split(" "); 
             Date date = this.clock.convertToDate(currEvent[this.TIME_INDEX]);
             if (this.clock.isTime(date.getTime())){
-                this.processEvent(currEvent, date);
+                this.processEvent(event, currEvent, date);
             }
         }
         this.clock.increment();
@@ -59,13 +60,14 @@ public class FloorScheduler extends UDPSend implements Runnable{
 
     /**
      * Void method that processes each event received, and set buttons as necessary per the events received.
+     * @param input the input
      * @param event A string array event.
      * @param date A Date object date.
      * @throws ParseException
      * @throws IOException
      * @throws InterruptedException
      */
-    private void processEvent(String[] event, Date date) throws ParseException, IOException, InterruptedException{
+    private void processEvent(String input, String[] event, Date date) throws ParseException, IOException, InterruptedException{
         Log.notification("FLOOR SCHEDULER", "Proccessing Event", new Date(), this.systemName);
         int floorNumber = Integer.parseInt(event[this.FLOOR_INDEX]);
         MotorDirection direction = MotorDirection.getDirection(event[this.DIRECTION_INDEX]);
@@ -85,6 +87,7 @@ public class FloorScheduler extends UDPSend implements Runnable{
         }
         
         this.send(new FloorRequestElevator(date, floorNumber, direction, buttonsToBePressed), SimulationConstants.SCHEDULER_PORT);
+        this.send(new FloorInputMessage(date, input, direction, floorNumber), SimulationConstants.GUI_PORT);
     }
 
     /**

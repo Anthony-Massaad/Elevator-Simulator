@@ -13,14 +13,15 @@ import project.logger.Log;
 import project.messageSystem.Message;
 import project.messageSystem.messages.ArrivalMessage;
 import project.messageSystem.messages.ElevatorLeavingMessage;
+import project.messageSystem.messages.FloorUpdateMessage;
 import project.simulationParser.Parser;
-import project.udp.UDPReceive;
+import project.udp.UDPBoth;
 
 /**
  * class that handles the Floors 
  * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
  */
-public class FloorManager extends UDPReceive{
+public class FloorManager extends UDPBoth{
 
     private ConcurrentHashMap<Integer, Floor> floors;
     private ArrayList<String> events; 
@@ -32,7 +33,7 @@ public class FloorManager extends UDPReceive{
      * @param events ArrayList of events.
      */
     public FloorManager(int port, String systemName, ArrayList<String> events) {
-        super(port, systemName);
+        super(port, systemName, Addresses.FLOOR.getAddress());
         this.floors = new ConcurrentHashMap<>();
         this.events = events; 
         System.out.println(this.systemName + " started");
@@ -91,16 +92,17 @@ public class FloorManager extends UDPReceive{
                     }else{
                         throw new Error("Pased an unknown direction for the floor events");
                     }
+                    this.send(new FloorUpdateMessage(new Date(), direction, floorNumber), SimulationConstants.GUI_PORT);
                 }else if (msg instanceof ElevatorLeavingMessage){
                     // elevator is leaving the floor
                     ElevatorLeavingMessage leavingMessage = (ElevatorLeavingMessage) msg; 
                     if (leavingMessage.getDirection() == MotorDirection.UP){
-                        this.floors.get(leavingMessage.getFloorNumber()).setUpLamp(false);
+                        this.floors.get(leavingMessage.getFloorNumber() - 1).setUpLamp(false);
                     }else if (leavingMessage.getDirection() == MotorDirection.DOWN){
-                        this.floors.get(leavingMessage.getFloorNumber()).setDownLamp(false);
+                        this.floors.get(leavingMessage.getFloorNumber() - 1).setDownLamp(false);
                     }else{
-                        this.floors.get(leavingMessage.getFloorNumber()).setDownLamp(false);
-                        this.floors.get(leavingMessage.getFloorNumber()).setUpLamp(false);
+                        this.floors.get(leavingMessage.getFloorNumber() - 1).setDownLamp(false);
+                        this.floors.get(leavingMessage.getFloorNumber() - 1).setUpLamp(false);
                     }
                 }
             }

@@ -37,6 +37,7 @@ public class ElevatorComReceiver extends UDPSend implements Runnable{
 				}
 				Message msg = this.elevatorResponses.poll();
 				this.send(msg, SimulationConstants.SCHEDULER_MID_TASK_PORT);
+				this.send(msg, SimulationConstants.GUI_PORT);
 			}
 
 		}catch(Exception e){
