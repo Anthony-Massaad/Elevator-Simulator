@@ -80,7 +80,7 @@ public abstract class UDPImpl {
 		byte[] data = this.serializeMessage(msg);  
 		this.sendPacket = new DatagramPacket(data, data.length, addr, destinationPort);
 		Log.logSendMsg(this.systemName, this.sendPacket, msg.toString());
-		Thread.sleep(1000);		// slow things down
+		//Thread.sleep(1000);		// slow things down
 		sendSocket.send(this.sendPacket);
 		// System.out.println("Packet sent.");
 	}
@@ -99,7 +99,7 @@ public abstract class UDPImpl {
 		receiveSocket.receive(this.receivePacket);
 		Message msg = this.deserializeMessage(this.receivePacket.getData());
 		Log.logReceiveMsg(this.systemName, this.receivePacket, msg.toString());
-		Thread.sleep(1000); // slow things down
+		//Thread.sleep(1000); // slow things down
 		return msg; 
 	}
 	

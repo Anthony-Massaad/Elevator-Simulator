@@ -121,7 +121,6 @@ public class Elevator implements Runnable{
 		State tpm = this.currentState;
 		this.currentState = state; 
 		if (state instanceof ElevatorIdleState && !(tpm instanceof ElevatorIdleState)){
-			System.out.println("HITITTTT");
 			this.sendUpdateStatus();
 		}
 	}

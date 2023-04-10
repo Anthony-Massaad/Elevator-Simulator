@@ -12,22 +12,22 @@ import project.messageSystem.messages.ElevatorMoved;
 import project.messageSystem.messages.FloorInputMessage;
 import project.messageSystem.messages.FloorUpdateMessage;
 import project.messageSystem.messages.UpdatePositionMessage;
-import project.udp.UDPReceive;
 
 import java.awt.*;
-import java.io.IOException;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
-public class MainGui extends UDPReceive implements Runnable{
+public class MainGui implements Runnable{
     private JPanel mainPanel, simPanel, textPanel, elevatorInfoPanel; 
     private FloorComponent[] floorComponents;
     private ElevatorInfo[] elevatorInfos; 
     private FloorInputText floorInputText; 
     private JFrame mainFrame; 
+    private ConcurrentLinkedDeque<Message> updateRequests;
 
     public MainGui(){
-        super(SimulationConstants.GUI_PORT, "GUI");
         GridBagConstraints constraints = new GridBagConstraints();
         this.mainFrame = new JFrame("Elevator Simulation");
+        this.updateRequests = new ConcurrentLinkedDeque<Message>();
         // initialize the panels
         this.mainPanel = new JPanel();
         this.simPanel = new JPanel();
@@ -126,34 +126,38 @@ public class MainGui extends UDPReceive implements Runnable{
         this.moveElevator(msg.getCurrentFloor(), msg.getElevatorId());
     }
 
+    public void checkMessages(){
+        Message msg = this.updateRequests.poll();
+        if (msg instanceof ElevatorMoved){
+            // elevator is moving
+            ElevatorMoved moved = (ElevatorMoved) msg; 
+            this.removeElevator(moved.getPreviousFloor(), moved.getElevatorId());
+            this.moveElevator(moved.getCurrentFloor(), moved.getElevatorId());
+        }else if (msg instanceof UpdatePositionMessage){
+            // update everything about the elevator
+            UpdatePositionMessage updatepositionMessage = (UpdatePositionMessage) msg;
+            this.updateElevatorInfo(updatepositionMessage.getElevatorID(), updatepositionMessage);
+        }else if (msg instanceof FloorUpdateMessage){
+            FloorUpdateMessage updateMessage = (FloorUpdateMessage) msg;
+            this.updateFloorComponentArrive(updateMessage.getFloorNumber(), updateMessage.getDirection());
+        }else if (msg instanceof FloorInputMessage){
+            FloorInputMessage floorInput = (FloorInputMessage) msg;
+            this.appendFloorInput(floorInput.getInput());
+            this.updateFloorComponentRequest(floorInput.getFloorNumber(), floorInput.getDirection());
+        }
+    }
+
     @Override
     public void run() {
+        MessageCollections collect = new MessageCollections(this.updateRequests);
+        Thread tC = new Thread(collect);
+        tC.start();
+
         while(true){
-            Message msg = null;
-            try {
-                msg = this.receive(SimulationConstants.BYTE_SIZE);
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+            if (this.updateRequests.size() <= 0){
+                continue;
             }
-
-            if (msg instanceof ElevatorMoved){
-                // elevator is moving
-                ElevatorMoved moved = (ElevatorMoved) msg; 
-                this.removeElevator(moved.getPreviousFloor(), moved.getElevatorId());
-                this.moveElevator(moved.getCurrentFloor(), moved.getElevatorId());
-            }else if (msg instanceof UpdatePositionMessage){
-                // update everything about the elevator
-                UpdatePositionMessage updatepositionMessage = (UpdatePositionMessage) msg;
-                this.updateElevatorInfo(updatepositionMessage.getElevatorID(), updatepositionMessage);
-            }else if (msg instanceof FloorUpdateMessage){
-                FloorUpdateMessage updateMessage = (FloorUpdateMessage) msg;
-                this.updateFloorComponentArrive(updateMessage.getFloorNumber(), updateMessage.getDirection());
-            }else if (msg instanceof FloorInputMessage){
-                FloorInputMessage floorInput = (FloorInputMessage) msg;
-                this.appendFloorInput(floorInput.getInput());
-                this.updateFloorComponentRequest(floorInput.getFloorNumber(), floorInput.getDirection());
-            }
-
+            this.checkMessages();
         }
     }
 
