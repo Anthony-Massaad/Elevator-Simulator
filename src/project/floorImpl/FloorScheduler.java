@@ -79,9 +79,9 @@ public class FloorScheduler extends UDPSend implements Runnable{
         System.out.println("SIZE OF BUTTONS TO BE PRESSED: " + buttonsToBePressed.size());
 
         if (direction == MotorDirection.UP){
-            this.floors.get(floorNumber).setUpBtn(FloorButtonState.ACTIVE);
+            this.floors.get(floorNumber-1).setUpBtn(FloorButtonState.ACTIVE);
         }else if (direction == MotorDirection.DOWN){
-            this.floors.get(floorNumber).setDownBtn(FloorButtonState.ACTIVE);
+            this.floors.get(floorNumber-1).setDownBtn(FloorButtonState.ACTIVE);
         }else{
             throw new Error("Pased an unknown direction for the floor events");
         }

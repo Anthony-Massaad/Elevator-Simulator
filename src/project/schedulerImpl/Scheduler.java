@@ -20,7 +20,7 @@ import project.udp.UDPBoth;
  * Class for communication between the floor to elevator and determining the nearest elevator Given request from floor
  * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
  */
-public class Scheduler extends UDPBoth{
+public class Scheduler extends UDPBoth implements Runnable{
 
     private ConcurrentHashMap<Integer, ElevatorStatus> elevatorStatuses;
     private Message receivedMessage; 
@@ -202,6 +202,7 @@ public class Scheduler extends UDPBoth{
     /**
      * Run method that activates the Scheduler's functionality.
      */
+    @Override
     public void run(){
         // initialize the hashmap of elevatorStatuses
         for (int i = 0; i < SimulationConstants.NUM_OF_ELEVATORS; i++){
@@ -232,7 +233,8 @@ public class Scheduler extends UDPBoth{
     public static void main(String[] args) {
         String addressToSend = Addresses.ELEVATOR.getAddress();
         Scheduler s = new Scheduler(SimulationConstants.SCHEDULER_PORT, "Scheduler", addressToSend);
-        s.run();
+        Thread tS = new Thread(s);
+        tS.start();
     }
 
 }

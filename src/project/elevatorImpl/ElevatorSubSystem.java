@@ -16,7 +16,7 @@ import project.udp.UDPReceive;
  * Class handing the elevators. Receives from the floor
  * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
  */
-public class ElevatorSubSystem extends UDPReceive{
+public class ElevatorSubSystem extends UDPReceive implements Runnable{
 	
 	private boolean isDead; 
 	private Elevator[] elevators; 
@@ -57,6 +57,7 @@ public class ElevatorSubSystem extends UDPReceive{
 	/**
 	 * Void method for running the Elevator subsystem. It essentially initializes all elevators and implements the UDP communication.
 	 */
+	@Override
 	public void run() {
 		// begin initialize elevator // 
 		for (int i = 0; i<SimulationConstants.NUM_OF_ELEVATORS; i++) {
@@ -115,7 +116,8 @@ public class ElevatorSubSystem extends UDPReceive{
 	 */
 	public static void main(String[] args) {
 		ElevatorSubSystem el = new ElevatorSubSystem(SimulationConstants.ELEVATOR_MANAGER_PORT, "Elevator Subsystem");
-		el.run();
+		Thread tE = new Thread(el);
+		tE.start();
 	}
 	
 }

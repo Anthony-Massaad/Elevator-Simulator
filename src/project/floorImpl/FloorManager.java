@@ -21,7 +21,7 @@ import project.udp.UDPBoth;
  * class that handles the Floors 
  * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
  */
-public class FloorManager extends UDPBoth{
+public class FloorManager extends UDPBoth implements Runnable{
 
     private ConcurrentHashMap<Integer, Floor> floors;
     private ArrayList<String> events; 
@@ -64,6 +64,7 @@ public class FloorManager extends UDPBoth{
     /**
      * Void method to run the FloorManager's functionality. Initializes all floors and sets buttons as per its states.
      */
+    @Override
     public void run(){
         // initialize floors
         this.initializeFloors();
@@ -84,11 +85,11 @@ public class FloorManager extends UDPBoth{
                     int floorNumber = arrivalMessage.getFloorNumber();
                     MotorDirection direction = arrivalMessage.getDirection();
                     if (direction == MotorDirection.UP){
-                        this.floors.get(floorNumber).setUpBtn(FloorButtonState.NOT_ACTIVE);
-                        this.floors.get(floorNumber).setUpLamp(true);
+                        this.floors.get(floorNumber-1).setUpBtn(FloorButtonState.NOT_ACTIVE);
+                        this.floors.get(floorNumber-1).setUpLamp(true);
                     }else if (direction == MotorDirection.DOWN){
-                        this.floors.get(floorNumber).setDownBtn(FloorButtonState.NOT_ACTIVE);
-                        this.floors.get(floorNumber).setDownLamp(true);
+                        this.floors.get(floorNumber-1).setDownBtn(FloorButtonState.NOT_ACTIVE);
+                        this.floors.get(floorNumber-1).setDownLamp(true);
                     }else{
                         throw new Error("Pased an unknown direction for the floor events");
                     }
@@ -134,7 +135,8 @@ public class FloorManager extends UDPBoth{
     public static void main(String[] args) {
         Parser p = new Parser(); 
         FloorManager manager = new FloorManager(SimulationConstants.FLOOR_MANAGER_PORT, "Floor Manager", p.getEventLines());
-        manager.run();
+        Thread tF = new Thread(manager);
+        tF.start();
     }
 
 }
