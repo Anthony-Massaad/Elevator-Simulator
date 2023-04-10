@@ -7,6 +7,7 @@ import project.constants.SimulationConstants;
 import project.gui.components.Floor.FloorComponent;
 import project.gui.components.Text.ElevatorInput.ElevatorInfo;
 import project.gui.components.Text.FloorInput.FloorInputText;
+import project.messageSystem.messages.ElevatorMoved;
 import project.messageSystem.messages.UpdatePositionMessage;
 
 import java.awt.*;
@@ -88,14 +89,25 @@ public class MainGui extends JFrame{
         // finish setup for the frame
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.add(this.mainPanel);
+        // this.moveElevator(1, 0);
+        // this.moveElevator(1, 1);
+        // this.moveElevator(1, 2);
+        // this.moveElevator(1, 3);
+
         this.pack();
-        this.setSize(WIDTH, HEIGHT);
         this.setResizable(false);
         this.setVisible(true);
     }
 
     public void updateElevatorInfo(int elevatorID, UpdatePositionMessage msg){
         this.elevatorInfos[elevatorID].update(msg);
+
+        if (msg.getState().equals("Open Door")){
+            this.floorComponents[msg.getCurrentFloor()- 1].openDoor(msg.getElevatorID());
+        }else if (msg.getState().equals("Close Door")){
+            this.floorComponents[msg.getCurrentFloor()- 1].closeDoor(msg.getElevatorID());
+        }
+
     }
 
     public void appendFloorInput(String msg){
@@ -108,6 +120,19 @@ public class MainGui extends JFrame{
 
     public void updateFloorComponentArrive(int floorNumber, MotorDirection direction){
         this.floorComponents[floorNumber - 1].disableButton(direction);
+    }
+
+    public void moveElevator(int floorNumber, int elevatorID){
+        this.floorComponents[floorNumber-1].addElevator(elevatorID);
+    }
+
+    public void removeElevator(int floorNumber, int elevatorID){
+        this.floorComponents[floorNumber-1].removeElevator(elevatorID);
+    }
+
+    public void transferElevator(ElevatorMoved msg){
+        this.removeElevator(msg.getPreviousFloor(), msg.getElevatorId());
+        this.moveElevator(msg.getCurrentFloor(), msg.getElevatorId());
     }
 
     public static void main(String[] args) {

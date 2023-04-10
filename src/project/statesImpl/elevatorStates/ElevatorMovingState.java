@@ -38,7 +38,6 @@ public class ElevatorMovingState extends State{
         Log.notification("ELEVATOR", "Current floor " + this.elevator.getElevatorStatus().getCurrentFloor(), new Date(), this.elevator.getSystemName());
         Log.notification("ELEVATOR", "Moving now", new Date(), this.elevator.getSystemName());
         this.elevator.sendUpdateStatus();
-
         // activate the timer depending on input
         Timing timer; 
         if (this.elevator.getElevatorStatus().getNextDestination() == SimulationConstants.ELEVATOR_BROKEN_FAULT_INPUT){
@@ -63,17 +62,17 @@ public class ElevatorMovingState extends State{
         if (this.isDieCalled){
             return this.elevator.getElevatorBrokenState();
         }
-        
+        this.elevator.setPreviousFloor(this.elevator.getElevatorStatus().getCurrentFloor());
         // move elevaor
         if (this.elevator.getElevatorStatus().getCurrentFloor() < this.elevator.getElevatorStatus().getNextDestination()) {
 			this.elevator.getElevatorStatus().setCurrentFloor(this.elevator.getElevatorStatus().getCurrentFloor() + 1);
     	}else if (this.elevator.getElevatorStatus().getCurrentFloor() > this.elevator.getElevatorStatus().getNextDestination()) {
 			this.elevator.getElevatorStatus().setCurrentFloor(this.elevator.getElevatorStatus().getCurrentFloor() - 1);
     	}
-
         
     	Log.notification("ELEVATOR", "Reached floor " + this.elevator.getElevatorStatus().getCurrentFloor(), new Date(), this.elevator.getSystemName());
     	// update the scheduler through the ElevatorSubsystem
+        this.elevator.sendUpdateMoveStatus();
     	this.elevator.sendUpdateStatus();
         if (this.elevator.getElevatorStatus().getNextDestination() == this.elevator.getElevatorStatus().getCurrentFloor()) {
         	// when we reach the destination floor 

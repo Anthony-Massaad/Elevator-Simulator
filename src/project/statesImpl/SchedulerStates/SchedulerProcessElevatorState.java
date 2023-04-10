@@ -6,6 +6,7 @@ import project.constants.SimulationConstants;
 import project.logger.Log;
 import project.messageSystem.messages.ArrivalMessage;
 import project.messageSystem.messages.ElevatorLeavingMessage;
+import project.messageSystem.messages.ElevatorMoved;
 import project.messageSystem.messages.UpdatePositionMessage;
 import project.schedulerImpl.SchedulerMidTask;
 import project.statesImpl.State;
@@ -46,7 +47,13 @@ public class SchedulerProcessElevatorState extends State {
                 this.schedulerMidTask.getElevatorStatus().get(updatePositionMessage.getElevatorID()).update(updatePositionMessage.getDirection(), updatePositionMessage.getCurrentFloor(), updatePositionMessage.getNumberOfPassengers(), updatePositionMessage.getNextDestination(), updatePositionMessage.getIsStuck());
                 Log.notification("SCHEDULER MID TASK", updatePositionMessage.toString(), new Date(), this.schedulerMidTask.getSystemName());
                 this.schedulerMidTask.reset();
-            }else if (this.schedulerMidTask.getReceviedMessage() instanceof ArrivalMessage) {
+            }else if (this.schedulerMidTask.getReceviedMessage() instanceof ElevatorMoved){
+                // mainly only for tthe gui! 
+                ElevatorMoved elevatorMoved = (ElevatorMoved) this.schedulerMidTask.getReceviedMessage();
+                this.schedulerMidTask.getGui().transferElevator(elevatorMoved);
+                this.schedulerMidTask.reset();
+            }
+            else if (this.schedulerMidTask.getReceviedMessage() instanceof ArrivalMessage) {
                 ArrivalMessage arrivalMessage = (ArrivalMessage) this.schedulerMidTask.getReceviedMessage();
                 this.schedulerMidTask.sendPacket(arrivalMessage, SimulationConstants.FLOOR_MANAGER_PORT);
                 this.schedulerMidTask.getGui().updateFloorComponentArrive(arrivalMessage.getFloorNumber(), arrivalMessage.getDirection());

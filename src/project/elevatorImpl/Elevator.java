@@ -12,6 +12,7 @@ import project.constants.MotorDirection;
 import project.constants.SimulationConstants;
 import project.logger.Log;
 import project.messageSystem.Message;
+import project.messageSystem.messages.ElevatorMoved;
 import project.messageSystem.messages.UpdatePositionMessage;
 import project.statesImpl.State;
 import project.statesImpl.elevatorStates.ElevatorBrokenState;
@@ -40,6 +41,7 @@ public class Elevator implements Runnable{
 	private boolean directionLampUp;
 	private boolean directionLampDown;
 	private MotorDirection upcomingDirection; // needed for changing the direction on the initial motordirection of the elvator 
+	private int previousFloor; 
 
 	// declare the states 
 	private State currentState;
@@ -69,6 +71,7 @@ public class Elevator implements Runnable{
 		this.id = id; 
 		this.floorInputButtons = new HashMap<>();
 		this.upcomingDirection = null; 
+		this.previousFloor = this.elevatorStatus.getCurrentFloor();
 		// initialize the states
 		this.requestProcessingState = new ElevatorRequestProcessState(this);
 		this.elevatorDoorCloseState = new ElevatorCloseDoorState(this);
@@ -79,6 +82,7 @@ public class Elevator implements Runnable{
 		this.elevatorBrokenState = new ElevatorBrokenState(this);
 		this.currentState = this.elevatorIdleState;
 		this.sendUpdateStatus();
+		this.sendUpdateMoveStatus();
 	}
 
 	/**
@@ -143,6 +147,14 @@ public class Elevator implements Runnable{
 	 */
 	public State getProcessingState(){
 		return this.requestProcessingState;
+	}
+
+	public void setPreviousFloor(int floor){
+		this.previousFloor = floor; 
+	}
+
+	public int getPreviousFloor(){
+		return this.previousFloor;
 	}
 
 
@@ -291,6 +303,11 @@ public class Elevator implements Runnable{
 		UpdatePositionMessage updatePositionMessage = new UpdatePositionMessage(new Date(), this.id, this.elevatorStatus.getNumberOfPassengers(), this.elevatorStatus.getNextDestination(), this.elevatorStatus.getCurrentFloor(), this.elevatorStatus.getMotorDirection(), this.elevatorStatus.getIsStuck(), this.destinations, this.currentState.toString());
 		Log.notification("ELEVATOR", updatePositionMessage.toString(), new Date(), this.systemName);
 		this.responses.addLast(updatePositionMessage);
+	}
+
+	public void sendUpdateMoveStatus(){
+		ElevatorMoved moved = new ElevatorMoved(new Date(), this.previousFloor, this.elevatorStatus.getCurrentFloor(), this.id);
+		this.responses.addLast(moved);
 	}
 
 	/**

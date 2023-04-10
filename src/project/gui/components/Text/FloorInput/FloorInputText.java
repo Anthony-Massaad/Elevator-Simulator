@@ -23,7 +23,8 @@ public class FloorInputText extends JPanel {
         this.title.setHorizontalAlignment(SwingConstants.CENTER);
         this.scrollPane = new JScrollPane();
         this.scrollPane.setBorder((BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK)));
-        textArea = new JTextArea();
+        this.textArea = new JTextArea();
+        this.textArea.setPreferredSize(new Dimension(this.textArea.getWidth(), 200));
         this.textArea.setEditable(false);
         this.scrollPane.setViewportView(textArea);
         this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5)); 
