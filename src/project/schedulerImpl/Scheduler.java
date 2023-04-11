@@ -127,12 +127,9 @@ public class Scheduler extends UDPBoth implements Runnable{
             } else if ((diffFloor > 0 && direction == MotorDirection.DOWN && elDirection == MotorDirection.DOWN) || (diffFloor < 0 && direction == MotorDirection.UP && elDirection == MotorDirection.UP)) {
                 distance = Math.min(Math.abs(diffFloor), Math.abs(elDest - floorNumber));
             } else { 
-                if (elDirection == MotorDirection.DOWN) { 
-                    distance = Math.abs((SimulationConstants.NUM_OF_FLOORS - elCurrPosition) - (SimulationConstants.NUM_OF_FLOORS - floorNumber));
-                } else { 
-                    distance = Math.abs((SimulationConstants.NUM_OF_FLOORS - elCurrPosition) + (SimulationConstants.NUM_OF_FLOORS - floorNumber));
-                }
+                distance = Math.abs(Math.abs(elCurrPosition - SimulationConstants.NUM_OF_FLOORS) - Math.abs(elDest - SimulationConstants.NUM_OF_FLOORS)) + Math.abs(Math.abs(floorNumber - SimulationConstants.NUM_OF_FLOORS) - Math.abs(elDest - SimulationConstants.NUM_OF_FLOORS));
             }
+
             if (distance < shortestDistance){
                 shortestDistance = distance;
                 elNumber = entry.getKey();

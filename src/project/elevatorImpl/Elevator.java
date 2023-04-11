@@ -441,7 +441,6 @@ public class Elevator implements Runnable{
 				if (this.requests.size() > 0) {
 					this.setCurrentState(this.requestProcessingState.handleState());
 				}
-
 				this.setCurrentState(this.currentState.handleState());
 			}catch (Exception e) {
 				// tthrow error
