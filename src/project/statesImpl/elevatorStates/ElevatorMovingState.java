@@ -80,10 +80,11 @@ public class ElevatorMovingState extends State{
             this.elevator.getLamps()[this.elevator.getElevatorStatus().getNextDestination() - 1] = false; 
             Log.notification("ELEVATOR", "Button Lamp " + (this.elevator.getElevatorStatus().getNextDestination())  + " is off", new Date(), this.elevator.getSystemName());
             ArrivalMessage arrivalMessage;
+            System.out.println(this.elevator.getElevatorStatus().getCurrentFloor());
 			if (this.elevator.getDestinations().size() == 0 && this.elevator.getUpcomingDirection() != null){
-				arrivalMessage = new ArrivalMessage(new Date(), this.elevator.getElevatorStatus().getNextDestination(), MotorDirection.oppositeDirection(this.elevator.getElevatorStatus().getMotorDirection()));
+				arrivalMessage = new ArrivalMessage(new Date(), this.elevator.getElevatorStatus().getCurrentFloor(), this.elevator.getUpcomingDirection());
 			}else{
-				arrivalMessage = new ArrivalMessage(new Date(), this.elevator.getElevatorStatus().getNextDestination(), this.elevator.getElevatorStatus().getMotorDirection());
+				arrivalMessage = new ArrivalMessage(new Date(), this.elevator.getElevatorStatus().getCurrentFloor(), this.elevator.getElevatorStatus().getMotorDirection());
 			}
         	Log.notification("ELEVATOR", arrivalMessage.toString(), new Date(), this.elevator.getSystemName());
 			Log.notification("ELEVATOR", "Lamp " + this.elevator.getElevatorStatus().getNextDestination() + " off", new Date(), this.elevator.getSystemName());

@@ -128,9 +128,9 @@ public class Scheduler extends UDPBoth implements Runnable{
                 distance = Math.min(Math.abs(diffFloor), Math.abs(elDest - floorNumber));
             } else { 
                 if (elDirection == MotorDirection.DOWN) { 
-                    distance = elCurrPosition + floorNumber;
+                    distance = Math.abs((SimulationConstants.NUM_OF_FLOORS - elCurrPosition) - (SimulationConstants.NUM_OF_FLOORS - floorNumber));
                 } else { 
-                    distance = (SimulationConstants.NUM_OF_FLOORS - elCurrPosition) + (SimulationConstants.NUM_OF_FLOORS - floorNumber);
+                    distance = Math.abs((SimulationConstants.NUM_OF_FLOORS - elCurrPosition) + (SimulationConstants.NUM_OF_FLOORS - floorNumber));
                 }
             }
             if (distance < shortestDistance){
