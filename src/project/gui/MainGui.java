@@ -16,6 +16,10 @@ import project.messageSystem.messages.UpdatePositionMessage;
 import java.awt.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+/**
+ * Responsible for displaying the main frame
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public class MainGui implements Runnable{
     private JPanel mainPanel, simPanel, textPanel, elevatorInfoPanel; 
     private FloorComponent[] floorComponents;
@@ -24,6 +28,9 @@ public class MainGui implements Runnable{
     private JFrame mainFrame; 
     private ConcurrentLinkedDeque<Message> updateRequests;
 
+    /**
+     * Constructor
+     */
     public MainGui(){
         GridBagConstraints constraints = new GridBagConstraints();
         this.mainFrame = new JFrame("Elevator Simulation");
@@ -90,6 +97,11 @@ public class MainGui implements Runnable{
         this.mainFrame.setVisible(true);
     }
 
+    /**
+     * Update the elevator information in the gui
+     * @param elevatorID Integer, the elevator id
+     * @param msg UpdatePositionMessage, the updated statuses
+     */
     public void updateElevatorInfo(int elevatorID, UpdatePositionMessage msg){
         this.elevatorInfos[elevatorID].update(msg);
 
@@ -103,31 +115,62 @@ public class MainGui implements Runnable{
 
     }
 
+    /**
+     * Append text to the floor input
+     * @param msg String, input
+     */
     public void appendFloorInput(String msg){
         this.floorInputText.appendText(msg);
     }
 
+    /**
+     * Update the floor components request by enabling the respective buttons
+     * @param floorNumber Integer, the floor number
+     * @param direction MotorDirection, the direction
+     */
     public void updateFloorComponentRequest(int floorNumber, MotorDirection direction){
         this.floorComponents[floorNumber-1].enableButtons(direction);
     }
 
+    /**
+     * Update the floor components request by disabling the respective buttons
+     * @param floorNumber Integer, the floor number
+     * @param direction MotorDirection, the direction
+     */
     public void updateFloorComponentArrive(int floorNumber, MotorDirection direction){
         this.floorComponents[floorNumber-1].disableButton(direction);
     }
 
+    /**
+     * Move the elevator to its current floor
+     * @param floorNumber Integer, the floor number
+     * @param elevatorID Integer, the elevator ID
+     */
     public void moveElevator(int floorNumber, int elevatorID){
         this.floorComponents[floorNumber-1].addElevator(elevatorID);
     }
 
+    /**
+     * Remove the elevator from its previous floor
+     * @param floorNumber Integer, the floor number
+     * @param elevatorID Integer, the elevator ID
+     */
     public void removeElevator(int floorNumber, int elevatorID){
         this.floorComponents[floorNumber-1].removeElevator(elevatorID);
     }
 
+    /**
+     * Transfer the elevator from one floor to the next
+     * @param msg ElevatorMoved, the positions
+     */ 
     public void transferElevator(ElevatorMoved msg){
         this.removeElevator(msg.getPreviousFloor(), msg.getElevatorId());
         this.moveElevator(msg.getCurrentFloor(), msg.getElevatorId());
     }
 
+    /**
+     * Update the gui based off its queue of updating requests
+     */
     public void checkMessages(){
         Message msg = this.updateRequests.poll();
         if (msg instanceof ElevatorMoved){
@@ -149,6 +192,9 @@ public class MainGui implements Runnable{
         }
     }
 
+    /**
+     * overriden run method from runnable
+     */
     @Override
     public void run() {
         MessageCollections collect = new MessageCollections(this.updateRequests);
@@ -163,6 +209,10 @@ public class MainGui implements Runnable{
         }
     }
 
+    /**
+     * main method
+     * @param args String[], arguments
+     */
     public static void main(String[] args) {
         MainGui g = new MainGui();
         Thread t = new Thread(g);

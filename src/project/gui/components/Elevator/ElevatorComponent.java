@@ -6,12 +6,20 @@ import java.awt.GridLayout;
 
 import javax.swing.*;
 
+/**
+ * Responsible for displaying the elevator in the simulation
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public class ElevatorComponent extends JPanel{
     private final String DOOR_CLOSED = "||";
     private final String DOOR_OPENED = "| |";
     
     private JLabel doors; 
     private JLabel title; 
+    /**
+     * Constructor for the elevator component
+     * @param title String, the title of the elevator
+     */
     public ElevatorComponent(String title){
         super(); 
         this.setLayout(new GridLayout(1, 2));
@@ -26,14 +34,23 @@ public class ElevatorComponent extends JPanel{
         this.add(this.doors);
     }
 
+    /**
+     * Simulate the door open of the elevator
+     */
     public void openDoor(){
         this.doors.setText(this.DOOR_OPENED);
     }
 
+    /**
+     * simulate the door closed of the elevator
+     */
     public void closeDoor(){
         this.doors.setText(this.DOOR_CLOSED);
     }
 
+    /**
+     * simulate the door broken of the elevator
+     */
     public void broken(){
         this.setBorder(BorderFactory.createLineBorder(Color.RED));
         this.title.setBorder((BorderFactory.createMatteBorder(0, 0, 0, 1, Color.RED)));

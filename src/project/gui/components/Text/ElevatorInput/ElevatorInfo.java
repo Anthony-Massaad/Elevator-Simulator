@@ -9,6 +9,10 @@ import project.messageSystem.messages.UpdatePositionMessage;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * Class responsible for displaying the elvators information
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public class ElevatorInfo extends JPanel{
     private final Color ACTIVE_STATUS = Color.GREEN;
     private final Color BROKEN_STATUS = Color.RED;
@@ -23,6 +27,10 @@ public class ElevatorInfo extends JPanel{
     private JPanel nextDestPanel, directionPanel, destinationsQueuePanel, orderedDestPanel; 
     private NextDestField[] nextDestinationsQueue;
     private JScrollPane destinationsQueueScroll; 
+    /**
+     * Constructor for the elevator info
+     * @param elevatorNumber Integer, the elevator number
+     */
     public ElevatorInfo(int elevatorNumber){
         super(); 
         this.setLayout(new BorderLayout()); 
@@ -164,6 +172,10 @@ public class ElevatorInfo extends JPanel{
 
     }
 
+    /**
+     * update the elevators status
+     * @param isErrorStatus boolean, true if error otherwise false
+     */
     public void setStatus(boolean isErrorStatus){
         if (isErrorStatus){
             this.status.setBackground(this.BROKEN_STATUS);
@@ -174,18 +186,34 @@ public class ElevatorInfo extends JPanel{
         this.status.setText(this.ACTIVE_TEXT);
     }
 
+    /**
+     * update the current floor of the elevator
+     * @param currentFloor String, the currentFloor
+     */
     public void setCurrentFloor(String currentFloor){
         this.currFloorLabel.setText(currentFloor);
     }
 
+    /**
+     * update the next destination of the elevator
+     * @param nextDestination String, next destination
+     */
     public void setNextDestination(String nextDestination){
         this.nextDestLabel.setText(nextDestination);
     }
 
+    /**
+     * update the elevators direction
+     * @param direction String, direction
+     */
     public void setDirection(String direction){
         this.directionLabel.setText(direction);
     }
 
+    /**
+     * update the ordered destinations for the elevator
+     * @param destinations ArrayList<Integer>, the list of integers
+     */
     public void setOrderedDestinationQueue(ArrayList<Integer> destinations){
         int index = 0;
         for (NextDestField feild: this.nextDestinationsQueue) {
@@ -201,10 +229,18 @@ public class ElevatorInfo extends JPanel{
         }
     }
 
+    /**
+     * update the state of the elevator
+     * @param state String, the state
+     */
     public void setState(String state){
         this.stateLabel.setText(state);
     }
 
+    /**
+     * update everything of the elevator
+     * @param msg UpdatePositionMessage, the message for updating
+     */
     public void update(UpdatePositionMessage msg){
         this.setStatus(msg.getIsStuck());
         this.setCurrentFloor(Integer.toString(msg.getCurrentFloor()));

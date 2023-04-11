@@ -5,6 +5,10 @@ import javax.swing.*;
 
 import project.constants.MotorDirection;
 
+/**
+ * The floor information displayed in the simulation for buttons and number of the floor
+ * @author Anthony Massaad SYSC3303 Group 2
+ */
 public class FloorInfo extends JPanel{
     private final Color DISABLED_COLOR = Color.GRAY;
     private final Color ENABLED_COLOR = Color.GREEN;
@@ -15,6 +19,12 @@ public class FloorInfo extends JPanel{
     private JLabel upButton;
     private JLabel downButton;
     private JPanel buttonsPanel;
+    /**
+     * The floor information constructor
+     * @param floorNumber String, the floor number
+     * @param height Integer, the prefered height
+     * @param width Integer, the perferred width
+     */
     public FloorInfo(String floorNumber, int height, int width){
         super();
         // floor info setup
@@ -55,6 +65,10 @@ public class FloorInfo extends JPanel{
         this.add(this.floorNumber, BorderLayout.WEST);
     }
 
+    /**
+     * Disable the button based on the direction provided 
+     * @param isUp MotordDirection, up or down
+     */
     public void disableButton(MotorDirection isUp){
         if (isUp == MotorDirection.UP){
             this.upButton.setBackground(this.DISABLED_COLOR);
@@ -63,6 +77,10 @@ public class FloorInfo extends JPanel{
         this.downButton.setBackground(this.DISABLED_COLOR);
     }
 
+    /**
+     * enable buttons based on the direction provided
+     * @param isUp MotorDirection, up or down
+     */
     public void enableButton(MotorDirection isUp){
         if (isUp == MotorDirection.UP){
             this.upButton.setBackground(this.ENABLED_COLOR);

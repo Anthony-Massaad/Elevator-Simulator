@@ -5,9 +5,16 @@ import java.awt.Dimension;
 
 import javax.swing.*;
 
+/**
+ * responsible for displaying the upcoming destinations for the elevator field
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public class NextDestField extends JPanel{
     
     private JLabel destination; 
+    /**
+     * constructor
+     */
     public NextDestField(){
         super();
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
@@ -19,6 +26,10 @@ public class NextDestField extends JPanel{
         this.add(this.destination);
     }
 
+    /**
+     * set the destination
+     * @param destination String, the destination
+     */
     public void setDestination(String destination) {
         this.destination.setText(destination);
     }
