@@ -7,6 +7,7 @@ import project.constants.SimulationConstants;
 import project.constants.Time;
 import project.elevatorImpl.Elevator;
 import project.logger.Log;
+import project.messageSystem.messages.ArrivalMessage;
 import project.statesImpl.State;
 
 /**
@@ -32,6 +33,13 @@ public class ElevatorOpenDoorState extends State{
     @Override
     public State handleState() {
         this.elevator.sendUpdateStatus();
+
+        if (this.elevator.getUpcomingDirection() != null && this.elevator.getDestinations().size() == 0){
+            // elevator was there to begin with! 
+            ArrivalMessage arrivalMessage = new ArrivalMessage(new Date(), this.elevator.getElevatorStatus().getCurrentFloor(), this.elevator.getUpcomingDirection());
+            this.elevator.getResponses().addFirst(arrivalMessage);
+        }
+        
         Log.notification("ELEVATOR", "Opening Door", new Date(), this.elevator.getSystemName());
         this.elevator.sleep(Time.OPEN_DOOR.getTime());
 

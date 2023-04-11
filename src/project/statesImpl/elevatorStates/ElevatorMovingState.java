@@ -80,7 +80,7 @@ public class ElevatorMovingState extends State{
             this.elevator.getLamps()[this.elevator.getElevatorStatus().getNextDestination() - 1] = false; 
             Log.notification("ELEVATOR", "Button Lamp " + (this.elevator.getElevatorStatus().getNextDestination())  + " is off", new Date(), this.elevator.getSystemName());
             ArrivalMessage arrivalMessage;
-			if (this.elevator.getDestinations().size() == 0 && this.elevator.getUpcomingDirection() != this.elevator.getElevatorStatus().getMotorDirection()){
+			if (this.elevator.getDestinations().size() == 0 && this.elevator.getUpcomingDirection() != null){
 				arrivalMessage = new ArrivalMessage(new Date(), this.elevator.getElevatorStatus().getNextDestination(), MotorDirection.oppositeDirection(this.elevator.getElevatorStatus().getMotorDirection()));
 			}else{
 				arrivalMessage = new ArrivalMessage(new Date(), this.elevator.getElevatorStatus().getNextDestination(), this.elevator.getElevatorStatus().getMotorDirection());
@@ -95,6 +95,8 @@ public class ElevatorMovingState extends State{
         if (returningState == null){
             returningState = this.elevator.getElevatorMovingState();
         }
+
+        
         
         return returningState; 
 

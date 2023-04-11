@@ -8,6 +8,8 @@ import java.util.HashMap;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import project.Timing.MeasureTime;
 import project.constants.MotorDirection;
 import project.messageSystem.Message;
 import project.messageSystem.messages.MoveToMessage;
@@ -28,6 +30,7 @@ class TestElevator {
 	
 	private Elevator Elevator; 
 	private ConcurrentLinkedDeque<Message> responses;
+	MeasureTime measure = new MeasureTime();
 	@BeforeEach
 	public void init(){
 		System.out.println("Starting Up");

@@ -1,0 +1,4 @@
+Measurement Elevator Open Door Timer Took: 2209ms
+Measurement for moving from floor 1 to Floor 21 is: 20160ms
+Measurement for moving one floor is: 1014ms
+Measurement Elevator Close Door Timer Took: 1205ms

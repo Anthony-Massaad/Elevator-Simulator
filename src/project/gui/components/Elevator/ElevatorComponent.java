@@ -34,4 +34,10 @@ public class ElevatorComponent extends JPanel{
         this.doors.setText(this.DOOR_CLOSED);
     }
 
+    public void broken(){
+        this.setBorder(BorderFactory.createLineBorder(Color.RED));
+        this.title.setBorder((BorderFactory.createMatteBorder(0, 0, 0, 1, Color.RED)));
+        this.title.setForeground(Color.RED);
+    }
+    
 }

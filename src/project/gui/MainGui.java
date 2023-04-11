@@ -93,7 +93,9 @@ public class MainGui implements Runnable{
     public void updateElevatorInfo(int elevatorID, UpdatePositionMessage msg){
         this.elevatorInfos[elevatorID].update(msg);
 
-        if (msg.getState().equals("Open Door")){
+        if (msg.getState().equals("Broken")){
+            this.floorComponents[msg.getCurrentFloor()- 1].brokenEl(msg.getElevatorID());
+        }else if (msg.getState().equals("Open Door")){
             this.floorComponents[msg.getCurrentFloor()- 1].openDoor(msg.getElevatorID());
         }else if (msg.getState().equals("Close Door")){
             this.floorComponents[msg.getCurrentFloor()- 1].closeDoor(msg.getElevatorID());

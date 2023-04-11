@@ -26,7 +26,7 @@ public class Main {
 		Thread tE = new Thread(el);
 		tE.start();
 
-        Thread.sleep(20000);
+        Thread.sleep(5000);
 
         Parser p = new Parser(); 
         FloorManager manager = new FloorManager(SimulationConstants.FLOOR_MANAGER_PORT, "Floor Manager", p.getEventLines());

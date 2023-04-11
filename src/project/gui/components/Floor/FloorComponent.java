@@ -69,4 +69,13 @@ public class FloorComponent extends JPanel{
         this.elevators[elevatorID].revalidate();
     }
 
+    public void brokenEl(int elevatorID){
+        ElevatorComponent e = new ElevatorComponent("#" + (elevatorID + 1));
+        e.broken();
+        this.elevators[elevatorID].removeAll();
+        this.elevators[elevatorID].add(e);
+        this.elevators[elevatorID].repaint();
+        this.elevators[elevatorID].revalidate();
+    }
+
 }
