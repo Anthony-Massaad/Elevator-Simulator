@@ -4,11 +4,18 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Class responsible for measuring time
+ * @author Anthony Massaad, Maximus Curkovic, Dorothy Tran, Elisha Catherasoo, Cassidy Pacada SYSC3303 Group 2
+ */
 public class MeasureTime {
     private final String FILENAME = "src/resources/measure/measurements.txt";
 
     private long startTime;
     private long endTime;
+    /**
+     * Constructor
+     */
     public MeasureTime(){
         File f = new File(this.FILENAME);
         try {
@@ -26,10 +33,17 @@ public class MeasureTime {
         this.endTime = 0;
     }
 
+    /**
+     * start the time
+     */
     public void start(){
         this.startTime = System.currentTimeMillis();
     }
 
+    /**
+     * end the time and append it to the measuring text file under resources 
+     * @param output String, the output
+     */
     public void end(String output){
         this.endTime = System.currentTimeMillis();
         long diff = this.endTime - this.startTime;
