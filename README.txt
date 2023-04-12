@@ -34,7 +34,7 @@ Project Description
 
 The purpose of this project is to design and create a system that simulates an elevator. It consists of three subsystems, the Elevator, the Scheduler, and the Floor.
 
-For the purpose of Iteration 5, the system utilizes a Graphical User Interface to display the original functionality of the Scheduler, the Elevator Subsystem, and the Floor Manager. The system now also takes measurements of particular tasks, including door open/close time as well as 
+For the purpose of Iteration 5, the system utilizes a Graphical User Interface to display the original functionality of the Scheduler, the Elevator Subsystem, and the Floor Manager. The system now also takes measurements of particular tasks, including door open/close time as well as the time to move between floors. 
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
