@@ -1,44 +1,30 @@
-# SYSC 3303 Group Project - Iteration 4
+# SYSC 3303 Group Project - Iteration 5
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Contributors and Respective Contributions - Group 2:
 
 Anthony Massaad 101150282
-- ElevatorSubSystem, Scheduler, Floor, Message, UpdatePositionMesesage, ArrivalMessage, MoveToMessage, RequestElevatorMessage, FloorRequestElevator,
-  ElevatorComReceiver, Elevator, ElevatorStatus, SchedulerMidTask, UDPReceive, UDPBoth, UDPSend, UDPImpl, Clock, FloorManager, FloorScheduler, Log, Timing, 
-  SchedulerIdleState, SchedulerMidTaskIdleState, ScheduelrProcessElevatorState, SchedulerProcessFloorState, State, ElevatorBrokenState, ElevatorCloseDoorState, 
-  ElevatorDoorFaultState, ElelvatorIdleState, ElevatorMovingState, ElevatorOpenDoorState, ElevatorRequestProcessState
+- ElevatorSubSystem, Scheduler, Floor, Message, UpdatePositionMesesage, ArrivalMessage, MoveToMessage, RequestElevatorMessage, FloorRequestElevator, ElevatorComReceiver, Elevator, ElevatorStatus, SchedulerMidTask, UDPReceive, UDPBoth, UDPSend, UDPImpl, Clock, FloorManager, FloorScheduler, Log, Timing, SchedulerIdleState, SchedulerMidTaskIdleState, ScheduelrProcessElevatorState, SchedulerProcessFloorState, State, ElevatorBrokenState, ElevatorCloseDoorState, ElevatorDoorFaultState, ElelvatorIdleState, ElevatorMovingState, ElevatorOpenDoorState, ElevatorRequestProcessState, MainGui, MessageCollections, ElevatorComponent, FloorComponent, FloorInfo, ElevatorInfo, NextDestField, FloorInputTest
 - Uml Class Diagram
 - Scheduler State Diagram
 
 Dorothy Tran 101141902 
-- ElevatorSubSystem, Scheduler, Floor, Message, UpdatePositionMesesage, ArrivalMessage, MoveToMessage, RequestElevatorMessage, FloorRequestElevator,
-  ElevatorComReceiver, Elevator, ElevatorStatus, SchedulerMidTask, UDPReceive, UDPBoth, UDPSend, UDPImpl, Clock, FloorManager, FloorScheduler,
-  SchedulerIdleState, SchedulerMidTaskIdleState, ScheduelrProcessElevatorState, SchedulerProcessFloorState, State, ElevatorBrokenState, ElevatorCloseDoorState, 
-  ElevatorDoorFaultState, ElelvatorIdleState, ElevatorMovingState, ElevatorOpenDoorState, ElevatorRequestProcessState
+- ElevatorSubSystem, Scheduler, Floor, Message, UpdatePositionMesesage, ArrivalMessage, MoveToMessage, RequestElevatorMessage, FloorRequestElevator, ElevatorComReceiver, Elevator, ElevatorStatus, SchedulerMidTask, UDPReceive, UDPBoth, UDPSend, UDPImpl, Clock, FloorManager, FloorScheduler, SchedulerIdleState, SchedulerMidTaskIdleState, ScheduelrProcessElevatorState, SchedulerProcessFloorState, State, ElevatorBrokenState, ElevatorCloseDoorState,  ElevatorDoorFaultState, ElelvatorIdleState, ElevatorMovingState, ElevatorOpenDoorState, ElevatorRequestProcessState, JUnit Testing, MainGui, MessageCollections, ElevatorComponent, FloorInfo, ElevatorInfo, NextDestField, FloorInputTest
 - JUnit Testing
 
 Max Curkovic 101139937
-- ElevatorSubSystem, Scheduler, Floor, Message, UpdatePositionMesesage, ArrivalMessage, MoveToMessage, RequestElevatorMessage, FloorRequestElevator,
-  ElevatorComReceiver, Elevator, ElevatorStatus, SchedulerMidTask, UDPReceive, UDPBoth, UDPSend, UDPImpl, Clock, FloorManager, FloorScheduler,
-  SchedulerIdleState, SchedulerMidTaskIdleState, ScheduelrProcessElevatorState, SchedulerProcessFloorState, State, ElevatorBrokenState, ElevatorCloseDoorState, 
-  ElevatorDoorFaultState, ElelvatorIdleState, ElevatorMovingState, ElevatorOpenDoorState, ElevatorRequestProcessState
+- ElevatorSubSystem, Scheduler, Floor, Message, UpdatePositionMesesage, ArrivalMessage, MoveToMessage, RequestElevatorMessage, FloorRequestElevator, ElevatorComReceiver, Elevator, ElevatorStatus, SchedulerMidTask, UDPReceive, UDPBoth, UDPSend, UDPImpl, Clock, FloorManager, FloorScheduler, SchedulerIdleState, SchedulerMidTaskIdleState, ScheduelrProcessElevatorState, SchedulerProcessFloorState, State, ElevatorBrokenState, ElevatorCloseDoorState, ElevatorDoorFaultState, ElevatorIdleState, ElevatorMovingState, ElevatorOpenDoorState, ElevatorRequestProcessState, JUnit Testing, MainGui, MessageCollections, ElevatorComponent, FloorInfo, ElevatorInfo, NextDestField, FloorInputTest
 - Sequence Diagram
 - JUnit Testing
 
 Elisha Catherasoo 101148507
-- ElevatorSubSystem, Scheduler, Floor, Message, UpdatePositionMesesage, ArrivalMessage, MoveToMessage, RequestElevatorMessage, FloorRequestElevator,
-  ElevatorComReceiver, Elevator, ElevatorStatus, SchedulerMidTask, UDPReceive, UDPBoth, UDPSend, UDPImpl, Clock, FloorManager, FloorScheduler,
-  SchedulerIdleState, SchedulerMidTaskIdleState, ScheduelrProcessElevatorState, SchedulerProcessFloorState, State, ElevatorBrokenState, ElevatorCloseDoorState, 
-  ElevatorDoorFaultState, ElelvatorIdleState, ElevatorMovingState, ElevatorOpenDoorState, ElevatorRequestProcessState
+- ElevatorSubSystem, Scheduler, Floor, Message, UpdatePositionMesesage, ArrivalMessage, MoveToMessage, RequestElevatorMessage, FloorRequestElevator, ElevatorComReceiver, Elevator, ElevatorStatus, SchedulerMidTask, UDPReceive, UDPBoth, UDPSend, UDPImpl, Clock, FloorManager, FloorScheduler, SchedulerIdleState, SchedulerMidTaskIdleState, ScheduelrProcessElevatorState, SchedulerProcessFloorState, State, ElevatorBrokenState, ElevatorCloseDoorState, ElevatorDoorFaultState, ElevatorIdleState, ElevatorMovingState, ElevatorOpenDoorState, ElevatorRequestProcessState, JUnit Testing, MainGui, MessageCollections, ElevatorComponent, FloorInfo, ElevatorInfo, NextDestField, FloorInputTest
 - JUnit Testing
 
 Cassidy Pacada 101143345
-- ElevatorSubSystem, Scheduler, Floor, Message, UpdatePositionMesesage, ArrivalMessage, MoveToMessage, RequestElevatorMessage, FloorRequestElevator,
-  ElevatorComReceiver, Elevator, ElevatorStatus, SchedulerMidTask, UDPReceive, UDPBoth, UDPSend, UDPImpl, Clock, FloorManager, FloorScheduler,
-  SchedulerIdleState, SchedulerMidTaskIdleState, ScheduelrProcessElevatorState, SchedulerProcessFloorState, State, ElevatorBrokenState, ElevatorCloseDoorState, 
-  ElevatorDoorFaultState, ElelvatorIdleState, ElevatorMovingState, ElevatorOpenDoorState, ElevatorRequestProcessState
+- ElevatorSubSystem, Scheduler, Floor, Message, UpdatePositionMesesage, ArrivalMessage, MoveToMessage, RequestElevatorMessage, FloorRequestElevator, ElevatorComReceiver, Elevator, ElevatorStatus, SchedulerMidTask, UDPReceive, UDPBoth, UDPSend, UDPImpl, Clock, FloorManager, FloorScheduler, SchedulerIdleState, SchedulerMidTaskIdleState, ScheduelrProcessElevatorState, SchedulerProcessFloorState, State, ElevatorBrokenState, ElevatorCloseDoorState, ElevatorDoorFaultState, ElelvatorIdleState, ElevatorMovingState, ElevatorOpenDoorState, ElevatorRequestProcessState, Elevator State Diagram, MainGui, MessageCollections, ElevatorComponent, FloorInfo, ElevatorInfo, NextDestField, FloorInputTest
 - Elevator State Diagram
+- Transient and Hard Fault Timing Diagrams
 
 Overall in general, everyone contributed evening as the general code was done as a group. 
 
@@ -48,8 +34,7 @@ Project Description
 
 The purpose of this project is to design and create a system that simulates an elevator. It consists of three subsystems, the Elevator, the Scheduler, and the Floor.
 
-For the purpose of Iteration 4, the system now handles two specific fault; a door fault which recovers after two seconds and a broken fault which is unrecoverable. 
-As well, the system was refactored to use state pattern. 
+For the purpose of Iteration 5, the system utilizes a Graphical User Interface to display the original functionality of the Scheduler, the Elevator Subsystem, and the Floor Manager. The system now also takes measurements of particular tasks, including door open/close time as well as 
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -149,6 +134,12 @@ This Iteration consists of 46 Java files where 6 are test files and 4 textfile l
 
 - ElevatorRequestProcessState.java: Contains functionality for Elevator's Request Process state, used for state pattern purposes
 
+- Main.java: Contains all the methods to run threads and the GUI.
+
+- MainGUI.java: Responsible for displaying the main GUI frame.
+
+- MessageCollections.java: Responsible for collecting update requests and storing it for the GUI.
+
 - Timing.java: Timing class to ensure that sleep times are accurate (for the door fault)
 
 - sim.txt: The textfile containing the instructions to be parsed and sent to the elevator system. 
@@ -159,6 +150,8 @@ This Iteration consists of 46 Java files where 6 are test files and 4 textfile l
 
 - sim4.txt: Additional instructions to be parsed and sent to the elevator system. 
 
+- measurements.txt: Text file that has measurements added to it when applicable.
+
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Setup Instructions
@@ -166,12 +159,11 @@ Setup Instructions
 1. Open Eclipse IDE and import the project by going to File -> Import -> Projects from Folder or Archive and select the submitted archive file. 
 
 2. To run the program, Navigate to the toolbar and find the green run button and select the down arrow next to it. A dropdown menu will appear, 
-   hover over the "Run As" option and select "1 Java Application". Run the Following in order: Scheduler.java, ElevatorSubSystem.java (wait about 3 second) then FloorManager.java.
+   hover over the "Run As" option and select "1 Java Application". Run the Following in order: MainGUI.java, Scheduler.java, ElevatorSubSystem.java (wait about 3 seconds), then FloorManager.java.
 
 
 Test Instructions 
 3. To run the JUnit test for the Parser, open TestParser.java. Find the green run button and select the down arrow next to it. A dropdown menu will appear, 
-   hover over the "Run As" option and select "1 JUnit Test". The output will appear in the JUnit window and will tell you how many errors and failures
-   occurred.
+   hover over the "Run As" option and select "1 JUnit Test". The output will appear in the JUnit window and will tell you how many errors and failures occurred.
 
-3. The other JUnit tests are run in the same way but open their respective files. 
+4. The other JUnit tests (TestElevator.java, TestElevator.SubSystem.java, TestFloor.java, TestMeasureSystem.java,  TestScheduler.java, and TestFloorManager.java) are run in the same way but open their respective files. 
