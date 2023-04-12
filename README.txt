@@ -40,7 +40,6 @@ For the purpose of Iteration 5, the system utilizes a Graphical User Interface t
 
 Files Included
 
-This Iteration consists of 46 Java files where 6 are test files and 4 textfile listed below:
 - Clock.java: grabs the time 
 
 - ElevatorStatus.java: keeps track of how many passengers an elevator has, its current flor, its direction, and its next destination
