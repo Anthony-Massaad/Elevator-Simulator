@@ -86,7 +86,7 @@ The purpose of this project is to simulate the behaviour of an elevator system i
 2. Navigate the eclipse IDE.
 3. Navigate the File menu.
 4. Open the `Open Project from File System..` option.
-5. Select the root folder for the project `Group2_SYSC3303`.
+5. Select the root folder for the project `Elevator-Simulator`.
 6. Click the `Finish button`.
 7. Select the project folder. 
 
